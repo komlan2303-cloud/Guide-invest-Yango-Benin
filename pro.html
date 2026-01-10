@@ -1,10 +1,245 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yango Business Simulator – PRO</title>
+
+<style>
+:root{
+  --yellow:#FFD600;
+  --light:#f7f7f7;
+  --card:#ffffff;
+  --text:#111;
+  --muted:#666;
+  --radius:14px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background:var(--light);
+  color:var(--text);
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:16px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:18px;
+  margin-bottom:18px;
+}
+
+h1,h2,h3{
+  margin-top:0;
+}
+
+.badge{
+  background:#eef4ff;
+  border-left:4px solid #2f6fff;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px;
+}
+
+label{
+  font-weight:600;
+  display:block;
+  margin-top:14px;
+}
+
+.desc{
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:16px;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  background:var(--yellow);
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:18px;
+}
+
+.nav-btn{
+  background:#eee;
+  margin-top:10px;
+}
+
+.nav-btn.active{
+  background:var(--yellow);
+}
+
+.result{
+  background:#fff9db;
+  border-radius:14px;
+  padding:16px;
+  margin-top:16px;
+}
+
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:#666;
+  margin:40px 0 20px;
+}
+
+.hidden{display:none}
+hr{border:none;border-top:1px solid #eee;margin:20px 0}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<!-- IMPORTANT -->
+<div class="card badge">
+<b>Important :</b><br>
+Toutes les estimations sont basées sur <b>Yango ECO</b>, le service le plus accessible et le moins cher de l’application.
+</div>
+
+<!-- LANGUE / DEVISE -->
+<div class="card">
+<label>Langue</label>
+<select id="langSelect"></select>
+
+<label>Devise</label>
+<select id="currencySelect"></select>
+</div>
+
+<!-- LOGIN CODE -->
+<div class="card" id="loginCard">
+<h2>Accès professionnel requis</h2>
+<div class="desc">Entrez votre code investisseur personnel reçu après paiement Mobile Money.</div>
+<input id="codeInput" placeholder="Ex : JOSUE-MOMO-ALAIN">
+<button onclick="unlock()">Débloquer l’accès</button>
+</div>
+
+<!-- DASHBOARD -->
+<div class="card hidden" id="dashboard">
+<h2>Tableau de bord investisseur</h2>
+<p><b>Propriétaire du code :</b> <span id="ownerName"></span></p>
+<p>Simulations effectuées : <span id="usedCount"></span></p>
+<p>Simulations restantes : <span id="remainingCount"></span></p>
+
+<button class="nav-btn active" onclick="showTab('salariat')">Simulation Salariat</button>
+<button class="nav-btn" onclick="showTab('leasing')">Simulation Leasing</button>
+<button class="nav-btn" onclick="showTab('compare')">Comparaison</button>
+<button class="nav-btn" onclick="showTab('history')">Historique</button>
+</div>
+
+<!-- SALARIAT -->
+<div class="card hidden" id="salariat">
+<h2>Modèle Salariat</h2>
+
+<label>Nombre de véhicules</label>
+<div class="desc">Valeur par défaut : 1 véhicule</div>
+<input id="s_nb" type="number" value="1">
+
+<label>Prix d’achat du véhicule (unité)</label>
+<div class="desc">Montant investi pour un véhicule</div>
+<input id="s_buy" value="3000000">
+
+<label>Revenu mensuel Yango par véhicule</label>
+<div class="desc">Moyenne observée sur Yango ECO</div>
+<input id="s_rev" value="800000">
+
+<hr>
+
+<label>Salaire chauffeur</label>
+<input id="s_salary" value="80000">
+
+<label>Primes / bonus</label>
+<input id="s_bonus" value="30000">
+
+<label>Carburant</label>
+<input id="s_fuel" value="280000">
+
+<label>Entretien</label>
+<input id="s_maint" value="50000">
+
+<label>Divers / imprévus</label>
+<input id="s_misc" value="30000">
+
+<button onclick="calcSalariat()">Calculer le salariat</button>
+
+<div class="result" id="salariatResult"></div>
+<button onclick="downloadPDF('salariat')">Télécharger PDF Salariat</button>
+</div>
+
+<!-- LEASING -->
+<div class="card hidden" id="leasing">
+<h2>Modèle Leasing</h2>
+
+<label>Nombre de véhicules</label>
+<input id="l_nb" value="1">
+
+<label>Prix d’achat du véhicule (unité)</label>
+<input id="l_buy" value="3000000">
+
+<label>Prix de revente au chauffeur (unité)</label>
+<input id="l_sell" value="4500000">
+
+<label>Durée du contrat (mois)</label>
+<input id="l_months" value="24">
+
+<label>Jours travaillés par mois</label>
+<input id="l_days" value="26">
+
+<button onclick="calcLeasing()">Calculer le leasing</button>
+
+<div class="result" id="leasingResult"></div>
+<button onclick="downloadPDF('leasing')">Télécharger PDF Leasing</button>
+</div>
+
+<!-- COMPARAISON -->
+<div class="card hidden" id="compare">
+<h2>Comparaison Salariat vs Leasing</h2>
+<div class="result" id="compareResult"></div>
+<button onclick="downloadPDF('compare')">Télécharger PDF Comparaison</button>
+</div>
+
+<!-- HISTORIQUE -->
+<div class="card hidden" id="history">
+<h2>Historique des simulations</h2>
+<div id="historyList"></div>
+</div>
+
+<div class="footer">
+© 2026 – Josué Cédric Komlan Akakpovi<br>
+WhatsApp : +229 01 53 63 63 63<br>
+Email : komlan2303@gmail.com
+</div>
+
+</div>
+
+<script>
+/<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const { jsPDF } = window.jspdf;
 
 /* ================= CONFIG ================= */
 const PRO_CODES = {
- "JOSUE-MOMO-JOSUE": { owner:"Josue", max:200 }
+ "JOSUE": { owner:"Josue", max:200 }
 };
 
 const LANGS = ["Français","English","Español","Português","Русский","العربية","Hindi","中文"];
@@ -158,3 +393,7 @@ function downloadPDF(type){
  doc.save("yango-"+type+".pdf");
 }
 </script>
+
+
+</body>
+</html>
