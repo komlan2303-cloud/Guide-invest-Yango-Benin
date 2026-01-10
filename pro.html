@@ -2,32 +2,96 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Yango Partner – Business Simulator PRO</title>
+<title>Yango Business Simulator PRO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-body{font-family:Inter,sans-serif;background:#f4f6f8;padding:20px}
-.container{max-width:1100px;margin:auto;background:#fff;padding:35px;border-radius:16px}
-h1,h2,h3{text-align:center}
-.section{margin-top:55px}
+body{
+  font-family:Inter,sans-serif;
+  background:#f4f6f8;
+  margin:0;
+  padding:12px;
+}
+.container{
+  max-width:100%;
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+}
+h1,h2{
+  text-align:center;
+}
+.section{margin-top:40px}
 label{font-weight:600;display:block;margin-bottom:6px}
-.help{font-size:13px;color:#666;margin-bottom:12px}
-input{width:100%;padding:14px;margin-bottom:24px;border-radius:10px;border:1px solid #ddd}
-button{background:#FFD400;border:none;padding:16px;width:100%;border-radius:12px;font-weight:700;font-size:16px;cursor:pointer}
-.choice button{margin-bottom:22px}
+.help{font-size:13px;color:#666;margin-bottom:10px}
+input{
+  width:100%;
+  padding:16px;
+  margin-bottom:20px;
+  border-radius:12px;
+  border:1px solid #ddd;
+  font-size:16px;
+}
+button{
+  background:#FFD400;
+  border:none;
+  padding:16px;
+  width:100%;
+  border-radius:14px;
+  font-weight:700;
+  font-size:17px;
+  cursor:pointer;
+}
+.choice button{margin-bottom:18px}
 .hidden{display:none}
-.result{background:#fffbe6;padding:25px;border-radius:14px;margin-top:30px;line-height:1.7}
-.analysis{background:#f1f1f1;padding:25px;border-radius:14px;margin-top:20px;line-height:1.7}
-.compare{background:#eef5ff;padding:30px;border-radius:16px;margin-top:40px}
-.notice{background:#fff3e0;padding:20px;border-left:6px solid #ff9800;border-radius:12px}
-.footer{text-align:center;margin-top:60px;font-size:13px;color:#555}
-.lock{background:#fff3f3;border-left:6px solid #c62828;padding:30px;border-radius:14px}
-table{width:100%;border-collapse:collapse;margin-top:20px}
-td,th{border:1px solid #ddd;padding:12px;text-align:center}
-th{background:#f5f5f5}
+.result{
+  background:#fffbe6;
+  padding:20px;
+  border-radius:14px;
+  margin-top:25px;
+  line-height:1.7;
+}
+.analysis{
+  background:#f1f1f1;
+  padding:20px;
+  border-radius:14px;
+  margin-top:20px;
+  line-height:1.7;
+}
+.notice{
+  background:#eef5ff;
+  padding:16px;
+  border-left:5px solid #2962ff;
+  border-radius:12px;
+  font-size:14px;
+  margin-top:20px;
+}
+.compare{
+  background:#f9f9f9;
+  padding:20px;
+  border-radius:14px;
+  margin-top:35px;
+}
+.footer{
+  text-align:center;
+  margin-top:50px;
+  font-size:13px;
+  color:#555;
+}
+.lock{
+  background:#fff3f3;
+  border-left:5px solid #c62828;
+  padding:20px;
+  border-radius:14px;
+}
+
+@media(min-width:768px){
+  body{padding:25px}
+  .container{max-width:1050px;margin:auto}
+}
 </style>
 </head>
 
@@ -36,99 +100,74 @@ th{background:#f5f5f5}
 <!-- 🔐 ACCÈS PRO -->
 <div id="lock" class="container lock">
   <h2>Accès professionnel requis</h2>
-  <p>Simulateur réservé aux partenaires et investisseurs.</p>
+  <p>Outil réservé aux partenaires et investisseurs.</p>
   <p><strong>Tarif : à partir de 5 USD</strong></p>
   <input id="codeInput" placeholder="Entrer votre code PRO">
-  <button onclick="unlock()">Débloquer</button>
+  <button onclick="unlock()">Débloquer l’accès</button>
   <p id="lockMsg"></p>
 </div>
 
-<!-- 🧠 APPLICATION -->
+<!-- 📊 APPLICATION -->
 <div id="app" class="container hidden">
 
-<h1>Simulateur Business Yango – Version Professionnelle</h1>
+<h1>Yango Business Simulator PRO</h1>
 <p style="text-align:center">
 Estimations basées sur <strong>Yango ECO</strong> (service le moins cher)
 </p>
 
 <div class="notice">
-Les calculs sont volontairement prudents et basés sur Yango ECO.
-Les autres services peuvent générer des performances supérieures.
+Les résultats sont volontairement prudents et basés sur le service ECO.
+Ils peuvent être supérieurs pour d’autres catégories de services.
 </div>
 
 <div class="section choice">
-  <button onclick="show('sal')">Analyser Salariat</button>
-  <button onclick="show('lea')">Analyser Leasing</button>
+  <button onclick="show('sal')">Analyser le modèle Salariat</button>
+  <button onclick="show('lea')">Analyser le modèle Leasing</button>
 </div>
 
 <!-- SALARIAT -->
 <div id="sal" class="section hidden">
-<h2>Modèle Salariat</h2>
+<h2>Salariat</h2>
 
-<input id="s_qty" type="number" value="1" placeholder="Nombre de véhicules">
-<input id="s_buy" type="number" value="3000000" placeholder="Prix d'achat du véhicule">
-<input id="s_rev" type="number" value="800000" placeholder="Revenu mensuel">
+<input id="s_qty" type="number" min="1" value="1" placeholder="Nombre de véhicules">
+<input id="s_buy" type="number" value="3000000" placeholder="Prix d'achat par véhicule">
+<input id="s_rev" type="number" value="800000" placeholder="Revenu mensuel par véhicule">
 <input id="s_salary" type="number" value="80000" placeholder="Salaire chauffeur">
-<input id="s_bonus" type="number" value="30000" placeholder="Primes">
+<input id="s_bonus" type="number" value="30000" placeholder="Primes / bonus">
 <input id="s_fuel" type="number" value="280000" placeholder="Carburant">
 <input id="s_maint" type="number" value="50000" placeholder="Entretien">
-<input id="s_misc" type="number" value="30000" placeholder="Divers">
+<input id="s_misc" type="number" value="30000" placeholder="Divers / imprévus">
 
-<button onclick="calcSal()">Calculer Salariat</button>
+<button onclick="calcSal()">Calculer le salariat</button>
+
 <div id="salResult" class="result hidden"></div>
+<div id="salAnalysis" class="analysis hidden"></div>
 </div>
 
 <!-- LEASING -->
 <div id="lea" class="section hidden">
-<h2>Modèle Leasing</h2>
+<h2>Leasing</h2>
 
-<input id="l_qty" type="number" value="1" placeholder="Nombre de véhicules">
-<input id="l_buy" type="number" value="3000000" placeholder="Prix d'achat du véhicule">
-<input id="l_sell" type="number" value="4500000" placeholder="Prix de revente">
+<input id="l_qty" type="number" min="1" value="1" placeholder="Nombre de véhicules">
+<input id="l_buy" type="number" value="3000000" placeholder="Prix d'achat par véhicule">
+<input id="l_sell" type="number" value="4500000" placeholder="Prix de revente par véhicule">
 <input id="l_duration" type="number" value="24" placeholder="Durée du contrat (mois)">
-<input id="l_days" type="number" value="26" placeholder="Jours travaillés / mois">
+<input id="l_days" type="number" value="26" placeholder="Jours travaillés par mois">
 
-<button onclick="calcLea()">Calculer Leasing</button>
+<button onclick="calcLea()">Calculer le leasing</button>
+
 <div id="leaResult" class="result hidden"></div>
+<div id="leaAnalysis" class="analysis hidden"></div>
 </div>
 
 <!-- COMPARAISON -->
 <div id="compare" class="section compare hidden">
-<h2>Comparaison Salariat vs Leasing</h2>
-
-<table>
-<tr>
-<th>Critère</th>
-<th>Salariat</th>
-<th>Leasing</th>
-</tr>
-<tr>
-<td>ROI (mois)</td>
-<td id="c_sal_roi"></td>
-<td id="c_lea_roi"></td>
-</tr>
-<tr>
-<td>Cash-flow mensuel</td>
-<td id="c_sal_cash"></td>
-<td id="c_lea_cash"></td>
-</tr>
-<tr>
-<td>Niveau de gestion</td>
-<td>Élevé</td>
-<td>Faible</td>
-</tr>
-<tr>
-<td>Niveau de risque</td>
-<td>Moyen</td>
-<td>Faible</td>
-</tr>
-</table>
-
-<div id="recommendation" class="analysis"></div>
+<h2>Comparaison & recommandation</h2>
+<div id="compareText"></div>
 </div>
 
 <div class="section">
-<button onclick="downloadPDF()">Télécharger le rapport PDF complet</button>
+<button onclick="downloadPDF()">Télécharger le rapport PDF</button>
 </div>
 
 <div class="footer">
@@ -140,83 +179,117 @@ Email : komlan2303@gmail.com
 </div>
 
 <script>
+/* =====================
+   CODES PRO
+===================== */
+const PRO_CODES = {
+  "josue": 100,
+  "YANGO-PRO-002": 20,
+  "YANGO-PRO-003": 30,
+  "YANGO-INVEST-004": 50
+};
+
 let salData=null;
 let leaData=null;
 
+/* =====================
+   ACCÈS
+===================== */
 function unlock(){
-  if(codeInput.value.trim()){
+  const code = codeInput.value.trim();
+  if(PRO_CODES[code]){
+    localStorage.setItem("proUses", PRO_CODES[code]);
     lock.classList.add("hidden");
     app.classList.remove("hidden");
   }else{
-    lockMsg.innerText="Code invalide";
+    lockMsg.innerText="Code invalide ou expiré";
   }
 }
 
+function checkAccess(){
+  let uses = Number(localStorage.getItem("proUses"));
+  if(uses <= 0){
+    alert("Votre accès PRO est expiré.");
+    return false;
+  }
+  localStorage.setItem("proUses", uses - 1);
+  return true;
+}
+
+/* =====================
+   UI
+===================== */
 function show(id){
   sal.classList.add("hidden");
   lea.classList.add("hidden");
   document.getElementById(id).classList.remove("hidden");
 }
 
+/* =====================
+   CALCULS
+===================== */
 function calcSal(){
+  if(!checkAccess()) return;
+
+  const qty=+s_qty.value;
   const charges=+s_salary.value+ +s_bonus.value+ +s_fuel.value+ +s_maint.value+ +s_misc.value;
   const net=+s_rev.value-charges;
   const roi=(+s_buy.value/net);
 
-  salData={
-    roi,
-    cash:net*+s_qty.value
-  };
+  salData={roi,cash:net*qty};
 
   salResult.innerHTML=`
   Résultat net par véhicule : ${net.toLocaleString()} FCFA<br>
-  Cash-flow mensuel flotte : ${(net*s_qty.value).toLocaleString()} FCFA<br>
-  ROI : ${roi.toFixed(1)} mois
+  Cash-flow mensuel flotte : ${(net*qty).toLocaleString()} FCFA<br>
+  ROI estimé : ${roi.toFixed(1)} mois
   `;
+  salAnalysis.innerText="Rentabilité élevée mais nécessite une gestion rigoureuse du chauffeur et des charges.";
   salResult.classList.remove("hidden");
-  compareIfReady();
+  salAnalysis.classList.remove("hidden");
+  compareModels();
 }
 
 function calcLea(){
+  if(!checkAccess()) return;
+
+  const qty=+l_qty.value;
   const monthly=+l_sell.value/+l_duration.value;
-  const margin=+l_sell.value-+l_buy.value;
   const roi=(+l_buy.value/monthly);
 
-  leaData={
-    roi,
-    cash:monthly*+l_qty.value
-  };
+  leaData={roi,cash:monthly*qty};
 
   leaResult.innerHTML=`
-  Marge par véhicule : ${margin.toLocaleString()} FCFA<br>
-  Cash-flow mensuel flotte : ${(monthly*l_qty.value).toLocaleString()} FCFA<br>
-  ROI : ${roi.toFixed(1)} mois
+  Paiement mensuel par véhicule : ${monthly.toFixed(0)} FCFA<br>
+  Cash-flow mensuel flotte : ${(monthly*qty).toLocaleString()} FCFA<br>
+  ROI estimé : ${roi.toFixed(1)} mois
   `;
+  leaAnalysis.innerText="Modèle sécurisé avec faible gestion et revenus stables.";
   leaResult.classList.remove("hidden");
-  compareIfReady();
+  leaAnalysis.classList.remove("hidden");
+  compareModels();
 }
 
-function compareIfReady(){
+/* =====================
+   COMPARAISON
+===================== */
+function compareModels(){
   if(salData && leaData){
     compare.classList.remove("hidden");
-
-    c_sal_roi.innerText=salData.roi.toFixed(1);
-    c_lea_roi.innerText=leaData.roi.toFixed(1);
-    c_sal_cash.innerText=salData.cash.toLocaleString()+" FCFA";
-    c_lea_cash.innerText=leaData.cash.toLocaleString()+" FCFA";
-
     let reco="";
     if(Math.abs(salData.roi-leaData.roi)<=3){
-      reco="Les deux modèles sont proches. Un modèle mixte est recommandé : salariat pour le cash rapide et leasing pour la sécurité.";
+      reco="Les deux modèles sont proches. Un modèle mixte est recommandé pour équilibrer rentabilité et sécurité.";
     }else if(salData.roi<leaData.roi){
-      reco="Le modèle salariat permet une récupération plus rapide du capital mais nécessite une gestion rigoureuse.";
+      reco="Le salariat permet une récupération plus rapide du capital mais demande une gestion active.";
     }else{
-      reco="Le modèle leasing est plus sécurisé avec une charge opérationnelle réduite.";
+      reco="Le leasing est plus sécurisé avec un retour progressif du capital.";
     }
-    recommendation.innerText=reco;
+    compareText.innerText=reco;
   }
 }
 
+/* =====================
+   PDF
+===================== */
 function downloadPDF(){
   html2pdf().from(app).save("Yango_Business_Report_PRO.pdf");
 }
