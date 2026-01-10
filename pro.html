@@ -295,6 +295,129 @@ Veuillez effectuer une simulation Salariat et Leasing pour afficher la comparais
 <div id="historyList"></div>
 </div>
 
+<script>
+function getStore(){
+  return JSON.parse(localStorage.getItem(currentCode) || '{"used":0,"history":[]}');
+}
+
+function saveSimulation(type,data){
+  const store = getStore();
+  store.used += 1;
+  store.history.push({
+    type,
+    date: new Date().toLocaleString(),
+    data
+  });
+  localStorage.setItem(currentCode, JSON.stringify(store));
+
+  usedCount.innerText = store.used;
+  remainingCount.innerText = PRO_CODES[currentCode].max - store.used;
+}
+
+function calculateSalariat(){
+  const qty = +s_qty.value;
+  const charges =
+    +s_salary.value +
+    +s_bonus.value +
+    +s_fuel.value +
+    +s_maint.value +
+    +s_misc.value;
+
+  const netPerVehicle = +s_rev.value - charges;
+  const totalNet = netPerVehicle * qty;
+  const roi = (+s_buy.value / netPerVehicle).toFixed(1);
+
+  salResult.innerHTML = `
+    <strong>Résultats – Salariat</strong><br><br>
+    Résultat net par véhicule : ${netPerVehicle.toLocaleString()} FCFA<br>
+    Résultat net total (${qty} véhicules) : ${totalNet.toLocaleString()} FCFA<br>
+    ROI estimé : ${roi} mois<br><br>
+    <strong>Analyse :</strong>
+    <ul>
+      <li>Retour sur investissement rapide</li>
+      <li>Génération de cash élevée</li>
+      <li>Nécessite une gestion rigoureuse</li>
+    </ul>
+  `;
+  salResult.classList.remove("hidden");
+
+  saveSimulation("Salariat",{roi,netPerVehicle});
+}
+
+function calculateLeasing(){
+  const qty = +l_qty.value;
+  const marginPerVehicle = +l_sell.value - +l_buy.value;
+  const monthlyPayment = +l_sell.value / +l_months.value;
+  const dailyPayment = monthlyPayment / +l_days.value;
+  const roi = (+l_buy.value / monthlyPayment).toFixed(1);
+
+  leaseResult.innerHTML = `
+    <strong>Résultats – Leasing</strong><br><br>
+    Marge par véhicule : ${marginPerVehicle.toLocaleString()} FCFA<br>
+    Paiement mensuel chauffeur : ${monthlyPayment.toFixed(0)} FCFA<br>
+    Paiement journalier : ${dailyPayment.toFixed(0)} FCFA<br>
+    ROI estimé : ${roi} mois<br><br>
+    <strong>Analyse :</strong>
+    <ul>
+      <li>Gestion simplifiée</li>
+      <li>Revenus stables</li>
+      <li>Risque opérationnel réduit</li>
+    </ul>
+  `;
+  leaseResult.classList.remove("hidden");
+
+  saveSimulation("Leasing",{roi,marginPerVehicle});
+}
+
+function showComparison(){
+  const store = getStore();
+  const sal = store.history.filter(h=>h.type==="Salariat").slice(-1)[0];
+  const lea = store.history.filter(h=>h.type==="Leasing").slice(-1)[0];
+
+  if(!sal || !lea){
+    compareResult.innerHTML = "Veuillez effectuer les deux simulations.";
+    return;
+  }
+
+  let reco = "";
+  if(sal.data.roi < lea.data.roi){
+    reco = "Le modèle Salariat permet une récupération du capital plus rapide.";
+  }else{
+    reco = "Le modèle Leasing offre plus de stabilité et moins de gestion.";
+  }
+
+  compareResult.innerHTML = `
+    <strong>Comparaison</strong><br><br>
+    ROI Salariat : ${sal.data.roi} mois<br>
+    ROI Leasing : ${lea.data.roi} mois<br><br>
+    <strong>Recommandation :</strong> ${reco}
+  `;
+}
+
+function loadHistory(){
+  const store = getStore();
+  if(store.history.length === 0){
+    historyList.innerHTML = "Aucune simulation enregistrée.";
+    return;
+  }
+
+  historyList.innerHTML = store.history.map(h=>`
+    <div style="margin-bottom:12px;">
+      <strong>${h.type}</strong><br>
+      Date : ${h.date}<br>
+      ROI : ${h.data.roi} mois
+    </div>
+  `).join("");
+}
+
+/* Patch navigation */
+const oldShow = showSection;
+showSection = function(id){
+  oldShow(id);
+  if(id==="compare") showComparison();
+  if(id==="history") loadHistory();
+};
+</script>
 
 
 <!-- ================= FOOTER ================= -->
