@@ -16,9 +16,4 @@ self.addEventListener("fetch", e=>{
     })
   );
 });
-lang.onchange = () => {
-  document.querySelectorAll("[data-i18n]").forEach(el => {
-    const key = el.dataset.i18n;
-    el.innerText = i18n[lang.value][key] || el.innerText;
-  });
-};
+
