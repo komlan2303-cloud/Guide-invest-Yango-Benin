@@ -4,24 +4,77 @@
 <meta charset="UTF-8">
 <title>Yango Partner – Business Simulator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:Inter,sans-serif;background:#f5f6f8;padding:20px}
-.container{max-width:1000px;margin:auto;background:#fff;padding:25px;border-radius:14px}
-h1,h2{text-align:center}
-select,input{width:100%;padding:10px;margin:6px 0 12px;border-radius:8px;border:1px solid #ddd}
-button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px;font-weight:700;cursor:pointer}
-.section{margin-top:30px}
+body{
+  font-family:Inter,sans-serif;
+  background:#f5f6f8;
+  padding:20px;
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
+}
+h1,h2{
+  text-align:center;
+}
+.section{
+  margin-top:45px;
+}
+.choice button{
+  margin-bottom:25px;
+}
+label{
+  font-weight:600;
+  display:block;
+  margin-bottom:6px;
+}
+.small{
+  font-size:13px;
+  color:#666;
+  margin-bottom:10px;
+}
+input,select{
+  width:100%;
+  padding:12px;
+  margin-bottom:20px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+button{
+  background:#FFD400;
+  border:none;
+  padding:14px;
+  width:100%;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
 .hidden{display:none}
-.result{background:#fffbe6;padding:20px;border-radius:12px}
-.footer{text-align:center;margin-top:40px;font-size:13px;color:#555}
+.result{
+  background:#fffbe6;
+  padding:20px;
+  border-radius:12px;
+  margin-top:30px;
+}
+.footer{
+  text-align:center;
+  margin-top:50px;
+  font-size:13px;
+  color:#555;
+}
 </style>
 </head>
 
 <body>
 <div class="container">
 
+<!-- LANGUE -->
 <select onchange="setLang(this.value)">
   <option value="fr">Français</option>
   <option value="en">English</option>
@@ -33,32 +86,62 @@ button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px
   <option value="zh">中文</option>
 </select>
 
+<!-- DEVISE -->
+<select onchange="setCurrency(this.value)">
+  <option value="XOF">Franc CFA (XOF)</option>
+  <option value="USD">US Dollar (USD)</option>
+</select>
+
 <h1 id="title"></h1>
 <p id="subtitle" style="text-align:center"></p>
 
-<div class="section">
+<!-- CHOIX MODE -->
+<div class="section choice">
   <button onclick="show('sal')" id="btnSal"></button>
   <button onclick="show('lea')" id="btnLea"></button>
 </div>
 
+<!-- SALARIAT -->
 <div id="sal" class="section hidden">
   <h2 id="salTitle"></h2>
+
+  <label id="lblBuy"></label>
+  <div class="small" id="helpBuy"></div>
   <input id="s_buy" type="number" value="3000000">
+
+  <label id="lblRev"></label>
+  <div class="small" id="helpRev"></div>
   <input id="s_rev" type="number" value="800000">
+
+  <label id="lblCost"></label>
+  <div class="small" id="helpCost"></div>
   <input id="s_cost" type="number" value="470000">
+
   <button onclick="calcSal()" id="calcBtn"></button>
 </div>
 
+<!-- LEASING -->
 <div id="lea" class="section hidden">
   <h2 id="leaTitle"></h2>
+
+  <label id="lblBuyL"></label>
+  <div class="small" id="helpBuyL"></div>
   <input id="l_buy" type="number" value="3000000">
+
+  <label id="lblSellL"></label>
+  <div class="small" id="helpSellL"></div>
   <input id="l_sell" type="number" value="4500000">
+
+  <label id="lblDurL"></label>
+  <div class="small" id="helpDurL"></div>
   <input id="l_duration" type="number" value="24">
+
   <button onclick="calcLea()" id="calcBtn2"></button>
 </div>
 
-<div id="result" class="section result hidden"></div>
+<div id="result" class="result hidden"></div>
 
+<!-- VERSION PRO -->
 <div class="section">
   <h3 id="proTitle"></h3>
   <p id="proText"></p>
@@ -75,131 +158,68 @@ Josué Cédric Komlan Akakpovi – WhatsApp : +229 01 53 63 63 63
 </div>
 
 <script>
+/* =====================
+   LANGUE
+===================== */
 let lang="fr";
 
+/* =====================
+   DEVISE
+===================== */
+const rates = {
+  XOF: 1,
+  USD: 0.00165
+};
+let currentCurrency="XOF";
+
+function setCurrency(c){
+  currentCurrency=c;
+}
+
+function formatMoney(amountXOF){
+  return new Intl.NumberFormat(undefined,{
+    style:"currency",
+    currency: currentCurrency,
+    maximumFractionDigits:0
+  }).format(amountXOF * rates[currentCurrency]);
+}
+
+/* =====================
+   TRADUCTIONS
+===================== */
 const i18n={
 fr:{
 title:"Simulateur Business Partenaire Yango",
-subtitle:"Estimation réaliste basée sur des données terrain observées au Bénin",
+subtitle:"Outil d’estimation basé sur des données terrain observées au Bénin",
 sal:"Salariat",
 lea:"Leasing",
-salT:"Salariat – Estimation",
-leaT:"Leasing – Estimation",
+salT:"Simulation – Système de salariat",
+leaT:"Simulation – Système de leasing",
+buy:"Prix d’achat du véhicule (unité)",
+buyH:"Montant investi pour l’acquisition d’un véhicule.",
+rev:"Revenu mensuel par véhicule",
+revH:"Revenu moyen observé sur l’application Yango.",
+cost:"Charges mensuelles totales",
+costH:"Salaire chauffeur, carburant, entretien et divers.",
+buyL:"Prix d’achat du véhicule",
+buyLH:"Montant investi pour acheter le véhicule.",
+sellL:"Prix de revente au chauffeur",
+sellLH:"Montant total payé par le chauffeur sur la durée du contrat.",
+durL:"Durée du contrat (mois)",
+durLH:"Nombre total de mois du contrat de leasing.",
 calc:"Calculer",
-salRes:(n,r)=>`Résultat net mensuel : ${n} FCFA – ROI : ${r} mois`,
-leaRes:(m)=>`Marge totale par véhicule : ${m} FCFA`,
+salRes:(n,r)=>`Résultat net mensuel : ${formatMoney(n)} – ROI : ${r} mois`,
+leaRes:(m)=>`Marge totale par véhicule : ${formatMoney(m)}`,
 proT:"Version professionnelle",
-proTxt:"Accédez à un outil complet avec plus de paramètres, un modèle mixte personnalisable, une analyse stratégique et le téléchargement d’un rapport PDF.",
+proTxt:"Outil complet avec plus de paramètres, modèle mixte, analyse stratégique et rapport PDF.",
 price:"Tarif : à partir de 5 USD",
 proB:"Passer à la version professionnelle"
-},
-en:{
-title:"Yango Partner Business Simulator",
-subtitle:"Realistic estimation based on field data observed in Benin",
-sal:"Salary model",
-lea:"Leasing model",
-salT:"Salary – Estimation",
-leaT:"Leasing – Estimation",
-calc:"Calculate",
-salRes:(n,r)=>`Monthly net profit: ${n} FCFA – ROI: ${r} months`,
-leaRes:(m)=>`Total margin per vehicle: ${m} FCFA`,
-proT:"Professional version",
-proTxt:"Access a complete tool with advanced parameters, customizable mixed model, strategic analysis and downloadable PDF report.",
-price:"Price: starting from 5 USD",
-proB:"Upgrade to professional version"
-},
-es:{
-title:"Simulador de Negocio Yango",
-subtitle:"Estimación realista basada en datos reales",
-sal:"Salariado",
-lea:"Leasing",
-salT:"Salariado – Estimación",
-leaT:"Leasing – Estimación",
-calc:"Calcular",
-salRes:(n,r)=>`Resultado neto: ${n} FCFA – ROI: ${r} meses`,
-leaRes:(m)=>`Margen total por vehículo: ${m} FCFA`,
-proT:"Versión profesional",
-proTxt:"Herramienta completa con parámetros avanzados, modelo mixto y reporte PDF.",
-price:"Precio: desde 5 USD",
-proB:"Acceder a la versión profesional"
-},
-pt:{
-title:"Simulador de Negócio Yango",
-subtitle:"Estimativa realista baseada em dados reais",
-sal:"Salário",
-lea:"Leasing",
-salT:"Salário – Estimativa",
-leaT:"Leasing – Estimativa",
-calc:"Calcular",
-salRes:(n,r)=>`Lucro líquido: ${n} FCFA – ROI: ${r} meses`,
-leaRes:(m)=>`Margem total por veículo: ${m} FCFA`,
-proT:"Versão profissional",
-proTxt:"Ferramenta completa com parâmetros avançados, modelo misto e relatório PDF.",
-price:"Preço: a partir de 5 USD",
-proB:"Obter versão profissional"
-},
-ru:{
-title:"Бизнес-симулятор Yango",
-subtitle:"Реалистичная оценка на основе реальных данных",
-sal:"Зарплатная модель",
-lea:"Лизинг",
-salT:"Зарплата – Оценка",
-leaT:"Лизинг – Оценка",
-calc:"Рассчитать",
-salRes:(n,r)=>`Чистая прибыль: ${n} FCFA – ROI: ${r} мес`,
-leaRes:(m)=>`Общая маржа на автомобиль: ${m} FCFA`,
-proT:"Профессиональная версия",
-proTxt:"Полнофункциональный инструмент с расширенными параметрами и PDF-отчетом.",
-price:"Цена: от 5 USD",
-proB:"Перейти на профессиональную версию"
-},
-ar:{
-title:"محاكي أعمال يانغو",
-subtitle:"تقدير واقعي مبني على بيانات حقيقية",
-sal:"نظام الراتب",
-lea:"نظام التأجير",
-salT:"الراتب – التقدير",
-leaT:"التأجير – التقدير",
-calc:"احسب",
-salRes:(n,r)=>`صافي الربح: ${n} FCFA – العائد: ${r} شهر`,
-leaRes:(m)=>`إجمالي الهامش: ${m} FCFA`,
-proT:"النسخة الاحترافية",
-proTxt:"أداة متكاملة بإعدادات متقدمة وتقرير PDF.",
-price:"السعر: ابتداءً من 5 دولارات",
-proB:"الترقية إلى النسخة الاحترافية"
-},
-hi:{
-title:"यांगो बिज़नेस सिम्युलेटर",
-subtitle:"वास्तविक डेटा पर आधारित अनुमान",
-sal:"वेतन मॉडल",
-lea:"लीज़ मॉडल",
-salT:"वेतन – अनुमान",
-leaT:"लीज़ – अनुमान",
-calc:"गणना करें",
-salRes:(n,r)=>`शुद्ध लाभ: ${n} FCFA – ROI: ${r} माह`,
-leaRes:(m)=>`कुल मार्जिन: ${m} FCFA`,
-proT:"प्रोफेशनल संस्करण",
-proTxt:"उन्नत सेटिंग्स और PDF रिपोर्ट के साथ पूर्ण टूल।",
-price:"मूल्य: 5 USD से शुरू",
-proB:"प्रोफेशनल संस्करण प्राप्त करें"
-},
-zh:{
-title:"Yango 商业模拟器",
-subtitle:"基于真实数据的估算",
-sal:"薪资模式",
-lea:"租赁模式",
-salT:"薪资模式 – 估算",
-leaT:"租赁模式 – 估算",
-calc:"计算",
-salRes:(n,r)=>`净利润: ${n} FCFA – ROI: ${r} 月`,
-leaRes:(m)=>`单车总利润: ${m} FCFA`,
-proT:"专业版",
-proTxt:"包含高级参数、混合模型和 PDF 报告的完整工具。",
-price:"价格：5 美元起",
-proB:"升级到专业版"
 }
 };
 
+/* =====================
+   LOGIQUE
+===================== */
 function setLang(l){
   lang=l;
   const t=i18n[l];
@@ -209,6 +229,18 @@ function setLang(l){
   btnLea.innerText=t.lea;
   salTitle.innerText=t.salT;
   leaTitle.innerText=t.leaT;
+  lblBuy.innerText=t.buy;
+  helpBuy.innerText=t.buyH;
+  lblRev.innerText=t.rev;
+  helpRev.innerText=t.revH;
+  lblCost.innerText=t.cost;
+  helpCost.innerText=t.costH;
+  lblBuyL.innerText=t.buyL;
+  helpBuyL.innerText=t.buyLH;
+  lblSellL.innerText=t.sellL;
+  helpSellL.innerText=t.sellLH;
+  lblDurL.innerText=t.durL;
+  helpDurL.innerText=t.durLH;
   calcBtn.innerText=t.calc;
   calcBtn2.innerText=t.calc;
   proTitle.innerText=t.proT;
@@ -227,16 +259,18 @@ function show(id){
 function calcSal(){
   const net=s_rev.value-s_cost.value;
   const roi=(s_buy.value/net).toFixed(1);
-  result.innerText=i18n[lang].salRes(net.toLocaleString(),roi);
+  result.innerText=i18n[lang].salRes(net,roi);
   result.classList.remove("hidden");
 }
+
 function calcLea(){
   const margin=l_sell.value-l_buy.value;
-  result.innerText=i18n[lang].leaRes(margin.toLocaleString());
+  result.innerText=i18n[lang].leaRes(margin);
   result.classList.remove("hidden");
 }
 
 setLang("fr");
 </script>
+
 </body>
 </html>
