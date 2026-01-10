@@ -6,394 +6,266 @@
 <title>Yango Business Simulator – PRO</title>
 
 <style>
-:root{
-  --yellow:#FFD600;
-  --light:#f7f7f7;
-  --card:#ffffff;
-  --text:#111;
-  --muted:#666;
-  --radius:14px;
-}
-
+/* ================= RESET & BASE ================= */
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-  background:var(--light);
-  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  background:#f5f6f8;
+  color:#111;
 }
 
-.container{
-  max-width:900px;
+/* ================= LAYOUT ================= */
+.wrapper{
+  max-width:960px;
   margin:auto;
-  padding:16px;
+  padding:20px;
 }
-
 .card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:18px;
-  margin-bottom:18px;
+  background:#ffffff;
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:28px;
 }
+.hidden{display:none}
 
-h1,h2,h3{
-  margin-top:0;
-}
+/* ================= TYPO ================= */
+h1{margin-top:0;font-size:26px}
+h2{margin-top:0;font-size:22px}
+h3{margin-top:0;font-size:18px}
+p{line-height:1.6}
 
-.badge{
+/* ================= NOTICE ================= */
+.notice{
   background:#eef4ff;
-  border-left:4px solid #2f6fff;
-  padding:12px;
-  border-radius:10px;
+  border-left:6px solid #2563eb;
+  padding:18px;
+  border-radius:14px;
   font-size:14px;
 }
 
+/* ================= FORM ================= */
 label{
   font-weight:600;
   display:block;
-  margin-top:14px;
+  margin-top:18px;
 }
-
 .desc{
   font-size:13px;
-  color:var(--muted);
-  margin-bottom:6px;
+  color:#666;
+  margin:6px 0 8px;
 }
-
 input,select{
   width:100%;
-  padding:12px;
-  border-radius:10px;
+  padding:14px;
+  border-radius:12px;
   border:1px solid #ddd;
-  font-size:16px;
+  font-size:15px;
 }
 
+/* ================= BUTTONS ================= */
 button{
   width:100%;
-  padding:14px;
-  background:var(--yellow);
+  padding:16px;
   border:none;
   border-radius:14px;
+  background:#FFD400;
   font-size:16px;
   font-weight:700;
   cursor:pointer;
+  margin-top:22px;
+}
+button.secondary{
+  background:#eee;
+}
+
+/* ================= NAV ================= */
+.nav{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
   margin-top:18px;
 }
-
-.nav-btn{
-  background:#eee;
-  margin-top:10px;
+.nav button.active{
+  border-bottom:4px solid #FFD400;
 }
 
-.nav-btn.active{
-  background:var(--yellow);
+/* ================= DASH ================= */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
 }
-
-.result{
-  background:#fff9db;
+.stat{
+  background:#f9fafb;
   border-radius:14px;
   padding:16px;
-  margin-top:16px;
+  text-align:center;
+}
+.stat b{
+  font-size:22px;
+  display:block;
+  margin-top:6px;
 }
 
+/* ================= FOOTER ================= */
 .footer{
   text-align:center;
   font-size:13px;
   color:#666;
-  margin:40px 0 20px;
+  margin:50px 0 20px;
 }
 
-.hidden{display:none}
-hr{border:none;border-top:1px solid #eee;margin:20px 0}
+/* ================= MOBILE ================= */
+@media(max-width:600px){
+  .nav{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<!-- IMPORTANT -->
-<div class="card badge">
-<b>Important :</b><br>
-Toutes les estimations sont basées sur <b>Yango ECO</b>, le service le plus accessible et le moins cher de l’application.
+<div class="wrapper">
+
+<!-- ================= IMPORTANT NOTICE ================= -->
+<div class="card notice">
+<strong>Important :</strong><br>
+Toutes les estimations de rentabilité sont basées sur le service <strong>Yango ECO</strong>,
+le plus accessible et le moins cher de la plateforme.
 </div>
 
-<!-- LANGUE / DEVISE -->
+<!-- ================= LANGUAGE & CURRENCY ================= -->
 <div class="card">
+<h3>Préférences</h3>
+
 <label>Langue</label>
-<select id="langSelect"></select>
+<div class="desc">Choisissez la langue d’affichage de l’outil.</div>
+<select id="languageSelect">
+  <option value="fr">Français</option>
+  <option value="en">English</option>
+  <option value="es">Español</option>
+  <option value="pt">Português</option>
+  <option value="ru">Русский</option>
+  <option value="ar">العربية</option>
+  <option value="hi">हिन्दी</option>
+  <option value="zh">中文</option>
+</select>
 
 <label>Devise</label>
-<select id="currencySelect"></select>
+<div class="desc">Les calculs sont faits en FCFA et convertis automatiquement.</div>
+<select id="currencySelect">
+  <option value="FCFA">FCFA</option>
+  <option value="USD">USD</option>
+  <option value="EUR">EUR</option>
+  <option value="GHS">GHS</option>
+  <option value="NGN">NGN</option>
+  <option value="AED">AED</option>
+  <option value="INR">INR</option>
+  <option value="CNY">CNY</option>
+  <option value="RUB">RUB</option>
+</select>
 </div>
 
-<!-- LOGIN CODE -->
+<!-- ================= ACCESS PRO ================= -->
 <div class="card" id="loginCard">
-<h2>Accès professionnel requis</h2>
-<div class="desc">Entrez votre code investisseur personnel reçu après paiement Mobile Money.</div>
+<h2>Accès professionnel</h2>
+<p>Entrez votre code investisseur personnel pour accéder à l’outil.</p>
+
+<label>Code PRO</label>
+<div class="desc">Code reçu après paiement Mobile Money.</div>
 <input id="codeInput" placeholder="Ex : JOSUE-MOMO-ALAIN">
+
 <button onclick="unlock()">Débloquer l’accès</button>
 </div>
 
-<!-- DASHBOARD -->
+<!-- ================= DASHBOARD ================= -->
 <div class="card hidden" id="dashboard">
 <h2>Tableau de bord investisseur</h2>
-<p><b>Propriétaire du code :</b> <span id="ownerName"></span></p>
-<p>Simulations effectuées : <span id="usedCount"></span></p>
-<p>Simulations restantes : <span id="remainingCount"></span></p>
 
-<button class="nav-btn active" onclick="showTab('salariat')">Simulation Salariat</button>
-<button class="nav-btn" onclick="showTab('leasing')">Simulation Leasing</button>
-<button class="nav-btn" onclick="showTab('compare')">Comparaison</button>
-<button class="nav-btn" onclick="showTab('history')">Historique</button>
+<div class="stats">
+  <div class="stat">
+    Simulations utilisées
+    <b id="usedCount">0</b>
+  </div>
+  <div class="stat">
+    Simulations restantes
+    <b id="remainingCount">0</b>
+  </div>
 </div>
 
-<!-- SALARIAT -->
-<div class="card hidden" id="salariat">
-<h2>Modèle Salariat</h2>
-
-<label>Nombre de véhicules</label>
-<div class="desc">Valeur par défaut : 1 véhicule</div>
-<input id="s_nb" type="number" value="1">
-
-<label>Prix d’achat du véhicule (unité)</label>
-<div class="desc">Montant investi pour un véhicule</div>
-<input id="s_buy" value="3000000">
-
-<label>Revenu mensuel Yango par véhicule</label>
-<div class="desc">Moyenne observée sur Yango ECO</div>
-<input id="s_rev" value="800000">
-
-<hr>
-
-<label>Salaire chauffeur</label>
-<input id="s_salary" value="80000">
-
-<label>Primes / bonus</label>
-<input id="s_bonus" value="30000">
-
-<label>Carburant</label>
-<input id="s_fuel" value="280000">
-
-<label>Entretien</label>
-<input id="s_maint" value="50000">
-
-<label>Divers / imprévus</label>
-<input id="s_misc" value="30000">
-
-<button onclick="calcSalariat()">Calculer le salariat</button>
-
-<div class="result" id="salariatResult"></div>
-<button onclick="downloadPDF('salariat')">Télécharger PDF Salariat</button>
+<div class="nav">
+  <button id="btnSalariat" class="active" onclick="showSection('salariat')">
+    Salariat
+  </button>
+  <button id="btnLeasing" onclick="showSection('leasing')">
+    Leasing
+  </button>
+  <button onclick="showSection('compare')">Comparaison</button>
+  <button onclick="showSection('history')">Historique</button>
+</div>
 </div>
 
-<!-- LEASING -->
-<div class="card hidden" id="leasing">
-<h2>Modèle Leasing</h2>
+<!-- ================= PLACEHOLDERS (PARTIE 2) ================= -->
+<div class="card hidden" id="salariat"></div>
+<div class="card hidden" id="leasing"></div>
+<div class="card hidden" id="compare"></div>
+<div class="card hidden" id="history"></div>
 
-<label>Nombre de véhicules</label>
-<input id="l_nb" value="1">
-
-<label>Prix d’achat du véhicule (unité)</label>
-<input id="l_buy" value="3000000">
-
-<label>Prix de revente au chauffeur (unité)</label>
-<input id="l_sell" value="4500000">
-
-<label>Durée du contrat (mois)</label>
-<input id="l_months" value="24">
-
-<label>Jours travaillés par mois</label>
-<input id="l_days" value="26">
-
-<button onclick="calcLeasing()">Calculer le leasing</button>
-
-<div class="result" id="leasingResult"></div>
-<button onclick="downloadPDF('leasing')">Télécharger PDF Leasing</button>
-</div>
-
-<!-- COMPARAISON -->
-<div class="card hidden" id="compare">
-<h2>Comparaison Salariat vs Leasing</h2>
-<div class="result" id="compareResult"></div>
-<button onclick="downloadPDF('compare')">Télécharger PDF Comparaison</button>
-</div>
-
-<!-- HISTORIQUE -->
-<div class="card hidden" id="history">
-<h2>Historique des simulations</h2>
-<div id="historyList"></div>
-</div>
-
+<!-- ================= FOOTER ================= -->
 <div class="footer">
 © 2026 – Josué Cédric Komlan Akakpovi<br>
-WhatsApp : +229 01 53 63 63 63<br>
-Email : komlan2303@gmail.com
+WhatsApp : +229 01 53 63 63 63 · Email : komlan2303@gmail.com
 </div>
 
 </div>
 
+<!-- ================= SCRIPT BASE ================= -->
 <script>
-/<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const { jsPDF } = window.jspdf;
-
-/* ================= CONFIG ================= */
+/* ===== CONFIG CODES PRO ===== */
 const PRO_CODES = {
- "JOSUE": { owner:"Josue", max:200 }
+  "JOSUE-MOMO-DEMO": {
+    owner:"Demo",
+    type:"count",      // count | time
+    max:50,            // nombre de simulations
+    days:0             // durée si type = time
+  }
 };
 
-const LANGS = ["Français","English","Español","Português","Русский","العربية","Hindi","中文"];
+let currentCode = null;
 
-const CURRENCIES = {
- "FCFA": {rate:1, label:"FCFA"},
- "USD": {rate:600, label:"USD"},
- "EUR": {rate:655, label:"EUR"},
- "NGN": {rate:1.3, label:"NGN"},
- "GHS": {rate:50, label:"GHS"},
- "CNY": {rate:85, label:"CNY"},
- "RUB": {rate:6, label:"RUB"},
- "AED": {rate:165, label:"AED"},
- "INR": {rate:7.2, label:"INR"}
-};
-
-let currentCode=null;
-let currency="FCFA";
-
-/* ================= INIT ================= */
-window.onload=()=>{
- LANGS.forEach(l=>langSelect.innerHTML+=`<option>${l}</option>`);
- Object.keys(CURRENCIES).forEach(c=>currencySelect.innerHTML+=`<option>${c}</option>`);
-};
-
-/* ================= ACCESS ================= */
+/* ===== ACCESS ===== */
 function unlock(){
- const code=codeInput.value.trim();
- if(!PRO_CODES[code]) return alert("Code invalide");
- const store=JSON.parse(localStorage.getItem(code)||"{}");
- if((store.used||0)>=PRO_CODES[code].max) return alert("Limite atteinte");
+  const code = codeInput.value.trim();
+  if(!PRO_CODES[code]){
+    alert("Code invalide ou expiré.");
+    return;
+  }
+  currentCode = code;
+  const store = JSON.parse(localStorage.getItem(code) || "{}");
+  const used = store.used || 0;
 
- currentCode=code;
- loginCard.classList.add("hidden");
- dashboard.classList.remove("hidden");
+  usedCount.innerText = used;
+  remainingCount.innerText = PRO_CODES[code].max - used;
 
- ownerName.innerText=PRO_CODES[code].owner;
- usedCount.innerText=store.used||0;
- remainingCount.innerText=PRO_CODES[code].max-(store.used||0);
- showTab('salariat');
+  loginCard.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  showSection("salariat");
 }
 
-/* ================= NAV ================= */
-function showTab(id){
- ["salariat","leasing","compare","history"].forEach(t=>{
-  document.getElementById(t).classList.add("hidden");
- });
- document.getElementById(id).classList.remove("hidden");
- document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-}
+/* ===== NAV ===== */
+function showSection(id){
+  ["salariat","leasing","compare","history"].forEach(s=>{
+    document.getElementById(s).classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
 
-/* ================= UTILS ================= */
-function convert(v){
- return (v / CURRENCIES[currency].rate).toFixed(0)+" "+currency;
-}
-
-/* ================= SALARIAT ================= */
-function calcSalariat(){
- currency=currencySelect.value;
-
- const nb=+s_nb.value;
- const charges=+s_salary.value+ +s_bonus.value+ +s_fuel.value+ +s_maint.value+ +s_misc.value;
- const profit=+s_rev.value - charges;
- const roi=+s_buy.value / profit;
-
- salariatResult.innerHTML=`
- <h3>Résultats – Salariat</h3>
- <p><b>Charges mensuelles :</b> ${convert(charges)}</p>
- <p><b>Résultat net par véhicule :</b> ${convert(profit)}</p>
- <p><b>Résultat total (${nb} véhicules) :</b> ${convert(profit*nb)}</p>
- <p><b>ROI estimé :</b> ${roi.toFixed(1)} mois</p>
- <hr>
- <b>Analyse :</b>
- <ul>
-  <li>Rentabilité rapide</li>
-  <li>Forte génération de cash</li>
-  <li>Gestion rigoureuse indispensable</li>
- </ul>
- `;
-
- save("Salariat",{profit,roi});
-}
-
-/* ================= LEASING ================= */
-function calcLeasing(){
- currency=currencySelect.value;
-
- const margin=+l_sell.value-+l_buy.value;
- const monthly=+l_sell.value/+l_months.value;
- const daily=monthly/+l_days.value;
- const roi=+l_buy.value/monthly;
-
- leasingResult.innerHTML=`
- <h3>Résultats – Leasing</h3>
- <p><b>Marge par véhicule :</b> ${convert(margin)}</p>
- <p><b>Paiement mensuel chauffeur :</b> ${convert(monthly)}</p>
- <p><b>Paiement journalier :</b> ${convert(daily)}</p>
- <p><b>ROI estimé :</b> ${roi.toFixed(1)} mois</p>
- <hr>
- <b>Analyse :</b>
- <ul>
-  <li>Gestion simplifiée</li>
-  <li>Risque transféré au chauffeur</li>
-  <li>Revenus stables</li>
- </ul>
- `;
- save("Leasing",{margin,roi});
-}
-
-/* ================= COMPARAISON ================= */
-function compare(){
- const h=JSON.parse(localStorage.getItem(currentCode)||"{}").history||[];
- const s=h.filter(x=>x.type==="Salariat").slice(-1)[0];
- const l=h.filter(x=>x.type==="Leasing").slice(-1)[0];
-
- if(!s||!l) return alert("Effectuez les deux simulations");
-
- compareResult.innerHTML=`
- <h3>Comparaison détaillée</h3>
- <p><b>ROI Salariat :</b> ${s.data.roi.toFixed(1)} mois</p>
- <p><b>ROI Leasing :</b> ${l.data.roi.toFixed(1)} mois</p>
- <hr>
- <b>Recommandation stratégique :</b><br>
- ${
-  s.data.roi<l.data.roi
-  ?"Salariat recommandé pour un retour rapide sur investissement."
-  :"Leasing recommandé pour plus de sécurité et moins de gestion."
- }
- `;
-}
-
-/* ================= HISTORY ================= */
-function save(type,data){
- const store=JSON.parse(localStorage.getItem(currentCode)||"{}");
- store.used=(store.used||0)+1;
- store.history=store.history||[];
- store.history.push({type,date:new Date().toLocaleString(),data});
- localStorage.setItem(currentCode,JSON.stringify(store));
- usedCount.innerText=store.used;
- remainingCount.innerText=PRO_CODES[currentCode].max-store.used;
-}
-
-/* ================= PDF ================= */
-function downloadPDF(type){
- const doc=new jsPDF();
- doc.text("Yango Business Simulator – PRO",10,10);
- doc.text("Estimations basées sur Yango ECO",10,18);
- doc.text("Type : "+type,10,30);
- doc.text("Date : "+new Date().toLocaleString(),10,38);
- doc.text("Données issues de simulations réelles terrain.",10,50);
- doc.save("yango-"+type+".pdf");
+  document.getElementById("btnSalariat").classList.remove("active");
+  document.getElementById("btnLeasing").classList.remove("active");
+  if(id==="salariat") btnSalariat.classList.add("active");
+  if(id==="leasing") btnLeasing.classList.add("active");
 }
 </script>
-
 
 </body>
 </html>
