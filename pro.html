@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Yango Partner – Business Simulator PRO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+:root{
+  --yango-yellow:#FFD400;
+  --yango-black:#111;
+  --yango-red:#E53935;
+  --bg:#f5f6f8;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  padding:20px;
+}
+.container{
+  max-width:1050px;
+  margin:auto;
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+h1,h2,h3{text-align:center}
+input{
+  width:100%;
+  padding:10px;
+  margin:6px 0 14px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+button{
+  width:100%;
+  padding:14px;
+  background:var(--yango-yellow);
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+.section{margin-top:30px}
+.hidden{display:none}
+.result{
+  background:#fffbe6;
+  border-left:6px solid var(--yango-yellow);
+  padding:20px;
+  border-radius:12px;
+}
+.analysis{
+  background:#f1f1f1;
+  padding:20px;
+  border-radius:12px;
+  margin-top:20px;
+}
+.lock{
+  background:#fff3f3;
+  border-left:6px solid var(--yango-red);
+  padding:20px;
+  border-radius:12px;
+}
+.footer{
+  text-align:center;
+  margin-top:40px;
+  font-size:13px;
+  color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔐 ÉCRAN DE VERROUILLAGE -->
+<div id="lockScreen" class="container lock">
+  <h2>🔒 Accès réservé – Version PRO</h2>
+  <p>
+    Cette version est réservée aux investisseurs disposant d’un
+    <strong>code PRO personnel</strong>.
+  </p>
+
+  <input id="proCodeInput" placeholder="Entrer votre code PRO">
+  <button onclick="activatePro()">Débloquer l’accès</button>
+
+  <p id="lockMsg"></p>
+
+  <p style="margin-top:15px">
+    👉 Vous n’avez pas encore de code ?<br>
+    <a href="https://wa.me/2290153636363" target="_blank">
+      Contacter pour obtenir un accès PRO
+    </a>
+  </p>
+</div>
+
+<!-- 🔓 CONTENU PRO -->
+<div id="proApp" class="container hidden">
+
+<h1>🚗 Yango Partner – Business Simulator PRO</h1>
+<p style="text-align:center">
+Outil professionnel basé sur des données terrain réelles – Bénin
+</p>
+
+<!-- PARAMÈTRES MIXTE -->
+<div class="section">
+<h2>Modèle mixte – Paramètres globaux</h2>
+<input id="veh" type="number" value="10" placeholder="Nombre total de véhicules">
+<input id="salPct" type="number" value="60" placeholder="Salariat (%)">
+<input id="leaPct" type="number" value="40" placeholder="Leasing (%)">
+</div>
+
+<!-- SALARIAT -->
+<div class="section">
+<h2>Salariat</h2>
+<input id="s_buy" type="number" value="3000000" placeholder="Prix d’achat véhicule">
+<input id="s_rev" type="number" value="800000" placeholder="Revenu mensuel / véhicule">
+<input id="s_km" type="number" value="3500" placeholder="Kilométrage mensuel">
+<input id="s_conso" type="number" value="6" placeholder="Consommation L/100km">
+<input id="s_fuel" type="number" value="650" placeholder="Prix carburant / litre">
+<input id="s_salary" type="number" value="80000" placeholder="Salaire chauffeur">
+<input id="s_bonus" type="number" value="30000" placeholder="Prime chauffeur">
+<input id="s_maint" type="number" value="50000" placeholder="Entretien">
+<input id="s_misc" type="number" value="30000" placeholder="Divers">
+</div>
+
+<!-- LEASING -->
+<div class="section">
+<h2>Leasing</h2>
+<input id="l_buy" type="number" value="3000000" placeholder="Prix d’achat véhicule">
+<input id="l_sell" type="number" value="4500000" placeholder="Prix de revente chauffeur">
+<input id="l_duration" type="number" value="24" placeholder="Durée contrat (mois)">
+<input id="l_days" type="number" value="26" placeholder="Jours travaillés / mois">
+</div>
+
+<button onclick="useProAndCalculate()">Calculer la rentabilité</button>
+
+<div id="result" class="section result hidden"></div>
+<div id="analysis" class="analysis hidden"></div>
+
+<button onclick="downloadPDF()">📄 Télécharger le rapport PDF</button>
+
+<div class="footer">
+<strong>Contact</strong><br>
+Josué Cédric Komlan Akakpovi<br>
+📞 +229 01 53 63 63 63<br>
+📧 komlan2303@gmail.com
+</div>
+
+</div>
+
+<script>
+/* 🔐 CODES PRO (À GÉRER MANUELLEMENT) */
+const PRO_CODES = {
+  "YANGO-PRO-9F2K": 10,
+  "YANGO-PRO-A7M3": 10,
+  "YANGO-PRO-XQ81": 15,
+  "YANGO-PRO-L4T9": 20,
+  "Josue": 1000
+};
+
+/* Vérifier si déjà activé */
+if(localStorage.getItem("proUses") > 0){
+  unlock();
+}
+
+function activatePro(){
+  const code = proCodeInput.value.trim();
+  if(PRO_CODES[code]){
+    localStorage.setItem("proUses", PRO_CODES[code]);
+    lockMsg.innerHTML = `✅ Accès activé (${PRO_CODES[code]} simulations disponibles)`;
+    setTimeout(unlock, 800);
+  }else{
+    lockMsg.innerHTML = "❌ Code invalide ou expiré";
+  }
+}
+
+function unlock(){
+  document.getElementById("lockScreen").classList.add("hidden");
+  document.getElementById("proApp").classList.remove("hidden");
+}
+
+function useProAndCalculate(){
+  let uses = parseInt(localStorage.getItem("proUses") || "0");
+  if(uses <= 0){
+    alert("Crédit PRO épuisé");
+    location.reload();
+    return;
+  }
+  localStorage.setItem("proUses", uses - 1);
+  calculate();
+}
+
+function calculate(){
+  const veh=+veh.value;
+  const salV=Math.round(veh * (+salPct.value/100));
+  const leaV=veh - salV;
+
+  const fuel=(+s_km.value * +s_conso.value / 100) * +s_fuel.value;
+  const salCharges=+s_salary.value + +s_bonus.value + fuel + +s_maint.value + +s_misc.value;
+  const salNet=+s_rev.value - salCharges;
+  const salROI=salNet>0?(+s_buy.value/salNet).toFixed(1):"∞";
+
+  const leaMonthly=+l_sell.value / +l_duration.value;
+  const leaDaily=(leaMonthly / +l_days.value).toFixed(0);
+  const leaMargin=+l_sell.value - +l_buy.value;
+
+  const totalMonthly=(salNet*salV) + (leaMonthly*leaV);
+  const avgROI=((salROI*salV)+(+l_duration.value*leaV))/veh;
+
+  result.innerHTML=`
+  <h3>Résultats globaux</h3>
+  🟡 Salariat (${salV}) – ROI ${salROI} mois<br>
+  🔴 Leasing (${leaV}) – Paiement ${leaDaily} FCFA / jour<br><br>
+  💰 Cash-flow mensuel : <strong>${totalMonthly.toLocaleString()} FCFA</strong><br>
+  ⏱ ROI moyen pondéré : <strong>${avgROI.toFixed(1)} mois</strong>
+  `;
+  result.classList.remove("hidden");
+
+  analysis.innerHTML =
+    avgROI <= 14
+    ? "🧠 Analyse : rentabilité rapide et cash-flow élevé."
+    : avgROI <= 18
+    ? "🧠 Analyse : équilibre optimal entre rentabilité et sécurité."
+    : "🧠 Analyse : modèle sécurisé avec rentabilité progressive.";
+  analysis.classList.remove("hidden");
+}
+
+function downloadPDF(){
+  html2pdf().from(document.getElementById("proApp")).save("Yango_Business_Simulator_PRO.pdf");
+}
+</script>
+
+</body>
+</html>
