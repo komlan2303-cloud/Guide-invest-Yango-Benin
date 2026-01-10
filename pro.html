@@ -89,7 +89,7 @@ Estimations basées sur le service <b>Yango ECO</b>.
 <h3 data-i18n="salariat">Simulation Salariat</h3>
 
 <div class="field">
-<label data-i18n="purchase">Prix d’achat véhicule</label>
+<label data-i18n="Purchase">Prix d’achat véhicule</label>
 <small>Valeur par défaut</small>
 <input id="s_buy" type="number" value="3000000">
 </div>
@@ -100,11 +100,12 @@ Estimations basées sur le service <b>Yango ECO</b>.
 </div>
 
 <div class="field">
-<label>Salaire chauffeur</label>
+<label data-i18n="Driver salary">Salaire chauffeur</label>
 <input id="s_salary" type="number" value="80000">
 </div>
 
 <button onclick="calcSalariat()">Calculer</button>
+<h3 data-i18n="Calculate">Calculer</h3>  
 <div class="result" id="resSal"></div>
 <button onclick="pdf('Salariat')">PDF</button>
 </div>
@@ -113,22 +114,23 @@ Estimations basées sur le service <b>Yango ECO</b>.
 <h3 data-i18n="leasing">Simulation Leasing</h3>
 
 <div class="field">
-<label>Prix achat</label>
+<label data-i18n="Purchase price">Prix achat</label>
 <input id="l_buy" type="number" value="3000000">
 </div>
 
 <div class="field">
-<label>Prix revente</label>
+<label data-i18n="Resale price">Prix revente</label>
 <input id="l_sell" type="number" value="4500000">
 </div>
 
 <div class="field">
-<label>Durée (mois)</label>
+<label data-i18n="Duration (months)">Durée (mois)</label>
 <input id="l_months" type="number" value="24">
 </div>
 
 <button onclick="calcLeasing()">Calculer</button>
 <div class="result" id="resLease"></div>
+<h3 data-i18n="Calculate">Calculer</h3>
 <button onclick="pdf('Leasing')">PDF</button>
 </div>
 
@@ -159,16 +161,95 @@ currency.onchange=()=>cur=currency.value;
 
 /* ===== I18N ===== */
 const i18n={
- fr:{access:"Accès professionnel",salariat:"Simulation Salariat",leasing:"Simulation Leasing",comparison:"Comparaison",history:"Historique",purchase:"Prix d’achat véhicule",revenue:"Revenu mensuel"},
- en:{access:"Professional access",salariat:"Salary simulation",leasing:"Leasing simulation",comparison:"Comparison",history:"History",purchase:"Vehicle purchase price",revenue:"Monthly revenue"},
- es:{access:"Acceso profesional",salariat:"Simulación salarial",leasing:"Simulación leasing",comparison:"Comparación",history:"Historial",purchase:"Precio de compra",revenue:"Ingresos mensuales"},
- pt:{access:"Acesso profissional",salariat:"Simulação salarial",leasing:"Simulação leasing",comparison:"Comparação",history:"Histórico",purchase:"Preço de compra",revenue:"Receita mensal"}
-};
-
-lang.onchange=()=>{
- document.querySelectorAll("[data-i18n]").forEach(e=>{
-  e.innerText=i18n[lang.value][e.dataset.i18n];
- });
+ const i18n = {
+  fr: {
+    access: "Accès professionnel",
+    salariat: "Simulation – Modèle Salariat",
+    leasing: "Simulation – Modèle Leasing",
+    comparison: "Comparaison",
+    history: "Historique",
+    purchase: "Prix d’achat du véhicule",
+    revenue: "Revenu mensuel",
+    calculate: "Calculer",
+    important: "Estimations basées sur le service Yango ECO"
+  },
+  en: {
+    access: "Professional access",
+    salariat: "Salary model simulation",
+    leasing: "Leasing model simulation",
+    comparison: "Comparison",
+    history: "History",
+    purchase: "Vehicle purchase price",
+    revenue: "Monthly revenue",
+    calculate: "Calculate",
+    important: "Estimates based on Yango ECO service"
+  },
+  es: {
+    access: "Acceso profesional",
+    salariat: "Simulación – Modelo salarial",
+    leasing: "Simulación – Modelo leasing",
+    comparison: "Comparación",
+    history: "Historial",
+    purchase: "Precio de compra del vehículo",
+    revenue: "Ingresos mensuales",
+    calculate: "Calcular",
+    important: "Estimaciones basadas en el servicio Yango ECO"
+  },
+  pt: {
+    access: "Acesso profissional",
+    salariat: "Simulação – Modelo salarial",
+    leasing: "Simulação – Modelo leasing",
+    comparison: "Comparação",
+    history: "Histórico",
+    purchase: "Preço de compra do veículo",
+    revenue: "Receita mensal",
+    calculate: "Calcular",
+    important: "Estimativas baseadas no serviço Yango ECO"
+  },
+  ru: {
+    access: "Профессиональный доступ",
+    salariat: "Модель с зарплатой",
+    leasing: "Лизинговая модель",
+    comparison: "Сравнение",
+    history: "История",
+    purchase: "Цена покупки автомобиля",
+    revenue: "Ежемесячный доход",
+    calculate: "Рассчитать",
+    important: "Оценки основаны на сервисе Yango ECO"
+  },
+  ar: {
+    access: "دخول احترافي",
+    salariat: "نموذج الراتب",
+    leasing: "نموذج التأجير",
+    comparison: "المقارنة",
+    history: "السجل",
+    purchase: "سعر شراء السيارة",
+    revenue: "الدخل الشهري",
+    calculate: "احسب",
+    important: "التقديرات مبنية على خدمة Yango ECO"
+  },
+  hi: {
+    access: "पेशेवर प्रवेश",
+    salariat: "वेतन मॉडल",
+    leasing: "लीजिंग मॉडल",
+    comparison: "तुलना",
+    history: "इतिहास",
+    purchase: "वाहन खरीद मूल्य",
+    revenue: "मासिक आय",
+    calculate: "गणना करें",
+    important: "अनुमान Yango ECO सेवा पर आधारित हैं"
+  },
+  zh: {
+    access: "专业访问",
+    salariat: "薪资模式",
+    leasing: "租赁模式",
+    comparison: "比较",
+    history: "历史记录",
+    purchase: "车辆购买价格",
+    revenue: "月收入",
+    calculate: "计算",
+    important: "估算基于 Yango ECO 服务"
+  }
 };
 
 /* ===== PRO CODE ===== */
@@ -232,5 +313,16 @@ function pdf(type){
  doc.save("Yango-"+type+".pdf");
 }
 </script>
+<select id="lang">
+  <option value="fr">Français</option>
+  <option value="en">English</option>
+  <option value="es">Español</option>
+  <option value="pt">Português</option>
+  <option value="ru">Русский</option>
+  <option value="ar">العربية</option>
+  <option value="hi">हिन्दी</option>
+  <option value="zh">中文</option>
+</select>
+
 </body>
 </html>
