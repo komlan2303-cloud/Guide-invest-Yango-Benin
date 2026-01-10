@@ -22,16 +22,15 @@ button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px
 <body>
 <div class="container">
 
-<!-- LANG SELECT -->
 <select onchange="setLang(this.value)">
-  <option value="fr">🇫🇷 Français</option>
-  <option value="en">🇬🇧 English</option>
-  <option value="es">🇪🇸 Español</option>
-  <option value="pt">🇵🇹 Português</option>
-  <option value="ru">🇷🇺 Русский</option>
-  <option value="ar">🇸🇦 العربية</option>
-  <option value="hi">🇮🇳 हिन्दी</option>
-  <option value="zh">🇨🇳 中文</option>
+  <option value="fr">Français</option>
+  <option value="en">English</option>
+  <option value="es">Español</option>
+  <option value="pt">Português</option>
+  <option value="ru">Русский</option>
+  <option value="ar">العربية</option>
+  <option value="hi">हिन्दी</option>
+  <option value="zh">中文</option>
 </select>
 
 <h1 id="title"></h1>
@@ -42,7 +41,6 @@ button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px
   <button onclick="show('lea')" id="btnLea"></button>
 </div>
 
-<!-- SALARIAT -->
 <div id="sal" class="section hidden">
   <h2 id="salTitle"></h2>
   <input id="s_buy" type="number" value="3000000">
@@ -51,7 +49,6 @@ button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px
   <button onclick="calcSal()" id="calcBtn"></button>
 </div>
 
-<!-- LEASING -->
 <div id="lea" class="section hidden">
   <h2 id="leaTitle"></h2>
   <input id="l_buy" type="number" value="3000000">
@@ -62,17 +59,17 @@ button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px
 
 <div id="result" class="section result hidden"></div>
 
-<!-- PRO CTA -->
 <div class="section">
   <h3 id="proTitle"></h3>
   <p id="proText"></p>
+  <p id="proPrice"></p>
   <a href="https://wa.me/2290153636363" target="_blank">
     <button id="proBtn"></button>
   </a>
 </div>
 
 <div class="footer">
-Josué Cédric Komlan Akakpovi · WhatsApp : +229 01 53 63 63 63
+Josué Cédric Komlan Akakpovi – WhatsApp : +229 01 53 63 63 63
 </div>
 
 </div>
@@ -82,39 +79,125 @@ let lang="fr";
 
 const i18n={
 fr:{
-title:"🚗 Simulateur Business Partenaire Yango",
-subtitle:"Estimation réaliste basée sur des données terrain (Bénin)",
-sal:"🟡 Salariat",
-lea:"🔴 Leasing",
+title:"Simulateur Business Partenaire Yango",
+subtitle:"Estimation réaliste basée sur des données terrain observées au Bénin",
+sal:"Salariat",
+lea:"Leasing",
 salT:"Salariat – Estimation",
 leaT:"Leasing – Estimation",
 calc:"Calculer",
-salRes:(n,r)=>`Résultat net : ${n} FCFA · ROI : ${r} mois`,
-leaRes:(m)=>`Marge totale : ${m} FCFA`,
-proT:"🔓 Version PRO",
-proTxt:"Rapport PDF, modèle mixte personnalisable, analyse stratégique avancée.",
-proB:"Passer à la version PRO"
+salRes:(n,r)=>`Résultat net mensuel : ${n} FCFA – ROI : ${r} mois`,
+leaRes:(m)=>`Marge totale par véhicule : ${m} FCFA`,
+proT:"Version professionnelle",
+proTxt:"Accédez à un outil complet avec plus de paramètres, un modèle mixte personnalisable, une analyse stratégique et le téléchargement d’un rapport PDF.",
+price:"Tarif : à partir de 5 USD",
+proB:"Passer à la version professionnelle"
 },
 en:{
-title:"🚗 Yango Partner Business Simulator",
-subtitle:"Realistic estimation based on field data (Benin)",
-sal:"🟡 Salary model",
-lea:"🔴 Leasing model",
+title:"Yango Partner Business Simulator",
+subtitle:"Realistic estimation based on field data observed in Benin",
+sal:"Salary model",
+lea:"Leasing model",
 salT:"Salary – Estimation",
 leaT:"Leasing – Estimation",
 calc:"Calculate",
-salRes:(n,r)=>`Net profit: ${n} FCFA · ROI: ${r} months`,
-leaRes:(m)=>`Total margin: ${m} FCFA`,
-proT:"🔓 PRO Version",
-proTxt:"PDF report, mixed model, smart investment analysis.",
-proB:"Upgrade to PRO"
+salRes:(n,r)=>`Monthly net profit: ${n} FCFA – ROI: ${r} months`,
+leaRes:(m)=>`Total margin per vehicle: ${m} FCFA`,
+proT:"Professional version",
+proTxt:"Access a complete tool with advanced parameters, customizable mixed model, strategic analysis and downloadable PDF report.",
+price:"Price: starting from 5 USD",
+proB:"Upgrade to professional version"
 },
-es:{title:"🚗 Simulador de Negocio Yango",subtitle:"Estimación realista basada en datos reales",sal:"🟡 Salariado",lea:"🔴 Leasing",salT:"Salariado",leaT:"Leasing",calc:"Calcular",salRes:(n,r)=>`Resultado neto: ${n} FCFA · ROI: ${r} meses`,leaRes:(m)=>`Margen total: ${m} FCFA`,proT:"🔓 Versión PRO",proTxt:"Informe PDF y análisis avanzado.",proB:"Acceder a PRO"},
-pt:{title:"🚗 Simulador de Negócio Yango",subtitle:"Estimativa realista baseada em dados reais",sal:"🟡 Salário",lea:"🔴 Leasing",salT:"Salário",leaT:"Leasing",calc:"Calcular",salRes:(n,r)=>`Lucro: ${n} FCFA · ROI: ${r} meses`,leaRes:(m)=>`Margem total: ${m} FCFA`,proT:"🔓 Versão PRO",proTxt:"Relatório PDF e análise avançada.",proB:"Versão PRO"},
-ru:{title:"🚗 Бизнес-симулятор Yango",subtitle:"Реалистичная оценка на основе данных",sal:"🟡 Зарплата",lea:"🔴 Лизинг",salT:"Зарплата",leaT:"Лизинг",calc:"Рассчитать",salRes:(n,r)=>`Прибыль: ${n} FCFA · ROI: ${r} мес`,leaRes:(m)=>`Маржа: ${m} FCFA`,proT:"🔓 PRO версия",proTxt:"PDF отчёт и продвинутый анализ.",proB:"PRO доступ"},
-ar:{title:"🚗 محاكي أعمال يانغو",subtitle:"تقدير واقعي مبني على بيانات حقيقية",sal:"🟡 راتب",lea:"🔴 تأجير",salT:"نظام الراتب",leaT:"نظام التأجير",calc:"احسب",salRes:(n,r)=>`الربح: ${n} FCFA · العائد: ${r} شهر`,leaRes:(m)=>`الهامش: ${m} FCFA`,proT:"🔓 النسخة الاحترافية",proTxt:"تقرير PDF وتحليل متقدم.",proB:"الترقية للاحترافية"},
-hi:{title:"🚗 यांगो बिज़नेस सिम्युलेटर",subtitle:"वास्तविक डेटा पर आधारित अनुमान",sal:"🟡 वेतन",lea:"🔴 लीज़",salT:"वेतन मॉडल",leaT:"लीज़ मॉडल",calc:"गणना करें",salRes:(n,r)=>`लाभ: ${n} FCFA · ROI: ${r} माह`,leaRes:(m)=>`मार्जिन: ${m} FCFA`,proT:"🔓 प्रो संस्करण",proTxt:"PDF रिपोर्ट और उन्नत विश्लेषण",proB:"प्रो प्राप्त करें"},
-zh:{title:"🚗 Yango 商业模拟器",subtitle:"基于真实数据的估算",sal:"🟡 薪资模式",lea:"🔴 租赁模式",salT:"薪资模式",leaT:"租赁模式",calc:"计算",salRes:(n,r)=>`利润: ${n} FCFA · ROI: ${r} 月`,leaRes:(m)=>`总利润: ${m} FCFA`,proT:"🔓 专业版",proTxt:"PDF 报告和高级分析",proB:"升级到专业版"}
+es:{
+title:"Simulador de Negocio Yango",
+subtitle:"Estimación realista basada en datos reales",
+sal:"Salariado",
+lea:"Leasing",
+salT:"Salariado – Estimación",
+leaT:"Leasing – Estimación",
+calc:"Calcular",
+salRes:(n,r)=>`Resultado neto: ${n} FCFA – ROI: ${r} meses`,
+leaRes:(m)=>`Margen total por vehículo: ${m} FCFA`,
+proT:"Versión profesional",
+proTxt:"Herramienta completa con parámetros avanzados, modelo mixto y reporte PDF.",
+price:"Precio: desde 5 USD",
+proB:"Acceder a la versión profesional"
+},
+pt:{
+title:"Simulador de Negócio Yango",
+subtitle:"Estimativa realista baseada em dados reais",
+sal:"Salário",
+lea:"Leasing",
+salT:"Salário – Estimativa",
+leaT:"Leasing – Estimativa",
+calc:"Calcular",
+salRes:(n,r)=>`Lucro líquido: ${n} FCFA – ROI: ${r} meses`,
+leaRes:(m)=>`Margem total por veículo: ${m} FCFA`,
+proT:"Versão profissional",
+proTxt:"Ferramenta completa com parâmetros avançados, modelo misto e relatório PDF.",
+price:"Preço: a partir de 5 USD",
+proB:"Obter versão profissional"
+},
+ru:{
+title:"Бизнес-симулятор Yango",
+subtitle:"Реалистичная оценка на основе реальных данных",
+sal:"Зарплатная модель",
+lea:"Лизинг",
+salT:"Зарплата – Оценка",
+leaT:"Лизинг – Оценка",
+calc:"Рассчитать",
+salRes:(n,r)=>`Чистая прибыль: ${n} FCFA – ROI: ${r} мес`,
+leaRes:(m)=>`Общая маржа на автомобиль: ${m} FCFA`,
+proT:"Профессиональная версия",
+proTxt:"Полнофункциональный инструмент с расширенными параметрами и PDF-отчетом.",
+price:"Цена: от 5 USD",
+proB:"Перейти на профессиональную версию"
+},
+ar:{
+title:"محاكي أعمال يانغو",
+subtitle:"تقدير واقعي مبني على بيانات حقيقية",
+sal:"نظام الراتب",
+lea:"نظام التأجير",
+salT:"الراتب – التقدير",
+leaT:"التأجير – التقدير",
+calc:"احسب",
+salRes:(n,r)=>`صافي الربح: ${n} FCFA – العائد: ${r} شهر`,
+leaRes:(m)=>`إجمالي الهامش: ${m} FCFA`,
+proT:"النسخة الاحترافية",
+proTxt:"أداة متكاملة بإعدادات متقدمة وتقرير PDF.",
+price:"السعر: ابتداءً من 5 دولارات",
+proB:"الترقية إلى النسخة الاحترافية"
+},
+hi:{
+title:"यांगो बिज़नेस सिम्युलेटर",
+subtitle:"वास्तविक डेटा पर आधारित अनुमान",
+sal:"वेतन मॉडल",
+lea:"लीज़ मॉडल",
+salT:"वेतन – अनुमान",
+leaT:"लीज़ – अनुमान",
+calc:"गणना करें",
+salRes:(n,r)=>`शुद्ध लाभ: ${n} FCFA – ROI: ${r} माह`,
+leaRes:(m)=>`कुल मार्जिन: ${m} FCFA`,
+proT:"प्रोफेशनल संस्करण",
+proTxt:"उन्नत सेटिंग्स और PDF रिपोर्ट के साथ पूर्ण टूल।",
+price:"मूल्य: 5 USD से शुरू",
+proB:"प्रोफेशनल संस्करण प्राप्त करें"
+},
+zh:{
+title:"Yango 商业模拟器",
+subtitle:"基于真实数据的估算",
+sal:"薪资模式",
+lea:"租赁模式",
+salT:"薪资模式 – 估算",
+leaT:"租赁模式 – 估算",
+calc:"计算",
+salRes:(n,r)=>`净利润: ${n} FCFA – ROI: ${r} 月`,
+leaRes:(m)=>`单车总利润: ${m} FCFA`,
+proT:"专业版",
+proTxt:"包含高级参数、混合模型和 PDF 报告的完整工具。",
+price:"价格：5 美元起",
+proB:"升级到专业版"
+}
 };
 
 function setLang(l){
@@ -130,6 +213,7 @@ function setLang(l){
   calcBtn2.innerText=t.calc;
   proTitle.innerText=t.proT;
   proText.innerText=t.proTxt;
+  proPrice.innerText=t.price;
   proBtn.innerText=t.proB;
 }
 
