@@ -474,6 +474,162 @@ function showSection(id){
   if(id==="leasing") btnLeasing.classList.add("active");
 }
 </script>
+<!-- ================= PARTIE 3 : LANGUES, DEVISES, PDF, CODES TEMPO ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ================= LANGUES ================= */
+const i18n = {
+  fr:{
+    salariat:"Simulation – Modèle Salariat",
+    leasing:"Simulation – Modèle Leasing",
+    compare:"Comparaison Salariat vs Leasing",
+    history:"Historique des simulations",
+    calc:"Calculer la rentabilité",
+    analysis:"Analyse",
+    recommendation:"Recommandation",
+    important:"Estimations basées sur le service Yango ECO"
+  },
+  en:{
+    salariat:"Salary model simulation",
+    leasing:"Leasing model simulation",
+    compare:"Salary vs Leasing comparison",
+    history:"Simulation history",
+    calc:"Run calculation",
+    analysis:"Analysis",
+    recommendation:"Recommendation",
+    important:"Estimates based on Yango ECO service"
+  },
+  es:{
+    salariat:"Simulación – Modelo salarial",
+    leasing:"Simulación – Modelo leasing",
+    compare:"Comparación salarial vs leasing",
+    history:"Historial de simulaciones",
+    calc:"Calcular rentabilidad",
+    analysis:"Análisis",
+    recommendation:"Recomendación",
+    important:"Estimaciones basadas en el servicio Yango ECO"
+  },
+  pt:{
+    salariat:"Simulação – Modelo salarial",
+    leasing:"Simulação – Modelo leasing",
+    compare:"Comparação salarial vs leasing",
+    history:"Histórico de simulações",
+    calc:"Calcular rentabilidade",
+    analysis:"Análise",
+    recommendation:"Recomendação",
+    important:"Estimativas baseadas no serviço Yango ECO"
+  },
+  ru:{ salariat:"Модель с зарплатой" },
+  ar:{ salariat:"نموذج الراتب" },
+  hi:{ salariat:"वेतन मॉडल" },
+  zh:{ salariat:"工资模式" }
+};
+
+let currentLang = "fr";
+languageSelect.onchange = () => {
+  currentLang = languageSelect.value;
+  document.querySelector("#salariat h2").innerText = i18n[currentLang].salariat;
+  document.querySelector("#leasing h2").innerText = i18n[currentLang].leasing;
+  document.querySelector("#compare h2").innerText = i18n[currentLang].compare;
+  document.querySelector("#history h2").innerText = i18n[currentLang].history;
+};
+
+/* ================= DEVISES ================= */
+const currencyRates = {
+  FCFA:1,
+  USD:600,
+  EUR:655,
+  GHS:50,
+  NGN:1.3,
+  AED:165,
+  INR:7.2,
+  CNY:85,
+  RUB:6
+};
+
+function convertAmount(amount){
+  const rate = currencyRates[currencySelect.value];
+  return (amount / rate).toFixed(2) + " " + currencySelect.value;
+}
+
+/* ================= CODES À DURÉE ================= */
+/*
+Exemple de code temporel :
+"JOSUE-TIME-30": {
+  owner:"Client X",
+  type:"time",
+  days:30,
+  start:null
+}
+*/
+
+function checkTimeCode(code){
+  const cfg = PRO_CODES[code];
+  if(cfg.type !== "time") return true;
+
+  let store = JSON.parse(localStorage.getItem(code) || "{}");
+  if(!store.start){
+    store.start = new Date().toISOString();
+    localStorage.setItem(code, JSON.stringify(store));
+    return true;
+  }
+  const start = new Date(store.start);
+  const now = new Date();
+  const diff = (now - start) / (1000*60*60*24);
+  return diff <= cfg.days;
+}
+
+/* Patch unlock */
+const oldUnlock = unlock;
+unlock = function(){
+  const code = codeInput.value.trim();
+  if(!PRO_CODES[code]) return alert("Code invalide");
+  if(PRO_CODES[code].type==="time" && !checkTimeCode(code)){
+    return alert("Ce code a expiré.");
+  }
+  oldUnlock();
+};
+
+/* ================= PDF PRO ================= */
+const { jsPDF } = window.jspdf;
+
+function generatePDF(type){
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text("Yango Business Simulator – PRO",10,15);
+  doc.setFontSize(11);
+  doc.text(i18n[currentLang].important,10,25);
+  doc.text("Date : " + new Date().toLocaleString(),10,35);
+
+  doc.setFontSize(12);
+  doc.text("Type de simulation : " + type,10,50);
+
+  if(type==="Salariat"){
+    doc.text("Analyse basée sur un modèle de rémunération salariale.",10,65);
+    doc.text("Avantages : retour rapide, cash-flow élevé.",10,75);
+    doc.text("Risques : gestion du chauffeur et du carburant.",10,85);
+  }
+
+  if(type==="Leasing"){
+    doc.text("Analyse basée sur un modèle de leasing.",10,65);
+    doc.text("Avantages : gestion simplifiée, revenus stables.",10,75);
+    doc.text("Risques : retards de paiement.",10,85);
+  }
+
+  if(type==="Comparaison"){
+    doc.text("Comparaison des deux modèles.",10,65);
+    doc.text("Recommandation stratégique basée sur le ROI.",10,75);
+  }
+
+  doc.save("Yango_"+type+"_PRO.pdf");
+}
+
+/* Ajout boutons PDF dynamiques */
+document.querySelectorAll("#salariat button")[1]?.addEventListener("click",()=>generatePDF("Salariat"));
+document.querySelectorAll("#leasing button")[1]?.addEventListener("click",()=>generatePDF("Leasing"));
+document.querySelector("#compare button")?.addEventListener("click",()=>generatePDF("Comparaison"));
+
+</script>
 
 </body>
 </html>
