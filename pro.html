@@ -6,345 +6,172 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 body{font-family:Inter,sans-serif;background:#f5f6f8;padding:20px}
-.container{max-width:1100px;margin:auto;background:#fff;padding:25px;border-radius:14px}
-h1,h2,h3{text-align:center}
-select,input{width:100%;padding:10px;margin:6px 0 12px;border-radius:8px;border:1px solid #ddd}
+.container{max-width:1000px;margin:auto;background:#fff;padding:30px;border-radius:14px}
+h1,h2{text-align:center}
+.section{margin-top:45px}
+label{font-weight:600;display:block;margin-bottom:6px}
+.small{font-size:13px;color:#666;margin-bottom:10px}
+input,select{width:100%;padding:12px;margin-bottom:20px;border-radius:8px;border:1px solid #ddd}
 button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px;font-weight:700;cursor:pointer}
-.section{margin-top:30px}
+.choice button{margin-bottom:25px}
 .hidden{display:none}
-.result{background:#fffbe6;padding:20px;border-radius:12px}
+.result{background:#fffbe6;padding:20px;border-radius:12px;margin-top:30px}
 .analysis{background:#f1f1f1;padding:20px;border-radius:12px;margin-top:15px}
-.lock{background:#fff3f3;padding:25px;border-left:6px solid #C62828;border-radius:12px}
-.footer{text-align:center;margin-top:40px;font-size:13px;color:#555}
-.price{text-align:center;font-weight:600;margin-top:10px}
+.lock{background:#fff3f3;border-left:6px solid #C62828;padding:25px;border-radius:12px}
+.footer{text-align:center;margin-top:50px;font-size:13px;color:#555}
 </style>
 </head>
 
 <body>
 
-<!-- ÉCRAN DE VERROUILLAGE -->
+<!-- 🔐 VERROU PRO -->
 <div id="lock" class="container lock">
-  <h2 id="lockTitle"></h2>
-  <p id="lockText"></p>
-  <p class="price" id="lockPrice"></p>
+  <h2>Accès professionnel requis</h2>
+  <p>Entrez votre code personnel pour accéder à l’outil professionnel.</p>
+  <p>Tarif : à partir de 5 USD</p>
   <input id="codeInput" placeholder="PRO CODE">
-  <button onclick="unlockPro()" id="unlockBtn"></button>
+  <button onclick="unlock()">Débloquer</button>
   <p id="lockMsg"></p>
-  <p style="text-align:center;margin-top:15px">
-    <a href="https://wa.me/2290153636363" target="_blank">Contact for access</a>
-  </p>
 </div>
 
-<!-- APPLICATION PRO -->
+<!-- 🧠 APP PRO -->
 <div id="app" class="container hidden">
 
-<select onchange="setLang(this.value)">
-  <option value="fr">Français</option>
-  <option value="en">English</option>
-  <option value="es">Español</option>
-  <option value="pt">Português</option>
-  <option value="ru">Русский</option>
-  <option value="ar">العربية</option>
-  <option value="hi">हिन्दी</option>
-  <option value="zh">中文</option>
-</select>
+<h1>Simulateur Business Yango – Version PRO</h1>
+<p style="text-align:center">Outil d’aide à la décision basé sur des données terrain réelles</p>
 
-<h1 id="title"></h1>
-<p id="subtitle" style="text-align:center"></p>
-
-<div class="price" id="proPrice"></div>
-
-<!-- PARAMÈTRES MIXTE -->
-<div class="section">
-  <h2 id="mixTitle"></h2>
-  <input id="veh" type="number" value="10">
-  <input id="salPct" type="number" value="60">
-  <input id="leaPct" type="number" value="40">
+<!-- CHOIX MODE -->
+<div class="section choice">
+  <button onclick="show('sal')">Salariat</button>
+  <button onclick="show('lea')">Leasing</button>
 </div>
 
-<!-- SALARIAT -->
-<div class="section">
-  <h2 id="salTitle"></h2>
-  <input id="s_buy" type="number" value="3000000">
-  <input id="s_rev" type="number" value="800000">
-  <input id="s_km" type="number" value="3500">
-  <input id="s_conso" type="number" value="6">
-  <input id="s_fuel" type="number" value="650">
-  <input id="s_salary" type="number" value="80000">
-  <input id="s_bonus" type="number" value="30000">
-  <input id="s_maint" type="number" value="50000">
-  <input id="s_misc" type="number" value="30000">
+<!-- ================= SALARIAT ================= -->
+<div id="sal" class="section hidden">
+<h2>Simulation – Système de salariat</h2>
+
+<label>Nombre de véhicules</label>
+<div class="small">Taille de la flotte exploitée en salariat.</div>
+<input id="s_qty" type="number" min="1" value="1">
+
+<label>Prix d’achat du véhicule (unité)</label>
+<div class="small">Montant investi pour l’acquisition d’un véhicule.</div>
+<input id="s_buy" type="number" value="3000000">
+
+<label>Revenu mensuel par véhicule</label>
+<div class="small">Revenu moyen observé sur l’application Yango.</div>
+<input id="s_rev" type="number" value="800000">
+
+<label>Salaire chauffeur</label>
+<input id="s_salary" type="number" value="80000">
+
+<label>Primes et bonus</label>
+<input id="s_bonus" type="number" value="30000">
+
+<label>Carburant</label>
+<input id="s_fuel" type="number" value="280000">
+
+<label>Entretien</label>
+<input id="s_maint" type="number" value="50000">
+
+<label>Divers / imprévus</label>
+<input id="s_misc" type="number" value="30000">
+
+<button onclick="calcSal()">Calculer</button>
+
+<div id="salResult" class="result hidden"></div>
+<div id="salAnalysis" class="analysis hidden"></div>
 </div>
 
-<!-- LEASING -->
-<div class="section">
-  <h2 id="leaTitle"></h2>
-  <input id="l_buy" type="number" value="3000000">
-  <input id="l_sell" type="number" value="4500000">
-  <input id="l_duration" type="number" value="24">
-  <input id="l_days" type="number" value="26">
+<!-- ================= LEASING ================= -->
+<div id="lea" class="section hidden">
+<h2>Simulation – Système de leasing</h2>
+
+<label>Nombre de véhicules</label>
+<input id="l_qty" type="number" min="1" value="1">
+
+<label>Prix d’achat du véhicule (unité)</label>
+<input id="l_buy" type="number" value="3000000">
+
+<label>Prix de revente au chauffeur (unité)</label>
+<input id="l_sell" type="number" value="4500000">
+
+<label>Durée du contrat (mois)</label>
+<input id="l_duration" type="number" value="24">
+
+<label>Jours travaillés par mois</label>
+<input id="l_days" type="number" value="26">
+
+<button onclick="calcLea()">Calculer</button>
+
+<div id="leaResult" class="result hidden"></div>
+<div id="leaAnalysis" class="analysis hidden"></div>
 </div>
-
-<button onclick="usePro()" id="calcBtn"></button>
-
-<div id="result" class="section result hidden"></div>
-<div id="analysis" class="analysis hidden"></div>
-
-<button onclick="downloadPDF()" id="pdfBtn"></button>
 
 <div class="footer">
 Josué Cédric Komlan Akakpovi<br>
-Phone: +229 01 53 63 63 63<br>
-Email: komlan2303@gmail.com
+WhatsApp : +229 01 53 63 63 63<br>
+Email : komlan2303@gmail.com
 </div>
 
 </div>
 
 <script>
-/* CODES PRO */
-const PRO_CODES = {
-  "YANGO-PRO-001": 10,
-  "YANGO-PRO-002": 15,
-  "YANGO-PRO-003": 20,
-  "josue": 100
-};
+const VALID_CODES=["YANGO-PRO-001","YANGO-PRO-002","YANGO-PRO-003"];
 
-/* TRADUCTIONS */
-const i18n = {
-fr:{
-lockTitle:"Accès professionnel requis",
-lockText:"Veuillez entrer votre code professionnel personnel pour accéder à l’outil.",
-lockPrice:"Tarif : à partir de 5 USD",
-unlock:"Débloquer",
-title:"Simulateur Business Yango – Version professionnelle",
-subtitle:"Outil d’aide à la décision basé sur des données terrain réelles",
-price:"Tarif : à partir de 5 USD",
-mix:"Répartition de la flotte (Salariat / Leasing)",
-sal:"Salariat – Paramètres",
-lea:"Leasing – Paramètres",
-calc:"Calculer la rentabilité",
-pdf:"Télécharger le rapport PDF",
-res:(c,r)=>`Flux de trésorerie mensuel : ${c} FCFA – ROI moyen : ${r} mois`,
-analysis:(r)=>r<=14?
-"Rentabilité rapide avec un flux de trésorerie élevé.":
-r<=18?
-"Équilibre satisfaisant entre rentabilité et sécurité.":
-"Modèle sécurisé avec une rentabilité plus progressive."
-},
-en:{
-lockTitle:"Professional access required",
-lockText:"Please enter your personal professional code to access the tool.",
-lockPrice:"Price: starting from 5 USD",
-unlock:"Unlock",
-title:"Yango Business Simulator – Professional version",
-subtitle:"Decision-support tool based on real field data",
-price:"Price: starting from 5 USD",
-mix:"Fleet allocation (Salary / Leasing)",
-sal:"Salary model – Parameters",
-lea:"Leasing model – Parameters",
-calc:"Run profitability analysis",
-pdf:"Download PDF report",
-res:(c,r)=>`Monthly cash flow: ${c} FCFA – Average ROI: ${r} months`,
-analysis:(r)=>r<=14?
-"Fast profitability with strong cash flow.":
-r<=18?
-"Balanced profitability and risk.":
-"High security with slower profitability."
-},
-es:{
-lockTitle:"Acceso profesional requerido",
-lockText:"Ingrese su código profesional para acceder a la herramienta.",
-lockPrice:"Precio: desde 5 USD",
-unlock:"Desbloquear",
-title:"Simulador de Negocio Yango – Versión profesional",
-subtitle:"Herramienta de decisión basada en datos reales",
-price:"Precio: desde 5 USD",
-mix:"Distribución de flota (Salariado / Leasing)",
-sal:"Salariado – Parámetros",
-lea:"Leasing – Parámetros",
-calc:"Calcular rentabilidad",
-pdf:"Descargar informe PDF",
-res:(c,r)=>`Flujo mensual: ${c} FCFA – ROI medio: ${r} meses`,
-analysis:(r)=>r<=14?
-"Alta rentabilidad con flujo sólido.":
-r<=18?
-"Buen equilibrio entre rentabilidad y riesgo.":
-"Alta seguridad con retorno progresivo."
-},
-pt:{
-lockTitle:"Acesso profissional necessário",
-lockText:"Insira seu código profissional para acessar a ferramenta.",
-lockPrice:"Preço: a partir de 5 USD",
-unlock:"Desbloquear",
-title:"Simulador de Negócio Yango – Versão profissional",
-subtitle:"Ferramenta de decisão baseada em dados reais",
-price:"Preço: a partir de 5 USD",
-mix:"Distribuição da frota (Salário / Leasing)",
-sal:"Salário – Parâmetros",
-lea:"Leasing – Parâmetros",
-calc:"Calcular rentabilidade",
-pdf:"Baixar relatório PDF",
-res:(c,r)=>`Fluxo mensal: ${c} FCFA – ROI médio: ${r} meses`,
-analysis:(r)=>r<=14?
-"Rentabilidade rápida com bom fluxo.":
-r<=18?
-"Equilíbrio entre retorno e risco.":
-"Alta segurança com retorno gradual."
-},
-ru:{
-lockTitle:"Требуется профессиональный доступ",
-lockText:"Введите ваш персональный профессиональный код.",
-lockPrice:"Цена: от 5 USD",
-unlock:"Разблокировать",
-title:"Бизнес-симулятор Yango – Профессиональная версия",
-subtitle:"Инструмент принятия решений на основе реальных данных",
-price:"Цена: от 5 USD",
-mix:"Распределение автопарка (Зарплата / Лизинг)",
-sal:"Зарплата – Параметры",
-lea:"Лизинг – Параметры",
-calc:"Рассчитать рентабельность",
-pdf:"Скачать PDF отчет",
-res:(c,r)=>`Денежный поток: ${c} FCFA – Средний ROI: ${r} мес`,
-analysis:(r)=>r<=14?
-"Быстрая окупаемость и высокий доход.":
-r<=18?
-"Хороший баланс доходности и риска.":
-"Высокая безопасность и медленная окупаемость."
-},
-ar:{
-lockTitle:"مطلوب وصول احترافي",
-lockText:"يرجى إدخال الرمز الاحترافي الخاص بك.",
-lockPrice:"السعر: ابتداءً من 5 دولارات",
-unlock:"فتح",
-title:"محاكي أعمال يانغو – النسخة الاحترافية",
-subtitle:"أداة دعم القرار مبنية على بيانات حقيقية",
-price:"السعر: ابتداءً من 5 دولارات",
-mix:"توزيع الأسطول (راتب / تأجير)",
-sal:"الراتب – الإعدادات",
-lea:"التأجير – الإعدادات",
-calc:"احسب الربحية",
-pdf:"تحميل تقرير PDF",
-res:(c,r)=>`التدفق الشهري: ${c} FCFA – متوسط العائد: ${r} شهر`,
-analysis:(r)=>r<=14?
-"ربحية سريعة وتدفق نقدي قوي.":
-r<=18?
-"توازن جيد بين الربح والمخاطر.":
-"أمان مرتفع وربحية تدريجية."
-},
-hi:{
-lockTitle:"पेशेवर एक्सेस आवश्यक",
-lockText:"कृपया अपना पेशेवर कोड दर्ज करें।",
-lockPrice:"मूल्य: 5 USD से शुरू",
-unlock:"अनलॉक करें",
-title:"यांगो बिज़नेस सिम्युलेटर – प्रो संस्करण",
-subtitle:"वास्तविक डेटा पर आधारित निर्णय उपकरण",
-price:"मूल्य: 5 USD से शुरू",
-mix:"फ्लीट वितरण (वेतन / लीज़)",
-sal:"वेतन – पैरामीटर",
-lea:"लीज़ – पैरामीटर",
-calc:"लाभ गणना करें",
-pdf:"PDF रिपोर्ट डाउनलोड करें",
-res:(c,r)=>`मासिक नकदी प्रवाह: ${c} FCFA – औसत ROI: ${r} माह`,
-analysis:(r)=>r<=14?
-"तेज़ लाभ और मजबूत नकदी प्रवाह।":
-r<=18?
-"लाभ और जोखिम के बीच संतुलन।":
-"उच्च सुरक्षा और धीमा लाभ।"
-},
-zh:{
-lockTitle:"需要专业访问权限",
-lockText:"请输入您的专业访问码。",
-lockPrice:"价格：5 美元起",
-unlock:"解锁",
-title:"Yango 商业模拟器 – 专业版",
-subtitle:"基于真实数据的决策工具",
-price:"价格：5 美元起",
-mix:"车队分配（薪资 / 租赁）",
-sal:"薪资模式 – 参数",
-lea:"租赁模式 – 参数",
-calc:"计算收益",
-pdf:"下载 PDF 报告",
-res:(c,r)=>`月现金流: ${c} FCFA – 平均 ROI: ${r} 月`,
-analysis:(r)=>r<=14?
-"回报快，现金流强。":
-r<=18?
-"收益与风险平衡。":
-"安全性高，回报较慢。"
-}
-};
-
-let lang="fr";
-
-/* INITIALISATION */
-if(+localStorage.getItem("proUses")>0) unlock();
-
-function unlockPro(){
-  const code=codeInput.value.trim();
-  if(PRO_CODES[code]){
-    localStorage.setItem("proUses",PRO_CODES[code]);
-    unlock();
+function unlock(){
+  if(VALID_CODES.includes(codeInput.value.trim())){
+    lock.classList.add("hidden");
+    app.classList.remove("hidden");
   }else{
-    lockMsg.innerText="Invalid code";
+    lockMsg.innerText="Code invalide";
   }
 }
 
-function unlock(){
-  lock.classList.add("hidden");
-  app.classList.remove("hidden");
-  setLang(lang);
+function show(id){
+  sal.classList.add("hidden");
+  lea.classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden");
 }
 
-function setLang(l){
-  lang=l;
-  const t=i18n[l];
-  lockTitle.innerText=t.lockTitle;
-  lockText.innerText=t.lockText;
-  lockPrice.innerText=t.lockPrice;
-  unlockBtn.innerText=t.unlock;
-  title.innerText=t.title;
-  subtitle.innerText=t.subtitle;
-  proPrice.innerText=t.price;
-  mixTitle.innerText=t.mix;
-  salTitle.innerText=t.sal;
-  leaTitle.innerText=t.lea;
-  calcBtn.innerText=t.calc;
-  pdfBtn.innerText=t.pdf;
+function calcSal(){
+  const qty=+s_qty.value;
+  const charges=+s_salary.value+ +s_bonus.value+ +s_fuel.value+ +s_maint.value+ +s_misc.value;
+  const net=+s_rev.value-charges;
+  const roi=(+s_buy.value/net).toFixed(1);
+
+  salResult.innerHTML=`
+  Résultat net par véhicule : ${net.toLocaleString()} FCFA<br>
+  Résultat net flotte : ${(net*qty).toLocaleString()} FCFA<br>
+  ROI estimé : ${roi} mois
+  `;
+  salAnalysis.innerText=roi<=14?
+  "Rentabilité rapide mais nécessite une gestion rigoureuse du chauffeur.":
+  "Rentabilité correcte avec un équilibre gestion / profit.";
+
+  salResult.classList.remove("hidden");
+  salAnalysis.classList.remove("hidden");
 }
 
-/* CALCULS */
-function usePro(){
-  let u=+localStorage.getItem("proUses");
-  if(u<=0){alert("Access expired");return;}
-  localStorage.setItem("proUses",u-1);
-  calculate();
-}
+function calcLea(){
+  const qty=+l_qty.value;
+  const margin=+l_sell.value-+l_buy.value;
+  const daily=(l_sell.value/l_duration.value)/l_days.value;
+  const roi=l_buy.value/(l_sell.value/l_duration.value);
 
-function calculate(){
-  const total=+veh.value;
-  const salV=Math.round(total*(+salPct.value/100));
-  const leaV=total-salV;
+  leaResult.innerHTML=`
+  Marge par véhicule : ${margin.toLocaleString()} FCFA<br>
+  Marge totale flotte : ${(margin*qty).toLocaleString()} FCFA<br>
+  Paiement journalier chauffeur : ${daily.toFixed(0)} FCFA<br>
+  ROI estimé : ${roi.toFixed(1)} mois
+  `;
+  leaAnalysis.innerText="Modèle sécurisé avec faible charge opérationnelle.";
 
-  const fuel=(+s_km.value*+s_conso.value/100)*+s_fuel.value;
-  const salNet=+s_rev.value-(+s_salary.value+ +s_bonus.value+fuel+ +s_maint.value+ +s_misc.value);
-  const salROI=(+s_buy.value/salNet).toFixed(1);
-
-  const leaMonthly=+l_sell.value/+l_duration.value;
-  const cash=(salNet*salV)+(leaMonthly*leaV);
-  const avgROI=((salROI*salV)+(+l_duration.value*leaV))/total;
-
-  result.innerText=i18n[lang].res(cash.toLocaleString(),avgROI.toFixed(1));
-  analysis.innerText=i18n[lang].analysis(avgROI);
-  result.classList.remove("hidden");
-  analysis.classList.remove("hidden");
-}
-
-/* PDF */
-function downloadPDF(){
-  html2pdf().from(app).save("Yango_Business_Simulator_PRO.pdf");
+  leaResult.classList.remove("hidden");
+  leaAnalysis.classList.remove("hidden");
 }
 </script>
 
