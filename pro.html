@@ -1,557 +1,160 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Yango Business Simulator PRO</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- PWA -->
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#FFD400">
-
-<!-- Font -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-<!-- PDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-<style>
-/* ================= BASE ================= */
-body{
-  font-family:Inter,sans-serif;
-  background:#f4f6f8;
-  margin:0;
-  padding:14px;
-}
-.container{
-  max-width:1100px;
-  margin:auto;
-  background:#fff;
-  padding:24px;
-  border-radius:18px;
-}
-h1,h2,h3{text-align:center}
-.section{margin-top:42px}
-.hidden{display:none}
-
-/* ================= FORMS ================= */
-.field{margin-bottom:26px}
-label{font-weight:600}
-.help{font-size:13px;color:#666;margin-top:6px}
-input,select{
-  width:100%;
-  padding:14px;
-  margin-top:8px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  font-size:15px;
-}
-
-/* ================= BUTTONS ================= */
-button{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:14px;
-  background:#FFD400;
-  font-weight:700;
-  font-size:16px;
-  cursor:pointer;
-}
-button.secondary{
-  background:#eee;
-}
-
-/* ================= BLOCKS ================= */
-.notice{
-  background:#eef5ff;
-  border-left:6px solid #2962ff;
-  padding:20px;
-  border-radius:14px;
-}
-.card{
-  background:#f9f9f9;
-  padding:20px;
-  border-radius:14px;
-  margin-top:16px;
-}
-.result{
-  background:#fffbe6;
-  padding:22px;
-  border-radius:14px;
-  margin-top:26px;
-  line-height:1.7;
-}
-
-/* ================= FOOTER ================= */
-.footer{
-  text-align:center;
-  margin-top:60px;
-  font-size:13px;
-  color:#555;
-}
-
-/* ================= MOBILE ================= */
-@media(max-width:600px){
-  h1{font-size:22px}
-}
-</style>
-</head>
-
-<body>
-
-<!-- ================= ACCÈS PRO ================= -->
-<div id="lock" class="container">
-  <h2>Accès professionnel requis</h2>
-  <p>Entrez votre code investisseur personnel.</p>
-
-  <div class="field">
-    <label>Code d’accès PRO</label>
-    <input id="codeInput" placeholder="Ex: JOSUE-MOMO-ALAIN">
-    <div class="help">
-      Code reçu après paiement Mobile Money (WhatsApp).
-    </div>
-  </div>
-
-  <button onclick="unlock()">Débloquer l’accès</button>
-  <p id="lockMsg"></p>
-</div>
-
-<!-- ================= APPLICATION ================= -->
-<div id="app" class="container hidden">
-
-<h1>Yango Business Simulator – Version PRO</h1>
-
-<div class="notice">
-<strong>Important :</strong><br>
-Toutes les estimations sont basées sur <strong>Yango ECO</strong>,
-le service le plus accessible et le moins cher de l’application.
-</div>
-
-<!-- ================= LANGUE & DEVISE ================= -->
-<div class="section">
-  <div class="field">
-    <label>Langue</label>
-    <select id="language" onchange="setLanguage()">
-      <option value="fr">Français</option>
-      <option value="en">English</option>
-      <option value="es">Español</option>
-      <option value="pt">Português</option>
-      <option value="ru">Русский</option>
-      <option value="ar">العربية</option>
-      <option value="hi">हिन्दी</option>
-      <option value="zh">中文</option>
-    </select>
-  </div>
-
-  <div class="field">
-    <label>Devise</label>
-    <select id="currency" onchange="updateCurrency()">
-      <option value="FCFA">FCFA (Afrique)</option>
-      <option value="USD">USD (Dollar)</option>
-      <option value="EUR">Euro</option>
-      <option value="GHS">Cedi Ghana</option>
-      <option value="NGN">Naira Nigeria</option>
-      <option value="AED">Dirham EAU</option>
-      <option value="INR">Roupie Inde</option>
-      <option value="RUB">Rouble Russie</option>
-      <option value="CNY">Yuan Chine</option>
-    </select>
-  </div>
-</div>
-
-<!-- ================= DASHBOARD ================= -->
-<div class="section">
-<h2>Tableau de bord investisseur</h2>
-<div id="dashboard" class="card"></div>
-</div>
-
-<!-- ================= NAVIGATION ================= -->
-<div class="section">
-  <button onclick="showSection('salariat')">Simulation Salariat</button>
-  <button onclick="showSection('leasing')" class="secondary">Simulation Leasing</button>
-  <button onclick="showSection('compare')" class="secondary">Comparaison</button>
-  <button onclick="showSection('history')" class="secondary">Historique</button>
-</div>
-
-<!-- ================= SALARIAT ================= -->
-<div id="salariat" class="section hidden">
-<h2>Modèle Salariat</h2>
-
-<div class="field">
-<label>Nombre de véhicules</label>
-<div class="help">Valeur par défaut basée sur 1 véhicule.</div>
-<input type="number" id="s_qty" value="1" min="1">
-</div>
-
-<div class="field">
-<label>Prix d’achat du véhicule (unité)</label>
-<div class="help">Valeur par défaut réaliste pour un véhicule Yango ECO.</div>
-<input type="number" id="s_buy" value="3000000">
-</div>
-
-<div class="field">
-<label>Revenu mensuel par véhicule</label>
-<div class="help">Revenu moyen observé sur Yango ECO.</div>
-<input type="number" id="s_rev" value="800000">
-</div>
-
-<div class="field">
-<label>Salaire chauffeur</label>
-<input type="number" id="s_salary" value="80000">
-</div>
-
-<div class="field">
-<label>Primes / Bonus</label>
-<input type="number" id="s_bonus" value="30000">
-</div>
-
-<div class="field">
-<label>Carburant</label>
-<input type="number" id="s_fuel" value="280000">
-</div>
-
-<div class="field">
-<label>Entretien</label>
-<input type="number" id="s_maint" value="50000">
-</div>
-
-<div class="field">
-<label>Divers / imprévus</label>
-<input type="number" id="s_misc" value="30000">
-</div>
-
-<button onclick="calculateSalariat()">Calculer le salariat</button>
-
-<div id="salResult" class="result hidden"></div>
-</div>
-
-<!-- ================= LEASING, COMPARAISON, HISTORIQUE ET LOGIQUE JS
-     ==> DANS LES MESSAGES 2 et 3
-================= -->
-
-<div class="footer">
-Josué Cédric Komlan Akakpovi<br>
-WhatsApp : +229 01 53 63 63 63<br>
-Email : komlan2303@gmail.com
-</div>
-
-</div>
-
-<!-- ================= SCRIPT PART 1 ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-/* ===== CODES PRO PERSONNALISABLES ===== */
+const { jsPDF } = window.jspdf;
+
+/* ================= CONFIG ================= */
 const PRO_CODES = {
-  "JOSUE": { uses: 200, owner: "Josue" },
-  "GHISLAIN": { uses: 10, owner: "Ghislain SOTON" },
-  "JOSUE-MOMO-SARAH": { uses: 40, owner: "Sarah" }
+ "JOSUE-MOMO-JOSUE": { owner:"Josue", max:200 }
 };
 
-let currentCode = null;
-let simulations = [];
+const LANGS = ["Français","English","Español","Português","Русский","العربية","Hindi","中文"];
 
-/* ===== ACCÈS ===== */
+const CURRENCIES = {
+ "FCFA": {rate:1, label:"FCFA"},
+ "USD": {rate:600, label:"USD"},
+ "EUR": {rate:655, label:"EUR"},
+ "NGN": {rate:1.3, label:"NGN"},
+ "GHS": {rate:50, label:"GHS"},
+ "CNY": {rate:85, label:"CNY"},
+ "RUB": {rate:6, label:"RUB"},
+ "AED": {rate:165, label:"AED"},
+ "INR": {rate:7.2, label:"INR"}
+};
+
+let currentCode=null;
+let currency="FCFA";
+
+/* ================= INIT ================= */
+window.onload=()=>{
+ LANGS.forEach(l=>langSelect.innerHTML+=`<option>${l}</option>`);
+ Object.keys(CURRENCIES).forEach(c=>currencySelect.innerHTML+=`<option>${c}</option>`);
+};
+
+/* ================= ACCESS ================= */
 function unlock(){
-  const code = codeInput.value.trim();
-  if(PRO_CODES[code]){
-    currentCode = code;
-    const saved = localStorage.getItem("investor_"+code);
-    simulations = saved ? JSON.parse(saved).simulations : [];
-    localStorage.setItem("currentCode", code);
-    lock.classList.add("hidden");
-    app.classList.remove("hidden");
-    updateDashboard();
-  }else{
-    lockMsg.innerText = "Code invalide ou expiré";
-  }
+ const code=codeInput.value.trim();
+ if(!PRO_CODES[code]) return alert("Code invalide");
+ const store=JSON.parse(localStorage.getItem(code)||"{}");
+ if((store.used||0)>=PRO_CODES[code].max) return alert("Limite atteinte");
+
+ currentCode=code;
+ loginCard.classList.add("hidden");
+ dashboard.classList.remove("hidden");
+
+ ownerName.innerText=PRO_CODES[code].owner;
+ usedCount.innerText=store.used||0;
+ remainingCount.innerText=PRO_CODES[code].max-(store.used||0);
+ showTab('salariat');
 }
 
-/* ===== UI ===== */
-function showSection(id){
-  ["salariat","leasing","compare","history"].forEach(s=>{
-    const el=document.getElementById(s);
-    if(el) el.classList.add("hidden");
-  });
-  const target=document.getElementById(id);
-  if(target) target.classList.remove("hidden");
+/* ================= NAV ================= */
+function showTab(id){
+ ["salariat","leasing","compare","history"].forEach(t=>{
+  document.getElementById(t).classList.add("hidden");
+ });
+ document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
 }
 
-/* ===== DASHBOARD ===== */
-function updateDashboard(){
-  const used = simulations.length;
-  const remaining = PRO_CODES[currentCode].uses - used;
-  dashboard.innerHTML = `
-    Propriétaire du code : <strong>${PRO_CODES[currentCode].owner}</strong><br>
-    Simulations effectuées : ${used}<br>
-    Simulations restantes : ${remaining}
-  `;
+/* ================= UTILS ================= */
+function convert(v){
+ return (v / CURRENCIES[currency].rate).toFixed(0)+" "+currency;
 }
 
-/* ===== SALARIAT ===== */
-function calculateSalariat(){
-  if(simulations.length >= PRO_CODES[currentCode].uses){
-    alert("Limite de simulations atteinte pour ce code.");
-    return;
-  }
-  const charges = +s_salary.value + +s_bonus.value + +s_fuel.value + +s_maint.value + +s_misc.value;
-  const net = +s_rev.value - charges;
-  const roi = (+s_buy.value / net).toFixed(1);
+/* ================= SALARIAT ================= */
+function calcSalariat(){
+ currency=currencySelect.value;
 
-  const sim = {
-    type:"Salariat",
-    date:new Date().toLocaleString(),
-    roi:roi
-  };
-  simulations.push(sim);
-  localStorage.setItem("investor_"+currentCode, JSON.stringify({simulations}));
+ const nb=+s_nb.value;
+ const charges=+s_salary.value+ +s_bonus.value+ +s_fuel.value+ +s_maint.value+ +s_misc.value;
+ const profit=+s_rev.value - charges;
+ const roi=+s_buy.value / profit;
 
-  salResult.innerHTML = `
-    Résultat net par véhicule : ${net.toLocaleString()} ${currency.value}<br>
-    ROI estimé : ${roi} mois
-  `;
-  salResult.classList.remove("hidden");
-  updateDashboard();
-}
-</script>
-<!-- ================= LEASING ================= -->
-<div id="leasing" class="section hidden">
-<h2>Modèle Leasing</h2>
+ salariatResult.innerHTML=`
+ <h3>Résultats – Salariat</h3>
+ <p><b>Charges mensuelles :</b> ${convert(charges)}</p>
+ <p><b>Résultat net par véhicule :</b> ${convert(profit)}</p>
+ <p><b>Résultat total (${nb} véhicules) :</b> ${convert(profit*nb)}</p>
+ <p><b>ROI estimé :</b> ${roi.toFixed(1)} mois</p>
+ <hr>
+ <b>Analyse :</b>
+ <ul>
+  <li>Rentabilité rapide</li>
+  <li>Forte génération de cash</li>
+  <li>Gestion rigoureuse indispensable</li>
+ </ul>
+ `;
 
-<div class="field">
-<label>Nombre de véhicules</label>
-<div class="help">Valeur par défaut : 1 véhicule.</div>
-<input type="number" id="l_qty" value="1" min="1">
-</div>
-
-<div class="field">
-<label>Prix d’achat du véhicule (unité)</label>
-<div class="help">Montant réel payé pour un véhicule.</div>
-<input type="number" id="l_buy" value="3000000">
-</div>
-
-<div class="field">
-<label>Prix de revente au chauffeur (unité)</label>
-<div class="help">Montant total que le chauffeur devra payer.</div>
-<input type="number" id="l_sell" value="4500000">
-</div>
-
-<div class="field">
-<label>Durée du contrat (en mois)</label>
-<div class="help">Exemple : 12 ou 24 mois.</div>
-<input type="number" id="l_duration" value="24">
-</div>
-
-<div class="field">
-<label>Jours travaillés par mois</label>
-<div class="help">Nombre moyen de jours actifs.</div>
-<input type="number" id="l_days" value="26">
-</div>
-
-<button onclick="calculateLeasing()">Calculer le leasing</button>
-
-<div id="leaseResult" class="result hidden"></div>
-</div>
-
-<!-- ================= COMPARAISON ================= -->
-<div id="compare" class="section hidden">
-<h2>Comparaison Salariat vs Leasing</h2>
-<div id="compareResult" class="result"></div>
-</div>
-
-<!-- ================= HISTORIQUE ================= -->
-<div id="history" class="section hidden">
-<h2>Historique des simulations</h2>
-<div id="historyList"></div>
-</div>
-
-<!-- ================= PDF TEMPLATE (CACHÉ) ================= -->
-<div id="pdfContent" class="hidden">
-<h1>Rapport d’analyse – Yango ECO</h1>
-<p>Code investisseur : <span id="pdfCode"></span></p>
-<p>Date : <span id="pdfDate"></span></p>
-<hr>
-
-<h2>Résumé exécutif</h2>
-<p id="pdfSummary"></p>
-
-<h2>Détails Salariat</h2>
-<p id="pdfSalariat"></p>
-
-<h2>Détails Leasing</h2>
-<p id="pdfLeasing"></p>
-
-<h2>Comparaison & Recommandation</h2>
-<p id="pdfCompare"></p>
-
-<p>
-Toutes les estimations sont basées sur le service Yango ECO,
-le plus accessible de la plateforme.
-</p>
-</div>
-
-<script>
-/* ===== LEASING ===== */
-function calculateLeasing(){
-  if(simulations.length >= PRO_CODES[currentCode].uses){
-    alert("Limite de simulations atteinte.");
-    return;
-  }
-
-  const qty = +l_qty.value;
-  const margin = +l_sell.value - +l_buy.value;
-  const monthly = +l_sell.value / +l_duration.value;
-  const daily = monthly / +l_days.value;
-  const roi = (+l_buy.value / monthly).toFixed(1);
-
-  const sim = {
-    type:"Leasing",
-    date:new Date().toLocaleString(),
-    roi:roi,
-    monthly:monthly
-  };
-  simulations.push(sim);
-  localStorage.setItem("investor_"+currentCode, JSON.stringify({simulations}));
-
-  leaseResult.innerHTML = `
-    Marge par véhicule : ${margin.toLocaleString()} ${currency.value}<br>
-    Paiement mensuel chauffeur : ${monthly.toFixed(0)} ${currency.value}<br>
-    Paiement journalier : ${daily.toFixed(0)} ${currency.value}<br>
-    ROI estimé : ${roi} mois
-  `;
-  leaseResult.classList.remove("hidden");
-  updateDashboard();
+ save("Salariat",{profit,roi});
 }
 
-/* ===== COMPARAISON ===== */
-function showComparison(){
-  const sal = simulations.filter(s=>s.type==="Salariat").slice(-1)[0];
-  const lea = simulations.filter(s=>s.type==="Leasing").slice(-1)[0];
-  if(!sal || !lea){
-    compareResult.innerText = "Veuillez effectuer une simulation Salariat et Leasing.";
-    return;
-  }
+/* ================= LEASING ================= */
+function calcLeasing(){
+ currency=currencySelect.value;
 
-  let reco="";
-  if(Math.abs(sal.roi - lea.roi) <= 3){
-    reco="Les deux modèles sont proches. Un modèle mixte est recommandé.";
-  }else if(sal.roi < lea.roi){
-    reco="Le salariat permet une récupération plus rapide du capital.";
-  }else{
-    reco="Le leasing est plus sécurisé avec une gestion simplifiée.";
-  }
+ const margin=+l_sell.value-+l_buy.value;
+ const monthly=+l_sell.value/+l_months.value;
+ const daily=monthly/+l_days.value;
+ const roi=+l_buy.value/monthly;
 
-  compareResult.innerHTML = `
-    ROI Salariat : ${sal.roi} mois<br>
-    ROI Leasing : ${lea.roi} mois<br><br>
-    <strong>Recommandation :</strong> ${reco}
-  `;
+ leasingResult.innerHTML=`
+ <h3>Résultats – Leasing</h3>
+ <p><b>Marge par véhicule :</b> ${convert(margin)}</p>
+ <p><b>Paiement mensuel chauffeur :</b> ${convert(monthly)}</p>
+ <p><b>Paiement journalier :</b> ${convert(daily)}</p>
+ <p><b>ROI estimé :</b> ${roi.toFixed(1)} mois</p>
+ <hr>
+ <b>Analyse :</b>
+ <ul>
+  <li>Gestion simplifiée</li>
+  <li>Risque transféré au chauffeur</li>
+  <li>Revenus stables</li>
+ </ul>
+ `;
+ save("Leasing",{margin,roi});
 }
 
-/* ===== HISTORIQUE ===== */
-function loadHistory(){
-  historyList.innerHTML = simulations.map((s,i)=>`
-    <div class="card">
-      <strong>${s.type}</strong><br>
-      Date : ${s.date}<br>
-      ROI : ${s.roi} mois<br>
-      <button onclick="deleteSim(${i})">Supprimer</button>
-    </div>
-  `).join("");
+/* ================= COMPARAISON ================= */
+function compare(){
+ const h=JSON.parse(localStorage.getItem(currentCode)||"{}").history||[];
+ const s=h.filter(x=>x.type==="Salariat").slice(-1)[0];
+ const l=h.filter(x=>x.type==="Leasing").slice(-1)[0];
+
+ if(!s||!l) return alert("Effectuez les deux simulations");
+
+ compareResult.innerHTML=`
+ <h3>Comparaison détaillée</h3>
+ <p><b>ROI Salariat :</b> ${s.data.roi.toFixed(1)} mois</p>
+ <p><b>ROI Leasing :</b> ${l.data.roi.toFixed(1)} mois</p>
+ <hr>
+ <b>Recommandation stratégique :</b><br>
+ ${
+  s.data.roi<l.data.roi
+  ?"Salariat recommandé pour un retour rapide sur investissement."
+  :"Leasing recommandé pour plus de sécurité et moins de gestion."
+ }
+ `;
 }
 
-function deleteSim(index){
-  simulations.splice(index,1);
-  localStorage.setItem("investor_"+currentCode, JSON.stringify({simulations}));
-  updateDashboard();
-  loadHistory();
+/* ================= HISTORY ================= */
+function save(type,data){
+ const store=JSON.parse(localStorage.getItem(currentCode)||"{}");
+ store.used=(store.used||0)+1;
+ store.history=store.history||[];
+ store.history.push({type,date:new Date().toLocaleString(),data});
+ localStorage.setItem(currentCode,JSON.stringify(store));
+ usedCount.innerText=store.used;
+ remainingCount.innerText=PRO_CODES[currentCode].max-store.used;
 }
 
-/* ===== PDF ===== */
-function downloadPDF(){
-  pdfCode.innerText = currentCode;
-  pdfDate.innerText = new Date().toLocaleString();
-  pdfSummary.innerText = `Nombre total de simulations : ${simulations.length}`;
-  pdfSalariat.innerText = "Voir résultats Salariat ci-dessus.";
-  pdfLeasing.innerText = "Voir résultats Leasing ci-dessus.";
-  pdfCompare.innerText = compareResult ? compareResult.innerText : "";
-  html2pdf().from(pdfContent).save("Yango_Report_PRO.pdf");
-}
-
-/* ===== NAVIGATION PATCH ===== */
-document.querySelector("button[onclick=\"showSection('compare')\"]")
-  ?.addEventListener("click", showComparison);
-
-document.querySelector("button[onclick=\"showSection('history')\"]")
-  ?.addEventListener("click", loadHistory);
-</script>
-<script>
-/* ================= LANGUES ================= */
-const I18N = {
-  fr:{
-    dashboard:"Tableau de bord investisseur",
-    salariat:"Modèle Salariat",
-    leasing:"Modèle Leasing",
-    compare:"Comparaison",
-    history:"Historique",
-    based:"Estimations basées sur Yango ECO (service le moins cher)"
-  },
-  en:{
-    dashboard:"Investor dashboard",
-    salariat:"Salary model",
-    leasing:"Leasing model",
-    compare:"Comparison",
-    history:"History",
-    based:"Estimates based on Yango ECO (lowest cost service)"
-  },
-  es:{
-    dashboard:"Panel del inversor",
-    salariat:"Modelo salarial",
-    leasing:"Modelo leasing",
-    compare:"Comparación",
-    history:"Historial",
-    based:"Estimaciones basadas en Yango ECO"
-  },
-  pt:{
-    dashboard:"Painel do investidor",
-    salariat:"Modelo salarial",
-    leasing:"Modelo leasing",
-    compare:"Comparação",
-    history:"Histórico",
-    based:"Estimativas baseadas no Yango ECO"
-  },
-  ru:{dashboard:"Панель инвестора"},
-  ar:{dashboard:"لوحة المستثمر"},
-  hi:{dashboard:"निवेशक डैशबोर्ड"},
-  zh:{dashboard:"投资者仪表板"}
-};
-
-function setLanguage(){
-  const l = language.value;
-  document.querySelector("h2").innerText = I18N[l].dashboard;
-}
-
-/* ================= DEVISES ================= */
-const RATES = {
-  FCFA:1,
-  USD:0.00165,
-  EUR:0.0015,
-  GHS:0.02,
-  NGN:1.3,
-  AED:0.006,
-  INR:0.14,
-  RUB:0.15,
-  CNY:0.012
-};
-
-function convert(val){
-  const base = val; // FCFA base
-  return (base * RATES[currency.value]).toFixed(2);
-}
-
-function updateCurrency(){
-  alert("La conversion sera appliquée aux prochains calculs.");
+/* ================= PDF ================= */
+function downloadPDF(type){
+ const doc=new jsPDF();
+ doc.text("Yango Business Simulator – PRO",10,10);
+ doc.text("Estimations basées sur Yango ECO",10,18);
+ doc.text("Type : "+type,10,30);
+ doc.text("Date : "+new Date().toLocaleString(),10,38);
+ doc.text("Données issues de simulations réelles terrain.",10,50);
+ doc.save("yango-"+type+".pdf");
 }
 </script>
-
-</body>
-</html>
