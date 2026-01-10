@@ -4,212 +4,155 @@
 <meta charset="UTF-8">
 <title>Yango Partner – Business Simulator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --yango-yellow:#FFD400;
-  --yango-black:#111;
-  --yango-red:#E53935;
-  --bg:#f5f6f8;
-}
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  padding:20px;
-}
-.container{
-  max-width:1000px;
-  margin:auto;
-  background:#fff;
-  padding:25px;
-  border-radius:14px;
-  box-shadow:0 8px 30px rgba(0,0,0,.08);
-}
-h1,h2,h3{text-align:center}
-p{line-height:1.6}
-input{
-  width:100%;
-  padding:10px;
-  margin:6px 0 14px;
-  border-radius:8px;
-  border:1px solid #ddd;
-}
-button{
-  width:100%;
-  padding:14px;
-  background:var(--yango-yellow);
-  border:none;
-  border-radius:10px;
-  font-weight:700;
-  cursor:pointer;
-}
+body{font-family:Inter,sans-serif;background:#f5f6f8;padding:20px}
+.container{max-width:1000px;margin:auto;background:#fff;padding:25px;border-radius:14px}
+h1,h2{text-align:center}
+select,input{width:100%;padding:10px;margin:6px 0 12px;border-radius:8px;border:1px solid #ddd}
+button{background:#FFD400;border:none;padding:14px;width:100%;border-radius:10px;font-weight:700;cursor:pointer}
 .section{margin-top:30px}
 .hidden{display:none}
-.result{
-  background:#fffbe6;
-  border-left:6px solid var(--yango-yellow);
-  padding:20px;
-  border-radius:12px;
-}
-.pro-box{
-  background:#f1f1f1;
-  padding:20px;
-  border-radius:12px;
-  margin-top:40px;
-}
-.footer{
-  text-align:center;
-  margin-top:40px;
-  font-size:13px;
-  color:#555;
-}
-.warning{color:var(--yango-red);font-weight:600}
+.result{background:#fffbe6;padding:20px;border-radius:12px}
+.footer{text-align:center;margin-top:40px;font-size:13px;color:#555}
 </style>
 </head>
 
 <body>
 <div class="container">
 
-<h1> Yango Partner – Business Simulator</h1>
-<p style="text-align:center">
-Outil d’estimation basé sur des données réelles observées sur l’activité Yango au Bénin.
-</p>
+<!-- LANG SELECT -->
+<select onchange="setLang(this.value)">
+  <option value="fr">🇫🇷 Français</option>
+  <option value="en">🇬🇧 English</option>
+  <option value="es">🇪🇸 Español</option>
+  <option value="pt">🇵🇹 Português</option>
+  <option value="ru">🇷🇺 Русский</option>
+  <option value="ar">🇸🇦 العربية</option>
+  <option value="hi">🇮🇳 हिन्दी</option>
+  <option value="zh">🇨🇳 中文</option>
+</select>
 
-<!-- EXPLICATION -->
-<div class="section">
-  <p>
-    Cet outil vous permet d’estimer la rentabilité d’une activité partenaire Yango
-    selon deux modèles d’exploitation : <strong>Salariat</strong> ou <strong>Leasing</strong>.
-    <br><br>
-    Les calculs sont basés sur des <strong>données terrain réelles</strong>
-    (revenus, kilométrage, consommation, charges),
-    afin de fournir des <strong>estimations crédibles et réalistes</strong>.
-  </p>
-</div>
+<h1 id="title"></h1>
+<p id="subtitle" style="text-align:center"></p>
 
-<!-- CHOIX MODE -->
 <div class="section">
-  <h2>Choisissez votre modèle</h2>
-  <button onclick="setMode('salariat')"> Salariat</button>
-  <button onclick="setMode('leasing')"> Leasing</button>
+  <button onclick="show('sal')" id="btnSal"></button>
+  <button onclick="show('lea')" id="btnLea"></button>
 </div>
 
 <!-- SALARIAT -->
-<div id="salariat" class="section hidden">
-<h2>Salariat – Estimation</h2>
-
-<input id="s_buy" type="number" value="3000000" placeholder="Prix d’achat du véhicule (unité)">
-<input id="s_rev" type="number" value="800000" placeholder="Revenu mensuel Yango / véhicule">
-
-<input id="s_km" type="number" value="3500" placeholder="Kilométrage mensuel (km)">
-<input id="s_conso" type="number" value="6" placeholder="Consommation (L / 100 km)">
-<input id="s_fuel" type="number" value="650" placeholder="Prix carburant / litre">
-
-<input id="s_salary" type="number" value="80000" placeholder="Salaire chauffeur">
-<input id="s_bonus" type="number" value="30000" placeholder="Prime chauffeur (0 si aucune)">
-<input id="s_maint" type="number" value="50000" placeholder="Entretien">
-<input id="s_misc" type="number" value="30000" placeholder="Divers / imprévus">
-
-<button onclick="calcSalariat()">Calculer</button>
+<div id="sal" class="section hidden">
+  <h2 id="salTitle"></h2>
+  <input id="s_buy" type="number" value="3000000">
+  <input id="s_rev" type="number" value="800000">
+  <input id="s_cost" type="number" value="470000">
+  <button onclick="calcSal()" id="calcBtn"></button>
 </div>
 
 <!-- LEASING -->
-<div id="leasing" class="section hidden">
-<h2>Leasing – Estimation</h2>
-
-<input id="l_buy" type="number" value="3000000" placeholder="Prix d’achat du véhicule (unité)">
-<input id="l_sell" type="number" value="4500000" placeholder="Prix de revente au chauffeur">
-<input id="l_duration" type="number" value="24" placeholder="Durée du contrat (mois)">
-<input id="l_days" type="number" value="26" placeholder="Jours travaillés / mois">
-
-<button onclick="calcLeasing()">Calculer</button>
+<div id="lea" class="section hidden">
+  <h2 id="leaTitle"></h2>
+  <input id="l_buy" type="number" value="3000000">
+  <input id="l_sell" type="number" value="4500000">
+  <input id="l_duration" type="number" value="24">
+  <button onclick="calcLea()" id="calcBtn2"></button>
 </div>
 
-<!-- RESULTATS -->
 <div id="result" class="section result hidden"></div>
 
-<!-- PRO -->
-<div class="section pro-box">
-<h3>🔓 Accéder à la version PRO (5 USD)</h3>
-
-<p>
-La version gratuite vous donne une première estimation.<br><br>
-
-<strong>La version PRO vous permet d’aller beaucoup plus loin :</strong>
-</p>
-
-<ul>
-  <li>👉 Génération d’un <strong>rapport PDF professionnel</strong> téléchargeable</li>
-  <li>👉 Accès au <strong>modèle mixte personnalisable</strong> (Salariat / Leasing)</li>
-  <li>👉 <strong>Analyse intelligente</strong> et recommandations stratégiques</li>
-  <li>👉 Outil complet prêt pour présentation à un associé ou investisseur</li>
-</ul>
-
-<p>
-👉 Paiement simple par Mobile Money<br>
-👉 Accès PRO via code personnel
-</p>
-
-<a href="https://wa.me/2290153636363" target="_blank"
-   style="
-     display:inline-block;
-     padding:14px 20px;
-     background:#FFD400;
-     color:#111;
-     font-weight:700;
-     border-radius:10px;
-     text-decoration:none;
-   ">
-💬 Passer à la version PRO
-</a>
+<!-- PRO CTA -->
+<div class="section">
+  <h3 id="proTitle"></h3>
+  <p id="proText"></p>
+  <a href="https://wa.me/2290153636363" target="_blank">
+    <button id="proBtn"></button>
+  </a>
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
-<strong>Contact</strong><br>
-Josué Cédric Komlan Akakpovi<br>
-📞 <a href="tel:+2290153636363">+229 01 53 63 63 63</a><br>
-📧 <a href="mailto:komlan2303@gmail.com">komlan2303@gmail.com</a>
+Josué Cédric Komlan Akakpovi · WhatsApp : +229 01 53 63 63 63
 </div>
 
 </div>
 
 <script>
-function setMode(m){
-  ["salariat","leasing"].forEach(x=>document.getElementById(x).classList.add("hidden"));
-  document.getElementById(m).classList.remove("hidden");
+let lang="fr";
+
+const i18n={
+fr:{
+title:"🚗 Simulateur Business Partenaire Yango",
+subtitle:"Estimation réaliste basée sur des données terrain (Bénin)",
+sal:"🟡 Salariat",
+lea:"🔴 Leasing",
+salT:"Salariat – Estimation",
+leaT:"Leasing – Estimation",
+calc:"Calculer",
+salRes:(n,r)=>`Résultat net : ${n} FCFA · ROI : ${r} mois`,
+leaRes:(m)=>`Marge totale : ${m} FCFA`,
+proT:"🔓 Version PRO",
+proTxt:"Rapport PDF, modèle mixte personnalisable, analyse stratégique avancée.",
+proB:"Passer à la version PRO"
+},
+en:{
+title:"🚗 Yango Partner Business Simulator",
+subtitle:"Realistic estimation based on field data (Benin)",
+sal:"🟡 Salary model",
+lea:"🔴 Leasing model",
+salT:"Salary – Estimation",
+leaT:"Leasing – Estimation",
+calc:"Calculate",
+salRes:(n,r)=>`Net profit: ${n} FCFA · ROI: ${r} months`,
+leaRes:(m)=>`Total margin: ${m} FCFA`,
+proT:"🔓 PRO Version",
+proTxt:"PDF report, mixed model, smart investment analysis.",
+proB:"Upgrade to PRO"
+},
+es:{title:"🚗 Simulador de Negocio Yango",subtitle:"Estimación realista basada en datos reales",sal:"🟡 Salariado",lea:"🔴 Leasing",salT:"Salariado",leaT:"Leasing",calc:"Calcular",salRes:(n,r)=>`Resultado neto: ${n} FCFA · ROI: ${r} meses`,leaRes:(m)=>`Margen total: ${m} FCFA`,proT:"🔓 Versión PRO",proTxt:"Informe PDF y análisis avanzado.",proB:"Acceder a PRO"},
+pt:{title:"🚗 Simulador de Negócio Yango",subtitle:"Estimativa realista baseada em dados reais",sal:"🟡 Salário",lea:"🔴 Leasing",salT:"Salário",leaT:"Leasing",calc:"Calcular",salRes:(n,r)=>`Lucro: ${n} FCFA · ROI: ${r} meses`,leaRes:(m)=>`Margem total: ${m} FCFA`,proT:"🔓 Versão PRO",proTxt:"Relatório PDF e análise avançada.",proB:"Versão PRO"},
+ru:{title:"🚗 Бизнес-симулятор Yango",subtitle:"Реалистичная оценка на основе данных",sal:"🟡 Зарплата",lea:"🔴 Лизинг",salT:"Зарплата",leaT:"Лизинг",calc:"Рассчитать",salRes:(n,r)=>`Прибыль: ${n} FCFA · ROI: ${r} мес`,leaRes:(m)=>`Маржа: ${m} FCFA`,proT:"🔓 PRO версия",proTxt:"PDF отчёт и продвинутый анализ.",proB:"PRO доступ"},
+ar:{title:"🚗 محاكي أعمال يانغو",subtitle:"تقدير واقعي مبني على بيانات حقيقية",sal:"🟡 راتب",lea:"🔴 تأجير",salT:"نظام الراتب",leaT:"نظام التأجير",calc:"احسب",salRes:(n,r)=>`الربح: ${n} FCFA · العائد: ${r} شهر`,leaRes:(m)=>`الهامش: ${m} FCFA`,proT:"🔓 النسخة الاحترافية",proTxt:"تقرير PDF وتحليل متقدم.",proB:"الترقية للاحترافية"},
+hi:{title:"🚗 यांगो बिज़नेस सिम्युलेटर",subtitle:"वास्तविक डेटा पर आधारित अनुमान",sal:"🟡 वेतन",lea:"🔴 लीज़",salT:"वेतन मॉडल",leaT:"लीज़ मॉडल",calc:"गणना करें",salRes:(n,r)=>`लाभ: ${n} FCFA · ROI: ${r} माह`,leaRes:(m)=>`मार्जिन: ${m} FCFA`,proT:"🔓 प्रो संस्करण",proTxt:"PDF रिपोर्ट और उन्नत विश्लेषण",proB:"प्रो प्राप्त करें"},
+zh:{title:"🚗 Yango 商业模拟器",subtitle:"基于真实数据的估算",sal:"🟡 薪资模式",lea:"🔴 租赁模式",salT:"薪资模式",leaT:"租赁模式",calc:"计算",salRes:(n,r)=>`利润: ${n} FCFA · ROI: ${r} 月`,leaRes:(m)=>`总利润: ${m} FCFA`,proT:"🔓 专业版",proTxt:"PDF 报告和高级分析",proB:"升级到专业版"}
+};
+
+function setLang(l){
+  lang=l;
+  const t=i18n[l];
+  title.innerText=t.title;
+  subtitle.innerText=t.subtitle;
+  btnSal.innerText=t.sal;
+  btnLea.innerText=t.lea;
+  salTitle.innerText=t.salT;
+  leaTitle.innerText=t.leaT;
+  calcBtn.innerText=t.calc;
+  calcBtn2.innerText=t.calc;
+  proTitle.innerText=t.proT;
+  proText.innerText=t.proTxt;
+  proBtn.innerText=t.proB;
+}
+
+function show(id){
+  sal.classList.add("hidden");
+  lea.classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden");
   result.classList.add("hidden");
 }
 
-function calcSalariat(){
-  const fuel=(+s_km.value * +s_conso.value / 100) * +s_fuel.value;
-  const charges=+s_salary.value + +s_bonus.value + fuel + +s_maint.value + +s_misc.value;
-  const net=+s_rev.value - charges;
-  const roi=net>0?(+s_buy.value/net).toFixed(1):"∞";
-
-  result.innerHTML=`
-  <h3>Résultat – Salariat</h3>
-  💰 Résultat net mensuel : <strong>${net.toLocaleString()} FCFA</strong><br>
-  ⏱ ROI estimé : <strong>${roi} mois</strong>
-  `;
+function calcSal(){
+  const net=s_rev.value-s_cost.value;
+  const roi=(s_buy.value/net).toFixed(1);
+  result.innerText=i18n[lang].salRes(net.toLocaleString(),roi);
+  result.classList.remove("hidden");
+}
+function calcLea(){
+  const margin=l_sell.value-l_buy.value;
+  result.innerText=i18n[lang].leaRes(margin.toLocaleString());
   result.classList.remove("hidden");
 }
 
-function calcLeasing(){
-  const daily=(+l_sell.value / +l_duration.value) / +l_days.value;
-  const margin=+l_sell.value - +l_buy.value;
-
-  result.innerHTML=`
-  <h3>Résultat – Leasing</h3>
-  💳 Paiement journalier recommandé : <strong>${daily.toFixed(0)} FCFA</strong><br>
-  💼 Marge totale / véhicule : <strong>${margin.toLocaleString()} FCFA</strong><br>
-  ⏱ ROI sécurisé : <strong>${l_duration.value} mois</strong>
-  `;
-  result.classList.remove("hidden");
-}
+setLang("fr");
 </script>
-
 </body>
 </html>
