@@ -1,244 +1,218 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Yango Partner – Business Simulator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<title>Yango Partner – Business Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --yango-yellow: #FFD400;
-      --yango-black: #111111;
-      --yango-red: #E53935;
-      --bg-light: #f5f6f8;
-    }
-
-    body {
-      font-family: 'Inter', Arial, sans-serif;
-      background: var(--bg-light);
-      margin: 0;
-      padding: 20px;
-      color: var(--yango-black);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: #ffffff;
-      padding: 25px;
-      border-radius: 14px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    .lang {
-      text-align: right;
-      margin-bottom: 10px;
-    }
-
-    select, input {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0 14px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 15px;
-    }
-
-    label {
-      font-weight: 600;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      background: var(--yango-yellow);
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .section {
-      margin-top: 30px;
-    }
-
-    .result {
-      background: #fffbe6;
-      padding: 20px;
-      border-radius: 12px;
-      border-left: 6px solid var(--yango-yellow);
-    }
-
-    .warning {
-      color: var(--yango-red);
-      font-weight: 600;
-    }
-
-    .footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 12px;
-      color: #777;
-    }
-  </style>
+<style>
+:root{
+  --yango-yellow:#FFD400;
+  --yango-black:#111111;
+  --yango-red:#E53935;
+  --bg:#f5f6f8;
+}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  padding:20px;
+}
+.container{
+  max-width:950px;
+  margin:auto;
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+h1,h2,h3{text-align:center}
+label{font-weight:600}
+input,select{
+  width:100%;
+  padding:10px;
+  margin:6px 0 14px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+button{
+  width:100%;
+  padding:14px;
+  background:var(--yango-yellow);
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+.section{margin-top:30px}
+.hidden{display:none}
+.result{
+  background:#fffbe6;
+  border-left:6px solid var(--yango-yellow);
+  padding:20px;
+  border-radius:12px;
+}
+.warning{color:var(--yango-red);font-weight:600}
+.footer{
+  margin-top:40px;
+  font-size:13px;
+  text-align:center;
+  color:#555;
+}
+.mode-select button{
+  margin-bottom:10px;
+}
+</style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <div class="lang">
-    <select id="language">
-      <option value="fr">🇫🇷 Français</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="pt">🇵🇹 Português</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="ru">🇷🇺 Русский</option>
-    </select>
-  </div>
+<h1>🚗 Yango Partner – Business Simulator</h1>
+<p style="text-align:center">Simulation basée sur données réelles – Bénin</p>
 
-  <header>
-    <h1 id="title"></h1>
-    <p id="subtitle"></p>
-  </header>
+<!-- CHOIX MODE -->
+<div class="section mode-select">
+  <h2>Choisissez votre modèle</h2>
+  <button onclick="showMode('salariat')">🟡 Salariat</button>
+  <button onclick="showMode('leasing')">🔴 Leasing</button>
+  <button onclick="showMode('mixte')">🔵 Mixte (60% / 40%)</button>
+</div>
 
-  <div class="section">
-    <h2 id="simTitle"></h2>
+<!-- SALARIAT -->
+<div id="salariat" class="section hidden">
+<h2>Salariat – Paramètres</h2>
 
-    <label id="lblVehicles"></label>
-    <input type="number" id="vehicles" value="10" min="1">
+<label>Nombre de véhicules</label>
+<input type="number" id="s_veh" value="10">
 
-    <label id="lblRevenue"></label>
-    <input type="number" id="revenue" value="800000">
+<label>Revenu mensuel Yango / véhicule</label>
+<input type="number" id="s_rev" value="800000">
 
-    <label id="lblKm"></label>
-    <input type="number" id="km" value="3500">
+<label>Kilométrage mensuel (km)</label>
+<input type="number" id="s_km" value="3500">
 
-    <label id="lblConsumption"></label>
-    <input type="number" id="consumption" value="6">
+<label>Consommation (L / 100 km)</label>
+<input type="number" id="s_conso" value="6">
 
-    <label id="lblFuel"></label>
-    <input type="number" id="fuelPrice" value="650">
+<label>Prix carburant / litre</label>
+<input type="number" id="s_fuel" value="650">
 
-    <button id="btnCalc"></button>
-  </div>
+<label>Salaire chauffeur</label>
+<input type="number" id="s_salary" value="80000">
 
-  <div class="section result" id="result"></div>
+<label>Prime chauffeur (0 si aucune)</label>
+<input type="number" id="s_bonus" value="30000">
 
-  <div class="section">
-    <h2 id="recTitle"></h2>
-    <p id="recommendation"></p>
-  </div>
+<label>Entretien mensuel</label>
+<input type="number" id="s_maint" value="50000">
 
-  <div class="footer" id="footer"></div>
+<label>Divers / imprévus</label>
+<input type="number" id="s_misc" value="30000">
+
+<button onclick="calcSalariat()">Calculer</button>
+</div>
+
+<!-- LEASING -->
+<div id="leasing" class="section hidden">
+<h2>Leasing – Paramètres</h2>
+
+<label>Nombre de véhicules</label>
+<input type="number" id="l_veh" value="10">
+
+<label>Prix d’achat du véhicule</label>
+<input type="number" id="l_buy" value="3000000">
+
+<label>Prix de revente au chauffeur</label>
+<input type="number" id="l_sell" value="4500000">
+
+<label>Durée du contrat (mois)</label>
+<input type="number" id="l_duration" value="24">
+
+<label>Jours travaillés / mois</label>
+<input type="number" id="l_days" value="26">
+
+<button onclick="calcLeasing()">Calculer</button>
+</div>
+
+<!-- MIXTE -->
+<div id="mixte" class="section hidden">
+<h2>Mixte – 60% Salariat / 40% Leasing</h2>
+<p style="text-align:center">Les calculs utilisent les paramètres saisis ci-dessus</p>
+<button onclick="calcMixte()">Calculer</button>
+</div>
+
+<!-- RESULTATS -->
+<div id="result" class="section result hidden"></div>
+
+<!-- CONTACT -->
+<div class="footer">
+<strong>Contact</strong><br>
+Josué Cédric Komlan Akakpovi<br>
+📞 <a href="tel:+2290153636363">+229 01 53 63 63 63</a><br>
+📧 <a href="mailto:komlan2303@gmail.com">komlan2303@gmail.com</a>
+</div>
 
 </div>
 
 <script>
-const i18n = {
-  fr: {
-    title: "🚗 Yango Partner – Business Simulator",
-    subtitle: "Simulation basée sur données réelles – Bénin",
-    simTitle: "Paramètres de simulation",
-    lblVehicles: "Nombre de véhicules",
-    lblRevenue: "Revenu mensuel par véhicule (FCFA)",
-    lblKm: "Kilométrage mensuel (km)",
-    lblConsumption: "Consommation (L / 100 km)",
-    lblFuel: "Prix du carburant (FCFA / L)",
-    btnCalc: "Lancer la simulation",
-    recTitle: "Recommandation",
-    footer: "Outil d’aide à la décision – Partenaire Yango Bénin",
-    result: (profit, roi) =>
-      `💰 Profit mensuel : <strong>${profit.toLocaleString()} FCFA</strong><br>
-       ⏱ ROI : <strong class="${roi > 18 ? 'warning' : ''}">${roi} mois</strong>`
-  },
-
-  en: {
-    title: "🚗 Yango Partner – Business Simulator",
-    subtitle: "Simulation based on real data – Benin",
-    simTitle: "Simulation parameters",
-    lblVehicles: "Number of vehicles",
-    lblRevenue: "Monthly revenue per vehicle (FCFA)",
-    lblKm: "Monthly mileage (km)",
-    lblConsumption: "Fuel consumption (L / 100 km)",
-    lblFuel: "Fuel price (FCFA / L)",
-    btnCalc: "Run simulation",
-    recTitle: "Recommendation",
-    footer: "Decision support tool – Yango Partner Benin",
-    result: (profit, roi) =>
-      `💰 Monthly profit: <strong>${profit.toLocaleString()} FCFA</strong><br>
-       ⏱ ROI: <strong class="${roi > 18 ? 'warning' : ''}">${roi} months</strong>`
-  },
-
-  ru: {
-    title: "🚗 Yango Partner – Бизнес симулятор",
-    subtitle: "Симуляция на основе реальных данных – Бенин",
-    simTitle: "Параметры симуляции",
-    lblVehicles: "Количество автомобилей",
-    lblRevenue: "Месячный доход на авто (FCFA)",
-    lblKm: "Пробег в месяц (км)",
-    lblConsumption: "Расход топлива (л / 100 км)",
-    lblFuel: "Цена топлива (FCFA / л)",
-    btnCalc: "Запустить симуляцию",
-    recTitle: "Рекомендация",
-    footer: "Инструмент поддержки решений – Партнёр Yango Бенин",
-    result: (profit, roi) =>
-      `💰 Месячная прибыль: <strong>${profit.toLocaleString()} FCFA</strong><br>
-       ⏱ Окупаемость: <strong class="${roi > 18 ? 'warning' : ''}">${roi} мес.</strong>`
-  }
-};
-
-const $ = id => document.getElementById(id);
-let lang = "fr";
-
-function setLanguage() {
-  const t = i18n[lang];
-  $("title").innerText = t.title;
-  $("subtitle").innerText = t.subtitle;
-  $("simTitle").innerText = t.simTitle;
-  $("lblVehicles").innerText = t.lblVehicles;
-  $("lblRevenue").innerText = t.lblRevenue;
-  $("lblKm").innerText = t.lblKm;
-  $("lblConsumption").innerText = t.lblConsumption;
-  $("lblFuel").innerText = t.lblFuel;
-  $("btnCalc").innerText = t.btnCalc;
-  $("recTitle").innerText = t.recTitle;
-  $("footer").innerText = t.footer;
+function showMode(mode){
+  ['salariat','leasing','mixte'].forEach(m=>document.getElementById(m).classList.add('hidden'));
+  document.getElementById(mode).classList.remove('hidden');
+  document.getElementById('result').classList.add('hidden');
 }
 
-function calculate() {
-  const v = Number($("vehicles").value);
-  const r = Number($("revenue").value);
-  const km = Number($("km").value);
-  const c = Number($("consumption").value);
-  const f = Number($("fuelPrice").value);
+function calcSalariat(){
+  const v=+s_veh.value,r=+s_rev.value,km=+s_km.value,c=+s_conso.value,
+  f=+s_fuel.value,sal=+s_salary.value,bon=+s_bonus.value,
+  m=+s_maint.value,d=+s_misc.value;
 
-  const fuelCost = (km * c / 100) * f;
-  const profitPerVehicle = r - (fuelCost + 160000);
-  const totalProfit = profitPerVehicle * v;
-  const roi = profitPerVehicle > 0 ? (3250000 / profitPerVehicle).toFixed(1) : "∞";
+  const fuel=(km*c/100)*f;
+  const charges=sal+bon+fuel+m+d;
+  const net=r-charges;
+  const total=net*v;
+  const roi=net>0?(3000000/net).toFixed(1):"∞";
 
-  $("result").innerHTML = i18n[lang].result(totalProfit, roi);
+  result.innerHTML=`
+  <h3>Résultat Salariat</h3>
+  💰 Résultat net / véhicule : <strong>${net.toLocaleString()} FCFA</strong><br>
+  💰 Résultat mensuel flotte : <strong>${total.toLocaleString()} FCFA</strong><br>
+  ⏱ ROI estimé : <strong>${roi} mois</strong>
+  `;
+  result.classList.remove('hidden');
 }
 
-$("language").addEventListener("change", e => {
-  lang = e.target.value;
-  setLanguage();
-});
+function calcLeasing(){
+  const v=+l_veh.value,b=+l_buy.value,s=+l_sell.value,
+  d=+l_duration.value,j=+l_days.value;
 
-$("btnCalc").addEventListener("click", calculate);
+  const monthly=s/d;
+  const daily=monthly/j;
+  const margin=s-b;
 
-setLanguage();
+  result.innerHTML=`
+  <h3>Résultat Leasing</h3>
+  💳 Paiement journalier recommandé : <strong>${daily.toFixed(0)} FCFA</strong><br>
+  💰 Mensualité : <strong>${monthly.toLocaleString()} FCFA</strong><br>
+  💼 Marge / véhicule : <strong>${margin.toLocaleString()} FCFA</strong><br>
+  💼 Marge flotte : <strong>${(margin*v).toLocaleString()} FCFA</strong><br>
+  ⏱ ROI sécurisé : <strong>${d} mois</strong>
+  `;
+  result.classList.remove('hidden');
+}
+
+function calcMixte(){
+  calcSalariat();
+  const salNet=parseInt(result.innerText.match(/\d+/g)[0]);
+  calcLeasing();
+  const leaseMargin=parseInt(result.innerText.match(/\d+/g)[0]);
+
+  result.innerHTML+=`
+  <hr>
+  <strong>Modèle mixte recommandé : équilibre cash-flow & sécurité</strong>
+  `;
+}
 </script>
-
 </body>
 </html>
