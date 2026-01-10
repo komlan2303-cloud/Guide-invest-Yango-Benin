@@ -1,131 +1,145 @@
-Guide-invest-Yango-Benin/
-├── index.html   
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Yango Partner – Business Simulator</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  padding: 20px;
-}
-.container {
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-}
-h1, h2 {
-  text-align: center;
-}
-label {
-  font-weight: bold;
-}
-input, select {
-  width: 100%;
-  padding: 8px;
-  margin: 6px 0 12px;
-}
-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.section {
-  margin-top: 25px;
-}
-.result {
-  background: #f0f9ff;
-  padding: 15px;
-  border-radius: 10px;
-}
-.good { color: green; }
-.mid { color: orange; }
-.bad { color: red; }
-.footer {
-  text-align: center;
-  font-size: 12px;
-  color: gray;
-  margin-top: 30px;
-}
-.lang {
-  text-align: right;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>Yango Partner – Business Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --yango-yellow: #FFD400;
+      --yango-black: #111111;
+      --yango-red: #E53935;
+      --bg-light: #f5f6f8;
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--bg-light);
+      margin: 0;
+      padding: 20px;
+      color: var(--yango-black);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .lang {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0 14px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: var(--yango-yellow);
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .result {
+      background: #fffbe6;
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 6px solid var(--yango-yellow);
+    }
+
+    .warning {
+      color: var(--yango-red);
+      font-weight: 600;
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
 
-<div class="lang">
-<select id="language" onchange="setLanguage()">
-  <option value="fr">🇫🇷 Français</option>
-  <option value="en">🇬🇧 English</option>
-  <option value="es">🇪🇸 Español</option>
-  <option value="pt">🇵🇹 Português</option>
-</select>
-</div>
+  <div class="lang">
+    <select id="language">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="pt">🇵🇹 Português</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="ru">🇷🇺 Русский</option>
+    </select>
+  </div>
 
-<h1 id="title"></h1>
-<p id="subtitle" style="text-align:center"></p>
+  <header>
+    <h1 id="title"></h1>
+    <p id="subtitle"></p>
+  </header>
 
-<div class="section">
-<h2 id="simTitle"></h2>
+  <div class="section">
+    <h2 id="simTitle"></h2>
 
-<label id="lblVehicles"></label>
-<input type="number" id="vehicles" value="10">
+    <label id="lblVehicles"></label>
+    <input type="number" id="vehicles" value="10" min="1">
 
-<label id="lblSystem"></label>
-<select id="system">
-  <option value="salariat">Salariat</option>
-  <option value="leasing">Leasing</option>
-  <option value="mixte">Mixte (60% / 40%)</option>
-</select>
+    <label id="lblRevenue"></label>
+    <input type="number" id="revenue" value="800000">
 
-<label id="lblRevenue"></label>
-<input type="number" id="revenue" value="800000">
+    <label id="lblKm"></label>
+    <input type="number" id="km" value="3500">
 
-<label id="lblKm"></label>
-<input type="number" id="km" value="3500">
+    <label id="lblConsumption"></label>
+    <input type="number" id="consumption" value="6">
 
-<label id="lblConsumption"></label>
-<input type="number" id="consumption" value="6">
+    <label id="lblFuel"></label>
+    <input type="number" id="fuelPrice" value="650">
 
-<label id="lblFuel"></label>
-<input type="number" id="fuelPrice" value="650">
+    <button id="btnCalc"></button>
+  </div>
 
-<button onclick="calculate()" id="btnCalc"></button>
-</div>
+  <div class="section result" id="result"></div>
 
-<div class="section result" id="result"></div>
+  <div class="section">
+    <h2 id="recTitle"></h2>
+    <p id="recommendation"></p>
+  </div>
 
-<div class="section">
-<h2 id="proofTitle"></h2>
-<ul>
-<li id="proof1"></li>
-<li id="proof2"></li>
-<li id="proof3"></li>
-<li id="proof4"></li>
-</ul>
-</div>
-
-<div class="section">
-<h2 id="recTitle"></h2>
-<p id="recommendation"></p>
-</div>
-
-<div class="footer">
-<span id="footer"></span>
-</div>
+  <div class="footer" id="footer"></div>
 
 </div>
 
@@ -134,102 +148,94 @@ const i18n = {
   fr: {
     title: "🚗 Yango Partner – Business Simulator",
     subtitle: "Simulation basée sur données réelles – Bénin",
-    simTitle: "1️⃣ Paramètres de simulation",
+    simTitle: "Paramètres de simulation",
     lblVehicles: "Nombre de véhicules",
-    lblSystem: "Système",
     lblRevenue: "Revenu mensuel par véhicule (FCFA)",
-    lblKm: "Kilométrage mensuel par véhicule (km)",
-    lblConsumption: "Consommation moyenne (L / 100 km)",
-    lblFuel: "Prix du carburant / litre (FCFA)",
+    lblKm: "Kilométrage mensuel (km)",
+    lblConsumption: "Consommation (L / 100 km)",
+    lblFuel: "Prix du carburant (FCFA / L)",
     btnCalc: "Lancer la simulation",
-    proofTitle: "📊 Données terrain confirmées",
-    proof1: "299 à 457 courses par mois",
-    proof2: "Revenus jusqu’à 986 000 FCFA / mois",
-    proof3: "Bonus mensuels jusqu’à 500 000 FCFA",
-    proof4: "Données issues de l’application Yango",
-    recTitle: "🧠 Recommandation",
+    recTitle: "Recommandation",
     footer: "Outil d’aide à la décision – Partenaire Yango Bénin",
-    recommend: roi =>
-      roi <= 14
-        ? "Modèle salariat ou mixte fortement conseillé."
-        : roi <= 18
-        ? "Modèle mixte recommandé."
-        : "Modèle leasing conseillé."
+    result: (profit, roi) =>
+      `💰 Profit mensuel : <strong>${profit.toLocaleString()} FCFA</strong><br>
+       ⏱ ROI : <strong class="${roi > 18 ? 'warning' : ''}">${roi} mois</strong>`
   },
+
   en: {
     title: "🚗 Yango Partner – Business Simulator",
-    subtitle: "Simulation based on real field data – Benin",
-    simTitle: "1️⃣ Simulation parameters",
+    subtitle: "Simulation based on real data – Benin",
+    simTitle: "Simulation parameters",
     lblVehicles: "Number of vehicles",
-    lblSystem: "Business model",
     lblRevenue: "Monthly revenue per vehicle (FCFA)",
-    lblKm: "Monthly mileage per vehicle (km)",
-    lblConsumption: "Average consumption (L / 100 km)",
-    lblFuel: "Fuel price per liter (FCFA)",
+    lblKm: "Monthly mileage (km)",
+    lblConsumption: "Fuel consumption (L / 100 km)",
+    lblFuel: "Fuel price (FCFA / L)",
     btnCalc: "Run simulation",
-    proofTitle: "📊 Verified field data",
-    proof1: "299 to 457 rides per month",
-    proof2: "Up to 986,000 FCFA monthly revenue",
-    proof3: "Monthly bonuses up to 500,000 FCFA",
-    proof4: "Data from Yango platform",
-    recTitle: "🧠 Recommendation",
+    recTitle: "Recommendation",
     footer: "Decision support tool – Yango Partner Benin",
-    recommend: roi =>
-      roi <= 14
-        ? "Salary or mixed model strongly recommended."
-        : roi <= 18
-        ? "Mixed model recommended."
-        : "Leasing model recommended."
+    result: (profit, roi) =>
+      `💰 Monthly profit: <strong>${profit.toLocaleString()} FCFA</strong><br>
+       ⏱ ROI: <strong class="${roi > 18 ? 'warning' : ''}">${roi} months</strong>`
+  },
+
+  ru: {
+    title: "🚗 Yango Partner – Бизнес симулятор",
+    subtitle: "Симуляция на основе реальных данных – Бенин",
+    simTitle: "Параметры симуляции",
+    lblVehicles: "Количество автомобилей",
+    lblRevenue: "Месячный доход на авто (FCFA)",
+    lblKm: "Пробег в месяц (км)",
+    lblConsumption: "Расход топлива (л / 100 км)",
+    lblFuel: "Цена топлива (FCFA / л)",
+    btnCalc: "Запустить симуляцию",
+    recTitle: "Рекомендация",
+    footer: "Инструмент поддержки решений – Партнёр Yango Бенин",
+    result: (profit, roi) =>
+      `💰 Месячная прибыль: <strong>${profit.toLocaleString()} FCFA</strong><br>
+       ⏱ Окупаемость: <strong class="${roi > 18 ? 'warning' : ''}">${roi} мес.</strong>`
   }
 };
 
-let currentLang = "fr";
+const $ = id => document.getElementById(id);
+let lang = "fr";
 
 function setLanguage() {
-  currentLang = document.getElementById("language").value;
-  const t = i18n[currentLang];
-  title.innerText = t.title;
-  subtitle.innerText = t.subtitle;
-  simTitle.innerText = t.simTitle;
-  lblVehicles.innerText = t.lblVehicles;
-  lblSystem.innerText = t.lblSystem;
-  lblRevenue.innerText = t.lblRevenue;
-  lblKm.innerText = t.lblKm;
-  lblConsumption.innerText = t.lblConsumption;
-  lblFuel.innerText = t.lblFuel;
-  btnCalc.innerText = t.btnCalc;
-  proofTitle.innerText = t.proofTitle;
-  proof1.innerText = t.proof1;
-  proof2.innerText = t.proof2;
-  proof3.innerText = t.proof3;
-  proof4.innerText = t.proof4;
-  recTitle.innerText = t.recTitle;
-  footer.innerText = t.footer;
+  const t = i18n[lang];
+  $("title").innerText = t.title;
+  $("subtitle").innerText = t.subtitle;
+  $("simTitle").innerText = t.simTitle;
+  $("lblVehicles").innerText = t.lblVehicles;
+  $("lblRevenue").innerText = t.lblRevenue;
+  $("lblKm").innerText = t.lblKm;
+  $("lblConsumption").innerText = t.lblConsumption;
+  $("lblFuel").innerText = t.lblFuel;
+  $("btnCalc").innerText = t.btnCalc;
+  $("recTitle").innerText = t.recTitle;
+  $("footer").innerText = t.footer;
 }
 
 function calculate() {
-  const vehicles = Number(vehiclesInput.value);
-  const revenue = Number(revenueInput.value);
-  const km = Number(kmInput.value);
-  const consumption = Number(consumptionInput.value);
-  const fuelPrice = Number(fuelPriceInput.value);
+  const v = Number($("vehicles").value);
+  const r = Number($("revenue").value);
+  const km = Number($("km").value);
+  const c = Number($("consumption").value);
+  const f = Number($("fuelPrice").value);
 
-  const fuelCost = (km * consumption / 100) * fuelPrice;
-  const profitPerVehicle = revenue - (fuelCost + 110000 + 50000);
-  const roi = 3250000 / profitPerVehicle;
+  const fuelCost = (km * c / 100) * f;
+  const profitPerVehicle = r - (fuelCost + 160000);
+  const totalProfit = profitPerVehicle * v;
+  const roi = profitPerVehicle > 0 ? (3250000 / profitPerVehicle).toFixed(1) : "∞";
 
-  result.innerHTML = `
-    <p>💰 Monthly profit: ${(profitPerVehicle * vehicles).toFixed(0)} FCFA</p>
-    <p>⏱ ROI: ${roi.toFixed(1)} months</p>
-  `;
-  recommendation.innerText = i18n[currentLang].recommend(roi);
+  $("result").innerHTML = i18n[lang].result(totalProfit, roi);
 }
 
-const vehiclesInput = document.getElementById("vehicles");
-const revenueInput = document.getElementById("revenue");
-const kmInput = document.getElementById("km");
-const consumptionInput = document.getElementById("consumption");
-const fuelPriceInput = document.getElementById("fuelPrice");
+$("language").addEventListener("change", e => {
+  lang = e.target.value;
+  setLanguage();
+});
+
+$("btnCalc").addEventListener("click", calculate);
 
 setLanguage();
 </script>
