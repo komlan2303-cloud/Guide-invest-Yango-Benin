@@ -260,86 +260,194 @@ le plus accessible et le moins cher de la plateforme.
 
 <!-- ================= PLACEHOLDERS (PARTIE 2) ================= -->
 <!-- ================= SALARIAT ================= -->
-<div class="card hidden" id="salariat">
-<h2>Simulation – Modèle Salariat</h2>
+<div class="section">
+  <h2>Simulation – Modèle Salariat</h2>
+  <p>
+    Ce modèle suppose que vous restez propriétaire du véhicule
+    et que le chauffeur est rémunéré par salaire et primes.
+  </p>
 
-<p class="desc">
-Ce modèle suppose que le partenaire reste propriétaire du véhicule
-et rémunère le chauffeur par un salaire fixe et des primes.
-</p>
+  <div class="field">
+    <label>Nombre de véhicules</label>
+    <small>Nombre total de véhicules exploités (minimum 1).</small>
+    <input type="number" id="vehicles" value="1" min="1">
+  </div>
 
-<label>Nombre de véhicules</label>
-<div class="desc">Valeur par défaut : 1 véhicule</div>
-<input id="s_qty" type="number" value="1" min="1">
+  <div class="field">
+    <label>Prix d’achat du véhicule (unité)</label>
+    <small>
+      Montant investi pour l’acquisition d’un véhicule.
+      <br><em>Valeur par défaut indicative.</em>
+    </small>
+    <input type="number" id="purchasePrice" value="3000000">
+  </div>
 
-<label>Prix d’achat du véhicule (unité)</label>
-<div class="desc">Valeur par défaut basée sur un véhicule standard</div>
-<input id="s_buy" type="number" value="3000000">
+  <div class="field">
+    <label>Revenu mensuel moyen par véhicule</label>
+    <small>
+      Revenu moyen observé sur le service ECO.
+    </small>
+    <input type="number" id="monthlyRevenue" value="800000">
+  </div>
 
-<label>Revenu mensuel moyen par véhicule</label>
-<div class="desc">Moyenne observée sur le service ECO</div>
-<input id="s_rev" type="number" value="800000">
+  <div class="separator"></div>
 
-<hr>
+  <h3>Charges mensuelles</h3>
 
-<h3>Charges mensuelles</h3>
+  <div class="field">
+    <label>Salaire chauffeur</label>
+    <small>Salaire fixe mensuel du chauffeur.</small>
+    <input type="number" id="salary" value="80000">
+  </div>
 
-<label>Salaire chauffeur</label>
-<input id="s_salary" type="number" value="80000">
+  <div class="field">
+    <label>Primes / bonus</label>
+    <small>Bonus variables selon performance.</small>
+    <input type="number" id="bonus" value="30000">
+  </div>
 
-<label>Primes / bonus</label>
-<input id="s_bonus" type="number" value="30000">
+  <div class="field">
+    <label>Carburant</label>
+    <small>Dépense mensuelle moyenne en carburant.</small>
+    <input type="number" id="fuel" value="280000">
+  </div>
 
-<label>Carburant</label>
-<input id="s_fuel" type="number" value="280000">
+  <div class="field">
+    <label>Entretien & usure</label>
+    <small>Maintenance, vidanges, pièces d’usure.</small>
+    <input type="number" id="maintenance" value="50000">
+  </div>
 
-<label>Entretien & usure</label>
-<input id="s_maint" type="number" value="50000">
+  <div class="field">
+    <label>Divers / imprévus</label>
+    <small>Frais non prévus, réparations mineures.</small>
+    <input type="number" id="misc" value="30000">
+  </div>
 
-<label>Divers / imprévus</label>
-<input id="s_misc" type="number" value="30000">
+  <button onclick="calculateSalariat()">Calculer la rentabilité</button>
 
-<button onclick="calculateSalariat()">Calculer la rentabilité</button>
+  <div class="result-box">
+  <h3>Résultats – Salariat</h3>
+  <p><strong>Résultat net par véhicule :</strong> 330 000</p>
+  <p><strong>Résultat net total :</strong> 330 000</p>
+  <p><strong>ROI estimé :</strong> 9,1 mois</p>
 
-<div class="result hidden" id="salResult"></div>
+  <p><strong>Analyse :</strong></p>
+  <ul>
+    <li>Retour sur investissement rapide</li>
+    <li>Bonne génération de cash</li>
+    <li>Nécessite une gestion rigoureuse</li>
+  </ul>
 </div>
+    <!-- Résultats leasing injectés ici -->
+>
+
 
 <!-- ================= LEASING ================= -->
-<div class="card hidden" id="leasing">
-<h2>Simulation – Modèle Leasing</h2>
+<div class="section">
+  <h2>Simulation – Modèle Leasing</h2>
+  <p>
+    Ce modèle suppose que le véhicule est revendu au chauffeur.
+    Le chauffeur paie un montant journalier ou mensuel
+    et prend en charge carburant et entretien.
+  </p>
 
-<p class="desc">
-Dans ce modèle, le véhicule est confié au chauffeur contre un paiement régulier,
-le carburant et l’entretien étant à sa charge.
-</p>
+  <div class="field">
+    <label>Nombre de véhicules</label>
+    <small>Nombre total de véhicules mis en leasing.</small>
+    <input type="number" id="leasingVehicles" value="1" min="1">
+  </div>
 
-<label>Nombre de véhicules</label>
-<input id="l_qty" type="number" value="1" min="1">
+  <div class="field">
+    <label>Prix d’achat du véhicule (unité)</label>
+    <small>
+      Montant investi pour acheter un véhicule.
+      <br><em>Valeur par défaut indicative.</em>
+    </small>
+    <input type="number" id="leasingPurchasePrice" value="3000000">
+  </div>
 
-<label>Prix d’achat du véhicule (unité)</label>
-<input id="l_buy" type="number" value="3000000">
+  <div class="field">
+    <label>Prix de revente au chauffeur (unité)</label>
+    <small>
+      Montant total que le chauffeur devra payer
+      sur toute la durée du contrat.
+    </small>
+    <input type="number" id="leasingResalePrice" value="4500000">
+  </div>
 
-<label>Prix de revente au chauffeur (unité)</label>
-<input id="l_sell" type="number" value="4500000">
+  <div class="field">
+    <label>Durée du contrat (en mois)</label>
+    <small>
+      Durée totale du leasing.
+      <br><em>Exemples courants : 12 ou 24 mois.</em>
+    </small>
+    <input type="number" id="leasingDuration" value="24">
+  </div>
 
-<label>Durée du contrat (en mois)</label>
-<input id="l_months" type="number" value="24">
+  <div class="field">
+    <label>Jours travaillés par mois</label>
+    <small>
+      Nombre moyen de jours actifs par mois
+      (repos inclus).
+    </small>
+    <input type="number" id="leasingDays" value="26">
+  </div>
 
-<label>Nombre de jours travaillés par mois</label>
-<input id="l_days" type="number" value="26">
+  <button onclick="calculateLeasing()">Calculer la rentabilité</button>
 
-<button onclick="calculateLeasing()">Calculer la rentabilité</button>
+  <div class="result-box">
+  <h3>Résultats – Leasing</h3>
 
-<div class="result hidden" id="leaseResult"></div>
+  <p><strong>Marge par véhicule :</strong> 1 500 000</p>
+  <p><strong>Paiement mensuel chauffeur :</strong> 187 500</p>
+  <p><strong>Paiement journalier :</strong> 7 200</p>
+  <p><strong>ROI estimé :</strong> 16 mois</p>
+
+  <p><strong>Analyse :</strong></p>
+  <ul>
+    <li>Gestion simplifiée</li>
+    <li>Revenus stables</li>
+    <li>Risque opérationnel faible</li>
+  </ul>
+</div>
+    <!-- Résultats leasing injectés ici -->
+  </div>
 </div>
 
 <!-- ================= COMPARAISON ================= -->
-<div class="card hidden" id="compare">
-<h2>Comparaison Salariat vs Leasing</h2>
-<div class="result" id="compareResult">
-Veuillez effectuer une simulation Salariat et Leasing pour afficher la comparaison.
+<div class="section">
+  <h2>Comparaison – Salariat vs Leasing</h2>
+  <p>
+    Cette comparaison synthétise les résultats obtenus
+    avec les deux modèles afin d’orienter la décision
+    d’investissement.
+  </p>
+
+  <div class="result-box">
+  <h3>Résumé comparatif</h3>
+
+  <p><strong>ROI Salariat :</strong> 9,1 mois</p>
+  <p><strong>ROI Leasing :</strong> 16 mois</p>
+
+  <div class="separator"></div>
+
+  <p><strong>Analyse stratégique :</strong></p>
+  <ul>
+    <li>Le salariat permet un retour sur investissement plus rapide</li>
+    <li>Le leasing offre une gestion plus simple et plus sécurisée</li>
+    <li>Un modèle mixte peut équilibrer rentabilité et stabilité</li>
+  </ul>
+
+  <p><strong>Recommandation :</strong><br>
+    Le choix optimal dépend de votre capacité de gestion
+    et de votre tolérance au risque.
+  </p>
 </div>
+    <!-- Résultats comparatifs injectés ici -->
+  </div>
 </div>
+
 
 <!-- ================= HISTORIQUE ================= -->
 <div class="card hidden" id="history">
@@ -680,8 +788,114 @@ function generatePDF(type){
 document.querySelectorAll("#salariat button")[1]?.addEventListener("click",()=>generatePDF("Salariat"));
 document.querySelectorAll("#leasing button")[1]?.addEventListener("click",()=>generatePDF("Leasing"));
 document.querySelector("#compare button")?.addEventListener("click",()=>generatePDF("Comparaison"));
+<script>
+const i18n = {
+  fr: {
+    salariat: "Simulation – Modèle Salariat",
+    leasing: "Simulation – Modèle Leasing",
+    comparison: "Comparaison Salariat vs Leasing",
+    calculate: "Calculer la rentabilité",
+    vehicles: "Nombre de véhicules",
+    purchasePrice: "Prix d’achat du véhicule",
+    revenue: "Revenu mensuel moyen",
+    salary: "Salaire chauffeur",
+    fuel: "Carburant",
+    maintenance: "Entretien & usure",
+    misc: "Divers / imprévus",
+    important: "Estimations basées sur le service ECO"
+  },
+  en: {
+    salariat: "Salary Model Simulation",
+    leasing: "Leasing Model Simulation",
+    comparison: "Salary vs Leasing Comparison",
+    calculate: "Calculate profitability",
+    vehicles: "Number of vehicles",
+    purchasePrice: "Vehicle purchase price",
+    revenue: "Average monthly revenue",
+    salary: "Driver salary",
+    fuel: "Fuel",
+    maintenance: "Maintenance & wear",
+    misc: "Miscellaneous",
+    important: "Estimates based on ECO service"
+  }
+  // 👉 on pourra compléter les autres langues après
+};
+</script>
+<script>
+function applyLanguage() {
+  const lang = document.getElementById("languageSelect").value;
+  const t = i18n[lang];
+
+  if (!t) return;
+
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (t[key]) el.innerText = t[key];
+  });
+}
+</script>
+<script>
+const exchangeRates = {
+  FCFA: 1,
+  USD: 0.00165,
+  EUR: 0.0015,
+  NGN: 1.8,
+  GHS: 0.013,
+  AED: 0.006,
+  INR: 0.14,
+  CNY: 0.012,
+  RUB: 0.15
+};
+
+let currentCurrency = "FCFA";
+
+function applyCurrency() {
+  const newCurrency = document.getElementById("currencySelect").value;
+  const rate = exchangeRates[newCurrency] / exchangeRates[currentCurrency];
+
+  document.querySelectorAll("input[type='number']").forEach(input => {
+    if (input.value) {
+      input.value = Math.round(input.value * rate);
+    }
+  });
+
+  currentCurrency = newCurrency;
+}
+</script>
 
 </script>
+<div class="section">
+  <div class="field">
+    <label>Langue</label>
+    <small>Sélectionnez la langue de l’interface.</small>
+    <select id="languageSelect" onchange="applyLanguage()">
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="pt">Português</option>
+      <option value="ru">Русский</option>
+      <option value="ar">العربية</option>
+      <option value="hi">हिन्दी</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Devise</label>
+    <small>Choisissez la devise d’affichage.</small>
+    <select id="currencySelect" onchange="applyCurrency()">
+      <option value="FCFA">FCFA</option>
+      <option value="USD">USD</option>
+      <option value="EUR">EUR</option>
+      <option value="NGN">Naira</option>
+      <option value="GHS">Cedi</option>
+      <option value="AED">AED</option>
+      <option value="INR">Roupie</option>
+      <option value="CNY">Yuan</option>
+      <option value="RUB">Rouble</option>
+    </select>
+  </div>
+</div>
 
 </body>
 </html>
