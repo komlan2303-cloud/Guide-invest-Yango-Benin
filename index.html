@@ -6,61 +6,22 @@
 <title>Yango Investment Simulator</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f5f6f8;
-}
-.wrapper{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
-.card{
-  background:#fff;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:24px;
-}
-.app-title{
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8}
+.wrapper{max-width:900px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;margin-bottom:24px}
+.app-title{text-align:center;font-size:22px;font-weight:bold}
 .field{margin-bottom:18px}
 label{font-weight:bold}
-input,select,button{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  font-size:15px;
-}
-button{
-  background:#FFD400;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
-}
+input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;font-size:15px}
+button{background:#FFD400;border:none;font-weight:bold;cursor:pointer}
 .nav button{margin-bottom:10px}
 .hidden{display:none}
-.result{
-  background:#fff8db;
-  padding:15px;
-  border-radius:12px;
-  margin-top:15px;
-}
-footer{
-  text-align:center;
-  font-size:13px;
-  color:#555;
-  margin-top:40px;
-}
+.result{background:#fff8db;padding:15px;border-radius:12px;margin-top:15px}
+footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 </style>
 </head>
 
 <body>
-
 <div class="wrapper">
 
 <div class="card app-title">
@@ -77,38 +38,30 @@ footer{
 
   <label data-i18n="currency"></label>
   <select id="currency">
-    <option value="XOF">FCFA</option>
     <option value="USD">USD</option>
+    <option value="XOF">FCFA</option>
     <option value="EUR">EUR</option>
-    <option value="AED">AED</option>
     <option value="GHS">GHS</option>
+    <option value="AED">AED</option>
   </select>
 </div>
 
-<div class="card">
-  <div class="nav">
-    <button onclick="show('salariat')" data-i18n="menu_salariat"></button>
-    <button onclick="show('leasing')" data-i18n="menu_leasing"></button>
-  </div>
+<div class="card nav">
+  <button onclick="show('salariat')" data-i18n="menu_salariat"></button>
+  <button onclick="show('leasing')" data-i18n="menu_leasing"></button>
 </div>
 
 <div class="card hidden" id="salariat">
   <h3 data-i18n="salariat"></h3>
 
-  <div class="field">
-    <label data-i18n="purchase"></label>
-    <input id="s_buy" type="number" value="3000000">
-  </div>
+  <label data-i18n="purchase"></label>
+  <input id="s_buy" type="number" value="5000">
 
-  <div class="field">
-    <label data-i18n="revenue"></label>
-    <input id="s_rev" type="number" value="800000">
-  </div>
+  <label data-i18n="revenue"></label>
+  <input id="s_rev" type="number" value="1400">
 
-  <div class="field">
-    <label data-i18n="salary"></label>
-    <input id="s_salary" type="number" value="80000">
-  </div>
+  <label data-i18n="salary"></label>
+  <input id="s_salary" type="number" value="140">
 
   <button onclick="simulateSalariat()" data-i18n="simulate"></button>
   <div class="result" id="resSal"></div>
@@ -117,163 +70,132 @@ footer{
 <div class="card hidden" id="leasing">
   <h3 data-i18n="leasing"></h3>
 
-  <div class="field">
-    <label data-i18n="purchase"></label>
-    <input id="l_buy" type="number" value="3000000">
-  </div>
+  <label data-i18n="purchase"></label>
+  <input id="l_buy" type="number" value="5000">
 
-  <div class="field">
-    <label data-i18n="sale_price"></label>
-    <input id="l_sell" type="number" value="4500000">
-  </div>
+  <label data-i18n="sale_price"></label>
+  <input id="l_sell" type="number" value="7500">
 
-  <div class="field">
-    <label data-i18n="duration"></label>
-    <input id="l_months" type="number" value="24">
-  </div>
+  <label data-i18n="duration"></label>
+  <input id="l_months" type="number" value="24">
 
   <button onclick="simulateLeasing()" data-i18n="simulate"></button>
   <div class="result" id="resLease"></div>
 </div>
 
-<footer>
-© 2026 – Josué Cédric Komlan Akakpovi
-</footer>
-
+<footer>© 2026 – Josué Cédric Komlan Akakpovi</footer>
 </div>
 
 <script>
-/* ================= LANGUES ================= */
+/* ===== LANGUES ===== */
 const i18n={
-  fr:{
-    app_name:"Simulateur d’Investissement Yango",
-    important:"Estimations basées sur le service Yango ECO",
-    language:"Langue",
-    currency:"Devise",
-    menu_salariat:"Salariat",
-    menu_leasing:"Leasing",
-    salariat:"Simulation – Modèle Salariat",
-    leasing:"Simulation – Modèle Leasing",
-    purchase:"Prix d’achat du véhicule",
-    revenue:"Revenu mensuel",
-    salary:"Salaire chauffeur",
-    sale_price:"Prix de revente",
-    duration:"Durée (mois)",
-    simulate:"Simuler",
-    profit:"Profit mensuel",
-    roi:"Retour sur investissement",
-    months:"mois"
-  },
-  en:{
-    app_name:"Yango Investment Simulator",
-    important:"Estimates based on Yango ECO service",
-    language:"Language",
-    currency:"Currency",
-    menu_salariat:"Salary",
-    menu_leasing:"Leasing",
-    salariat:"Salary model simulation",
-    leasing:"Leasing model simulation",
-    purchase:"Vehicle purchase price",
-    revenue:"Monthly revenue",
-    salary:"Driver salary",
-    sale_price:"Resale price",
-    duration:"Duration (months)",
-    simulate:"Simulate",
-    profit:"Monthly profit",
-    roi:"Return on investment",
-    months:"months"
-  },
-  es:{
-    app_name:"Simulador de Inversión Yango",
-    important:"Estimaciones basadas en el servicio Yango ECO",
-    language:"Idioma",
-    currency:"Moneda",
-    menu_salariat:"Salariado",
-    menu_leasing:"Leasing",
-    salariat:"Simulación – Modelo salarial",
-    leasing:"Simulación – Modelo leasing",
-    purchase:"Precio de compra del vehículo",
-    revenue:"Ingresos mensuales",
-    salary:"Salario del conductor",
-    sale_price:"Precio de reventa",
-    duration:"Duración (meses)",
-    simulate:"Simular",
-    profit:"Beneficio mensual",
-    roi:"Retorno de inversión",
-    months:"meses"
-  }
+fr:{
+app_name:"Simulateur d’Investissement Yango",
+important:"Estimations basées sur le service Yango ECO",
+language:"Langue",
+currency:"Devise",
+menu_salariat:"Salariat",
+menu_leasing:"Leasing",
+salariat:"Simulation – Modèle Salariat",
+leasing:"Simulation – Modèle Leasing",
+purchase:"Prix d’achat du véhicule",
+revenue:"Revenu mensuel",
+salary:"Charges mensuelles",
+sale_price:"Montant total payé",
+duration:"Durée (mois)",
+simulate:"Simuler",
+profit:"Profit mensuel",
+roi:"Retour sur investissement",
+months:"mois"
+},
+en:{
+app_name:"Yango Investment Simulator",
+important:"Estimates based on Yango ECO service",
+language:"Language",
+currency:"Currency",
+menu_salariat:"Salary",
+menu_leasing:"Leasing",
+salariat:"Salary model simulation",
+leasing:"Leasing model simulation",
+purchase:"Vehicle purchase price",
+revenue:"Monthly revenue",
+salary:"Monthly costs",
+sale_price:"Total paid",
+duration:"Duration (months)",
+simulate:"Simulate",
+profit:"Monthly profit",
+roi:"Return on investment",
+months:"months"
+}
 };
 
-/* ================= DEVISES ================= */
+/* ===== DEVISES (vers USD) ===== */
 const rates={
-  XOF:1,
-  USD:0.00165,
-  EUR:0.00152,
-  AED:0.00606,
-  GHS:0.014
+USD:1,
+XOF:1/600,
+EUR:1/1.08,
+GHS:1/12,
+AED:1/3.67
 };
 
-let currentLang;
-let currentCurrency="XOF";
+let currentCurrency="USD";
+let currentLang=navigator.language.slice(0,2);
+if(!i18n[currentLang]) currentLang="en";
 
-/* ================= INIT ================= */
+/* ===== INIT LANG ===== */
 const langSelect=document.getElementById("lang");
 Object.keys(i18n).forEach(l=>{
-  const o=document.createElement("option");
-  o.value=l;
-  o.text=l.toUpperCase();
+  let o=document.createElement("option");
+  o.value=l;o.text=l.toUpperCase();
   langSelect.appendChild(o);
 });
-
-currentLang=navigator.language.slice(0,2);
-if(!i18n[currentLang]) currentLang="en";
 langSelect.value=currentLang;
 
-/* ================= FORMAT ================= */
-function money(v){
-  return new Intl.NumberFormat(undefined,{
-    style:"currency",
-    currency:currentCurrency,
-    maximumFractionDigits:0
-  }).format(v * rates[currentCurrency]);
-}
-
-/* ================= APPLY LANG ================= */
 function applyLang(){
   document.querySelectorAll("[data-i18n]").forEach(el=>{
     el.innerText=i18n[currentLang][el.dataset.i18n];
   });
 }
-langSelect.onchange=()=>{currentLang=langSelect.value;applyLang();};
-currency.onchange=()=>currentCurrency=currency.value;
+langSelect.onchange=()=>{currentLang=langSelect.value;applyLang();}
 applyLang();
 
-/* ================= NAV ================= */
+/* ===== CONVERSION ===== */
+currency.onchange=()=>currentCurrency=currency.value;
+
+function toUSD(v){return v * rates[currentCurrency]}
+function fromUSD(v){
+  return new Intl.NumberFormat(undefined,{
+    style:"currency",
+    currency:currentCurrency,
+    maximumFractionDigits:2
+  }).format(v / rates[currentCurrency]);
+}
+
+/* ===== NAV ===== */
 function show(id){
   salariat.classList.add("hidden");
   leasing.classList.add("hidden");
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* ================= CALCULS ================= */
+/* ===== SIMULATIONS ===== */
 function simulateSalariat(){
-  const profit=s_rev.value - s_salary.value;
-  const roi=(s_buy.value / profit).toFixed(1);
+  const profitUSD=toUSD(s_rev.value-s_salary.value);
+  const roi=(toUSD(s_buy.value)/profitUSD).toFixed(1);
   resSal.innerHTML=`
-    ${i18n[currentLang].profit} : ${money(profit)}<br>
+    ${i18n[currentLang].profit} : ${fromUSD(profitUSD)}<br>
     ${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}
   `;
 }
 
 function simulateLeasing(){
-  const monthly=l_sell.value / l_months.value;
-  const roi=(l_buy.value / monthly).toFixed(1);
+  const monthlyUSD=toUSD(l_sell.value/l_months.value);
+  const roi=(toUSD(l_buy.value)/monthlyUSD).toFixed(1);
   resLease.innerHTML=`
-    ${money(monthly)} / ${i18n[currentLang].months}<br>
+    ${fromUSD(monthlyUSD)} / ${i18n[currentLang].months}<br>
     ${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}
   `;
 }
 </script>
-
 </body>
 </html>
