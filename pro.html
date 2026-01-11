@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yango Investment Simulator</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8}
-.wrapper{max-width:1100px;margin:auto;padding:20px}
+.wrapper{max-width:1200px;margin:auto;padding:20px}
 .card{background:#fff;border-radius:14px;padding:20px;margin-bottom:24px}
-.app-title{text-align:center;font-size:24px;font-weight:bold}
+.app-title{text-align:center;font-size:26px;font-weight:bold}
 label{font-weight:bold;display:block;margin-top:14px}
 input,select,button{
   width:100%;padding:12px;border-radius:10px;
@@ -20,6 +22,7 @@ button{background:#FFD400;border:none;font-weight:bold;cursor:pointer;margin-top
 .hidden{display:none}
 .result{background:#fff8db;padding:18px;border-radius:12px;margin-top:18px}
 .error{background:#ffe5e5;color:#900;padding:14px;border-radius:10px;margin-top:14px}
+.switch{margin-top:10px}
 footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 </style>
 </head>
@@ -41,51 +44,25 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 
   <label data-i18n="currency"></label>
   <select id="currency">
-    <option value="USD">USD – US Dollar</option>
-
-    <!-- AFRIQUE -->
-    <option value="XOF">XOF – FCFA UEMOA</option>
-    <option value="XAF">XAF – FCFA CEMAC</option>
-    <option value="GHS">GHS – Ghana</option>
-    <option value="NGN">NGN – Nigeria</option>
-    <option value="ZAR">ZAR – South Africa</option>
-    <option value="KES">KES – Kenya</option>
-    <option value="MAD">MAD – Morocco</option>
-    <option value="EGP">EGP – Egypt</option>
-    <option value="TZS">TZS – Tanzania</option>
-    <option value="UGX">UGX – Uganda</option>
-    <option value="AOA">AOA – Angola</option>
-
-    <!-- EUROPE / EURASIE -->
-    <option value="EUR">EUR – Euro</option>
-    <option value="GBP">GBP – United Kingdom</option>
-    <option value="PLN">PLN – Poland</option>
-    <option value="RUB">RUB – Russia</option>
-    <option value="UZS">UZS – Uzbekistan</option>
-    <option value="KZT">KZT – Kazakhstan</option>
-
-    <!-- MOYEN-ORIENT -->
-    <option value="AED">AED – UAE</option>
-    <option value="SAR">SAR – Saudi Arabia</option>
-    <option value="QAR">QAR – Qatar</option>
-
-    <!-- ASIE -->
-    <option value="CNY">CNY – China</option>
-    <option value="PKR">PKR – Pakistan</option>
-    <option value="INR">INR – India</option>
-    <option value="IDR">IDR – Indonesia</option>
-    <option value="VND">VND – Vietnam</option>
-
-    <!-- AMÉRIQUES -->
-    <option value="COP">COP – Colombia</option>
-    <option value="MXN">MXN – Mexico</option>
-    <option value="BRL">BRL – Brazil</option>
+    <option value="USD">USD</option>
+    <option value="XOF">XOF</option>
+    <option value="XAF">XAF</option>
+    <option value="EUR">EUR</option>
+    <option value="GBP">GBP</option>
+    <option value="GHS">GHS</option>
+    <option value="NGN">NGN</option>
+    <option value="AED">AED</option>
+    <option value="CNY">CNY</option>
+    <option value="ZAR">ZAR</option>
+    <option value="KES">KES</option>
+    <option value="MAD">MAD</option>
   </select>
 </div>
 
 <div class="card nav">
   <button onclick="show('salariat')" data-i18n="menu_salariat"></button>
   <button onclick="show('leasing')" data-i18n="menu_leasing"></button>
+  <button onclick="show('compare')" data-i18n="menu_compare"></button>
 </div>
 
 <!-- SALARIAT -->
@@ -93,28 +70,41 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <h3 data-i18n="salariat"></h3>
 
 <label data-i18n="vehicles"></label>
-<input id="s_cars" type="number" data-ph="vehicles_ph">
+<input id="s_cars">
 
 <label data-i18n="purchase"></label>
-<input id="s_buy" type="number" data-ph="purchase_ph">
+<input id="s_buy">
 
 <label data-i18n="revenue"></label>
-<input id="s_rev" type="number" data-ph="revenue_ph">
+<input id="s_rev">
 
 <label data-i18n="salary"></label>
-<input id="s_salary" type="number" data-ph="salary_ph">
+<input id="s_salary">
 
-<label data-i18n="bonus"></label>
-<input id="s_bonus" type="number" data-ph="bonus_ph">
+<label data-i18n="fuel_mode"></label>
+<select id="fuel_mode" onchange="toggleFuel()">
+  <option value="simple" data-i18n="fuel_simple"></option>
+  <option value="estimate" data-i18n="fuel_estimate"></option>
+</select>
 
-<label data-i18n="fuel"></label>
-<input id="s_fuel" type="number" data-ph="fuel_ph">
+<div id="fuel_simple">
+  <label data-i18n="fuel"></label>
+  <input id="s_fuel">
+</div>
+
+<div id="fuel_estimate" class="hidden">
+  <label data-i18n="fuel_price"></label>
+  <input id="fuel_price">
+  <label data-i18n="consumption"></label>
+  <input id="consumption">
+  <label data-i18n="price_km"></label>
+  <input id="price_km">
+</div>
 
 <label data-i18n="maintenance"></label>
-<input id="s_maint" type="number" data-ph="maintenance_ph">
+<input id="s_maint">
 
 <button onclick="simulateSalariat()" data-i18n="simulate"></button>
-<div class="error hidden" id="errSal"></div>
 <div class="result hidden" id="resSal"></div>
 </div>
 
@@ -123,177 +113,138 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <h3 data-i18n="leasing"></h3>
 
 <label data-i18n="vehicles"></label>
-<input id="l_cars" type="number" data-ph="vehicles_ph">
+<input id="l_cars">
 
 <label data-i18n="purchase"></label>
-<input id="l_buy" type="number" data-ph="purchase_ph">
+<input id="l_buy">
 
 <label data-i18n="sale_price"></label>
-<input id="l_sell" type="number" data-ph="sale_ph">
+<input id="l_sell">
 
 <label data-i18n="days"></label>
-<input id="l_days" type="number" data-ph="days_ph">
+<input id="l_days">
 
 <button onclick="simulateLeasing()" data-i18n="simulate"></button>
-<div class="error hidden" id="errLease"></div>
 <div class="result hidden" id="resLease"></div>
+</div>
+
+<!-- COMPARISON -->
+<div class="card hidden" id="compare">
+<h3 data-i18n="comparison"></h3>
+<div class="result" id="resCompare"></div>
+<button onclick="downloadPDF()" data-i18n="download_pdf"></button>
 </div>
 
 <footer>© 2026 – Josué Cédric Komlan Akakpovi</footer>
 </div>
 
 <script>
-/* ===== BASE TERRAIN YANGO (USD) ===== */
-const BASE={rev:1400,salary:140,fuel:300,maint:170};
+/* ================= CONFIG ================= */
+const BASE={km:8000}; // km mensuel moyen terrain Yango
+const rates={USD:1,XOF:1/600,XAF:1/600,EUR:1/1.08,GBP:1/1.27,GHS:1/12,NGN:1/1600,AED:1/3.67,CNY:1/7.2,ZAR:1/19,KES:1/155,MAD:1/10};
 
-/* ===== LANGUES ===== */
+/* ================= LANG ================= */
 const i18n={
 fr:{
 app_name:"Simulateur d’Investissement Yango",
-important:"Estimations basées sur le service Yango ECO",
-language:"Langue",
-currency:"Devise",
-menu_salariat:"Salariat",
-menu_leasing:"Leasing",
-salariat:"Simulation – Modèle Salariat",
-leasing:"Simulation – Modèle Leasing",
-vehicles:"Nombre de véhicules",
-purchase:"Prix d’achat par véhicule",
-revenue:"Revenu mensuel par véhicule",
-salary:"Salaire chauffeur",
-bonus:"Primes",
-fuel:"Carburant",
+important:"Estimations basées sur des données terrain Yango",
+language:"Langue",currency:"Devise",
+menu_salariat:"Salariat",menu_leasing:"Leasing",menu_compare:"Comparaison",
+salariat:"Simulation Salariat",leasing:"Simulation Leasing",
+vehicles:"Nombre de véhicules",purchase:"Prix d’achat par véhicule",
+revenue:"Revenu mensuel par véhicule",salary:"Salaire chauffeur",
+fuel_mode:"Mode carburant",fuel_simple:"Saisie directe",
+fuel_estimate:"Estimation intelligente",
+fuel:"Carburant mensuel",
+fuel_price:"Prix du carburant à la pompe",
+consumption:"Consommation (L/100km)",
+price_km:"Prix par km Yango",
 maintenance:"Entretien & divers",
-sale_price:"Montant total payé par chauffeur",
-days:"Durée de paiement (jours)",
+sale_price:"Total payé par chauffeur",
+days:"Durée (jours)",
 simulate:"Simuler",
-profit:"Profit net mensuel",
-roi:"Retour sur investissement",
-months:"mois",
-error:"Veuillez remplir tous les champs obligatoires.",
-vehicles_ph:"Ex : 5",
-purchase_ph:"Ex : 5000",
-revenue_ph:"Ex : 1400",
-salary_ph:"Ex : 140",
-bonus_ph:"Facultatif",
-fuel_ph:"Facultatif",
-maintenance_ph:"Facultatif",
-sale_ph:"Ex : 7500",
-days_ph:"Ex : 540"
+profit:"Profit mensuel",
+roi:"ROI",
+comparison:"Comparaison Salariat vs Leasing",
+download_pdf:"Télécharger le rapport PDF"
 },
 en:{
 app_name:"Yango Investment Simulator",
-important:"Estimates based on Yango ECO service",
-language:"Language",
-currency:"Currency",
-menu_salariat:"Salary",
-menu_leasing:"Leasing",
-salariat:"Salary model simulation",
-leasing:"Leasing model simulation",
-vehicles:"Number of vehicles",
-purchase:"Purchase price per vehicle",
-revenue:"Monthly revenue per vehicle",
-salary:"Driver salary",
-bonus:"Bonuses",
-fuel:"Fuel",
+important:"Estimates based on Yango field data",
+language:"Language",currency:"Currency",
+menu_salariat:"Salary",menu_leasing:"Leasing",menu_compare:"Comparison",
+salariat:"Salary simulation",leasing:"Leasing simulation",
+vehicles:"Number of vehicles",purchase:"Purchase price per vehicle",
+revenue:"Monthly revenue per vehicle",salary:"Driver salary",
+fuel_mode:"Fuel mode",fuel_simple:"Manual input",
+fuel_estimate:"Smart estimation",
+fuel:"Monthly fuel",
+fuel_price:"Fuel price",
+consumption:"Consumption (L/100km)",
+price_km:"Price per km",
 maintenance:"Maintenance & others",
 sale_price:"Total paid by driver",
-days:"Payment duration (days)",
+days:"Duration (days)",
 simulate:"Simulate",
-profit:"Monthly net profit",
-roi:"Return on investment",
-months:"months",
-error:"Please fill all required fields.",
-vehicles_ph:"e.g. 5",
-purchase_ph:"e.g. 5000",
-revenue_ph:"e.g. 1400",
-salary_ph:"e.g. 140",
-bonus_ph:"Optional",
-fuel_ph:"Optional",
-maintenance_ph:"Optional",
-sale_ph:"e.g. 7500",
-days_ph:"e.g. 540"
+profit:"Monthly profit",
+roi:"ROI",
+comparison:"Salary vs Leasing comparison",
+download_pdf:"Download PDF report"
 }
 };
 
-/* ===== DEVISES (→ USD) ===== */
-const rates={
-USD:1,XOF:1/600,XAF:1/600,GHS:1/12,NGN:1/1600,ZAR:1/19,
-KES:1/155,MAD:1/10,EGP:1/48,TZS:1/2500,UGX:1/3800,AOA:1/850,
-EUR:1/1.08,GBP:1/1.27,PLN:1/4.3,RUB:1/95,UZS:1/12500,KZT:1/470,
-AED:1/3.67,SAR:1/3.75,QAR:1/3.64,
-CNY:1/7.2,PKR:1/280,INR:1/83,IDR:1/15500,VND:1/24500,
-COP:1/3950,MXN:1/17,BRL:1/5
-};
-
-let currentCurrency="USD";
-let currentLang=navigator.language.slice(0,2);
-if(!i18n[currentLang]) currentLang="en";
-
-/* INIT LANG */
+/* ================= INIT ================= */
+let lang=navigator.language.slice(0,2);
+if(!i18n[lang]) lang="en";
+let currency="USD";
 const langSelect=document.getElementById("lang");
-Object.keys(i18n).forEach(l=>{
-  const o=document.createElement("option");
-  o.value=l;o.text=l.toUpperCase();
-  langSelect.appendChild(o);
-});
-langSelect.value=currentLang;
+Object.keys(i18n).forEach(l=>{langSelect.innerHTML+=`<option value="${l}">${l.toUpperCase()}</option>`});
+langSelect.value=lang;
+langSelect.onchange=()=>{lang=langSelect.value;applyLang()};
+currency.onchange=()=>currency=currency.value;
 
 function applyLang(){
-  document.querySelectorAll("[data-i18n]").forEach(el=>{
-    el.innerText=i18n[currentLang][el.dataset.i18n];
-  });
-  document.querySelectorAll("[data-ph]").forEach(el=>{
-    el.placeholder=i18n[currentLang][el.dataset.ph];
-  });
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.innerText=i18n[lang][e.dataset.i18n]);
 }
-langSelect.onchange=()=>{currentLang=langSelect.value;applyLang();}
 applyLang();
 
-/* CONVERSION */
-currency.onchange=()=>currentCurrency=currency.value;
-function toUSD(v){return v*rates[currentCurrency]}
-function fromUSD(v){
-  return new Intl.NumberFormat(undefined,{
-    style:"currency",currency:currentCurrency,maximumFractionDigits:0
-  }).format(v/rates[currentCurrency]);
+/* ================= UTILS ================= */
+function toUSD(v){return v*rates[currency]}
+function fromUSD(v){return new Intl.NumberFormat(undefined,{style:"currency",currency}).format(v/rates[currency])}
+function show(id){["salariat","leasing","compare"].forEach(x=>document.getElementById(x).classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
+function toggleFuel(){
+  fuel_simple.classList.toggle("hidden",fuel_mode.value==="estimate");
+  fuel_estimate.classList.toggle("hidden",fuel_mode.value==="simple");
 }
 
-/* NAV */
-function show(id){
-  salariat.classList.add("hidden");
-  leasing.classList.add("hidden");
-  document.getElementById(id).classList.remove("hidden");
-}
+/* ================= CALCULS ================= */
+let salProfit=0, leaseDaily=0;
 
-/* SALARIAT */
 function simulateSalariat(){
-  errSal.classList.add("hidden");resSal.classList.add("hidden");
-  if(!s_cars.value||!s_buy.value){
-    errSal.innerText=i18n[currentLang].error;
-    errSal.classList.remove("hidden");return;
-  }
   const cars=+s_cars.value;
-  const rev=(+s_rev.value||BASE.rev)*cars;
-  const costs=((+s_salary.value||BASE.salary)+(+s_bonus.value||0)+(+s_fuel.value||BASE.fuel)+(+s_maint.value||BASE.maint))*cars;
-  const profit=rev-costs;
-  const roi=(toUSD(s_buy.value*cars)/toUSD(profit)).toFixed(1);
-
-  resSal.innerHTML=`${i18n[currentLang].profit} : ${fromUSD(profit)}<br>${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}`;
+  let fuelCost=+s_fuel.value||0;
+  if(fuel_mode.value==="estimate"){
+    fuelCost=(BASE.km/100)*(+consumption.value||8)*(+fuel_price.value||1);
+  }
+  const profit=(+s_rev.value*cars)-((+s_salary.value+fuelCost+(+s_maint.value||0))*cars);
+  salProfit=profit;
+  resSal.innerHTML=`${i18n[lang].profit} : ${fromUSD(profit)}`;
   resSal.classList.remove("hidden");
 }
 
-/* LEASING */
 function simulateLeasing(){
-  errLease.classList.add("hidden");resLease.classList.add("hidden");
-  if(!l_cars.value||!l_buy.value||!l_sell.value||!l_days.value){
-    errLease.innerText=i18n[currentLang].error;
-    errLease.classList.remove("hidden");return;
-  }
-  const daily=l_sell.value/l_days.value;
-  const roiDays=(l_buy.value/daily).toFixed(0);
-  resLease.innerHTML=`${fromUSD(daily)} / jour<br>${i18n[currentLang].roi} : ${roiDays} jours`;
+  leaseDaily=(+l_sell.value)/(+l_days.value);
+  resLease.innerHTML=`${fromUSD(leaseDaily)} / day`;
   resLease.classList.remove("hidden");
+}
+
+function downloadPDF(){
+  const {jsPDF}=window.jspdf;
+  const pdf=new jsPDF();
+  pdf.text(i18n[lang].comparison,10,10);
+  pdf.text("Salariat: "+fromUSD(salProfit),10,20);
+  pdf.text("Leasing daily: "+fromUSD(leaseDaily),10,30);
+  pdf.save("Yango_Business_Report.pdf");
 }
 </script>
 </body>
