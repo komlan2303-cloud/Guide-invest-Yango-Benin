@@ -12,6 +12,7 @@ body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8}
 .wrapper{max-width:1200px;margin:auto;padding:20px}
 .card{background:#fff;border-radius:14px;padding:20px;margin-bottom:24px}
 .app-title{text-align:center;font-size:26px;font-weight:bold}
+.app-desc{text-align:center;color:#555;margin-top:8px;font-size:14px}
 label{font-weight:bold;display:block;margin-top:14px}
 input,select,button{
   width:100%;padding:12px;border-radius:10px;
@@ -21,8 +22,6 @@ button{background:#FFD400;border:none;font-weight:bold;cursor:pointer;margin-top
 .nav button{margin-bottom:10px}
 .hidden{display:none}
 .result{background:#fff8db;padding:18px;border-radius:12px;margin-top:18px}
-.error{background:#ffe5e5;color:#900;padding:14px;border-radius:10px;margin-top:14px}
-.switch{margin-top:10px}
 footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 </style>
 </head>
@@ -32,6 +31,7 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 
 <div class="card app-title">
   <span data-i18n="app_name"></span>
+  <div class="app-desc" data-i18n="app_desc"></div>
 </div>
 
 <div class="card">
@@ -70,16 +70,16 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <h3 data-i18n="salariat"></h3>
 
 <label data-i18n="vehicles"></label>
-<input id="s_cars">
+<input id="s_cars" data-ph="vehicles_ph">
 
 <label data-i18n="purchase"></label>
-<input id="s_buy">
+<input id="s_buy" data-ph="purchase_ph">
 
 <label data-i18n="revenue"></label>
-<input id="s_rev">
+<input id="s_rev" data-ph="revenue_ph">
 
 <label data-i18n="salary"></label>
-<input id="s_salary">
+<input id="s_salary" data-ph="salary_ph">
 
 <label data-i18n="fuel_mode"></label>
 <select id="fuel_mode" onchange="toggleFuel()">
@@ -89,20 +89,22 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 
 <div id="fuel_simple">
   <label data-i18n="fuel"></label>
-  <input id="s_fuel">
+  <input id="s_fuel" data-ph="fuel_ph">
 </div>
 
 <div id="fuel_estimate" class="hidden">
   <label data-i18n="fuel_price"></label>
-  <input id="fuel_price">
+  <input id="fuel_price" data-ph="fuel_price_ph">
+
   <label data-i18n="consumption"></label>
-  <input id="consumption">
+  <input id="consumption" data-ph="consumption_ph">
+
   <label data-i18n="price_km"></label>
-  <input id="price_km">
+  <input id="price_km" data-ph="price_km_ph">
 </div>
 
 <label data-i18n="maintenance"></label>
-<input id="s_maint">
+<input id="s_maint" data-ph="maintenance_ph">
 
 <button onclick="simulateSalariat()" data-i18n="simulate"></button>
 <div class="result hidden" id="resSal"></div>
@@ -113,16 +115,16 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <h3 data-i18n="leasing"></h3>
 
 <label data-i18n="vehicles"></label>
-<input id="l_cars">
+<input id="l_cars" data-ph="vehicles_ph">
 
 <label data-i18n="purchase"></label>
-<input id="l_buy">
+<input id="l_buy" data-ph="purchase_ph">
 
 <label data-i18n="sale_price"></label>
-<input id="l_sell">
+<input id="l_sell" data-ph="sale_ph">
 
 <label data-i18n="days"></label>
-<input id="l_days">
+<input id="l_days" data-ph="days_ph">
 
 <button onclick="simulateLeasing()" data-i18n="simulate"></button>
 <div class="result hidden" id="resLease"></div>
@@ -139,113 +141,13 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 </div>
 
 <script>
-/* ================= CONFIG ================= */
-const BASE={km:8000}; // km mensuel moyen terrain Yango
+const BASE={km:8000};
 const rates={USD:1,XOF:1/600,XAF:1/600,EUR:1/1.08,GBP:1/1.27,GHS:1/12,NGN:1/1600,AED:1/3.67,CNY:1/7.2,ZAR:1/19,KES:1/155,MAD:1/10};
 
-/* ================= LANG ================= */
 const i18n={
 fr:{
 app_name:"Simulateur d’Investissement Yango",
+app_desc:"Outil professionnel de simulation d’investissement dans le VTC avec Yango. Les calculs sont basés sur des données terrain collectées auprès de chauffeurs actifs.",
 important:"Estimations basées sur des données terrain Yango",
 language:"Langue",currency:"Devise",
-menu_salariat:"Salariat",menu_leasing:"Leasing",menu_compare:"Comparaison",
-salariat:"Simulation Salariat",leasing:"Simulation Leasing",
-vehicles:"Nombre de véhicules",purchase:"Prix d’achat par véhicule",
-revenue:"Revenu mensuel par véhicule",salary:"Salaire chauffeur",
-fuel_mode:"Mode carburant",fuel_simple:"Saisie directe",
-fuel_estimate:"Estimation intelligente",
-fuel:"Carburant mensuel",
-fuel_price:"Prix du carburant à la pompe",
-consumption:"Consommation (L/100km)",
-price_km:"Prix par km Yango",
-maintenance:"Entretien & divers",
-sale_price:"Total payé par chauffeur",
-days:"Durée (jours)",
-simulate:"Simuler",
-profit:"Profit mensuel",
-roi:"ROI",
-comparison:"Comparaison Salariat vs Leasing",
-download_pdf:"Télécharger le rapport PDF"
-},
-en:{
-app_name:"Yango Investment Simulator",
-important:"Estimates based on Yango field data",
-language:"Language",currency:"Currency",
-menu_salariat:"Salary",menu_leasing:"Leasing",menu_compare:"Comparison",
-salariat:"Salary simulation",leasing:"Leasing simulation",
-vehicles:"Number of vehicles",purchase:"Purchase price per vehicle",
-revenue:"Monthly revenue per vehicle",salary:"Driver salary",
-fuel_mode:"Fuel mode",fuel_simple:"Manual input",
-fuel_estimate:"Smart estimation",
-fuel:"Monthly fuel",
-fuel_price:"Fuel price",
-consumption:"Consumption (L/100km)",
-price_km:"Price per km",
-maintenance:"Maintenance & others",
-sale_price:"Total paid by driver",
-days:"Duration (days)",
-simulate:"Simulate",
-profit:"Monthly profit",
-roi:"ROI",
-comparison:"Salary vs Leasing comparison",
-download_pdf:"Download PDF report"
-}
-};
-
-/* ================= INIT ================= */
-let lang=navigator.language.slice(0,2);
-if(!i18n[lang]) lang="en";
-let currency="USD";
-const langSelect=document.getElementById("lang");
-Object.keys(i18n).forEach(l=>{langSelect.innerHTML+=`<option value="${l}">${l.toUpperCase()}</option>`});
-langSelect.value=lang;
-langSelect.onchange=()=>{lang=langSelect.value;applyLang()};
-currency.onchange=()=>currency=currency.value;
-
-function applyLang(){
-  document.querySelectorAll("[data-i18n]").forEach(e=>e.innerText=i18n[lang][e.dataset.i18n]);
-}
-applyLang();
-
-/* ================= UTILS ================= */
-function toUSD(v){return v*rates[currency]}
-function fromUSD(v){return new Intl.NumberFormat(undefined,{style:"currency",currency}).format(v/rates[currency])}
-function show(id){["salariat","leasing","compare"].forEach(x=>document.getElementById(x).classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
-function toggleFuel(){
-  fuel_simple.classList.toggle("hidden",fuel_mode.value==="estimate");
-  fuel_estimate.classList.toggle("hidden",fuel_mode.value==="simple");
-}
-
-/* ================= CALCULS ================= */
-let salProfit=0, leaseDaily=0;
-
-function simulateSalariat(){
-  const cars=+s_cars.value;
-  let fuelCost=+s_fuel.value||0;
-  if(fuel_mode.value==="estimate"){
-    fuelCost=(BASE.km/100)*(+consumption.value||8)*(+fuel_price.value||1);
-  }
-  const profit=(+s_rev.value*cars)-((+s_salary.value+fuelCost+(+s_maint.value||0))*cars);
-  salProfit=profit;
-  resSal.innerHTML=`${i18n[lang].profit} : ${fromUSD(profit)}`;
-  resSal.classList.remove("hidden");
-}
-
-function simulateLeasing(){
-  leaseDaily=(+l_sell.value)/(+l_days.value);
-  resLease.innerHTML=`${fromUSD(leaseDaily)} / day`;
-  resLease.classList.remove("hidden");
-}
-
-function downloadPDF(){
-  const {jsPDF}=window.jspdf;
-  const pdf=new jsPDF();
-  pdf.text(i18n[lang].comparison,10,10);
-  pdf.text("Salariat: "+fromUSD(salProfit),10,20);
-  pdf.text("Leasing daily: "+fromUSD(leaseDaily),10,30);
-  pdf.save("Yango_Business_Report.pdf");
-}
-</script>
-</body>
-</html>
+menu_salariat:"Salariat",menu_leasing:"Leasing",menu_compare:"Comparais_
