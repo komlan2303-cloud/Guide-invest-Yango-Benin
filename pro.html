@@ -1,1 +1,236 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yango Investment Simulator</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8}
+.wrapper{max-width:1200px;margin:auto;padding:20px}
+.card{background:#fff;border-radius:14px;padding:20px;margin-bottom:24px}
+.app-title{text-align:center;font-size:26px;font-weight:bold}
+.app-desc{text-align:center;color:#555;margin-top:8px;font-size:14px}
+label{font-weight:bold;display:block;margin-top:14px}
+input,select,button{
+  width:100%;padding:12px;border-radius:10px;
+  border:1px solid #ccc;font-size:15px
+}
+button{background:#FFD400;border:none;font-weight:bold;cursor:pointer;margin-top:18px}
+.nav button{margin-bottom:10px}
+.hidden{display:none}
+.result{background:#fff8db;padding:18px;border-radius:12px;margin-top:18px}
+footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+<div class="card app-title">
+  <span data-i18n="app_name"></span>
+  <div class="app-desc" data-i18n="app_desc"></div>
+</div>
+
+<div class="card">
+  <b data-i18n="important"></b>
+</div>
+
+<div class="card">
+  <label data-i18n="language"></label>
+  <select id="lang"></select>
+
+  <label data-i18n="currency"></label>
+  <select id="currency">
+    <option value="EUR">EUR</option>
+    <option value="USD">USD</option>
+    <option value="XOF">XOF</option>
+    <option value="XAF">XAF</option>
+  </select>
+</div>
+
+<div class="card nav">
+  <button onclick="show('salariat')" data-i18n="menu_salariat"></button>
+  <button onclick="show('leasing')" data-i18n="menu_leasing"></button>
+  <button onclick="show('compare')" data-i18n="menu_compare"></button>
+</div>
+
+<!-- ================= SALARIAT ================= -->
+<div class="card hidden" id="salariat">
+<h3 data-i18n="salariat"></h3>
+<p data-i18n="salariat_desc"></p>
+
+<label data-i18n="vehicles"></label>
+<input id="s_cars">
+
+<label data-i18n="purchase"></label>
+<input id="s_buy">
+
+<label data-i18n="revenue"></label>
+<input id="s_rev">
+
+<label data-i18n="salary"></label>
+<input id="s_salary">
+
+<label data-i18n="fuel"></label>
+<input id="s_fuel">
+
+<label data-i18n="maintenance"></label>
+<input id="s_maint">
+
+<button onclick="simulateSalariat()" data-i18n="simulate"></button>
+<div class="result hidden" id="resSal"></div>
+<button onclick="pdfSalariat()" class="hidden" id="pdfSal">PDF</button>
+</div>
+
+<!-- ================= LEASING ================= -->
+<div class="card hidden" id="leasing">
+<h3 data-i18n="leasing"></h3>
+<p data-i18n="leasing_desc"></p>
+
+<label data-i18n="purchase"></label>
+<input id="l_buy">
+
+<label data-i18n="daily_payment"></label>
+<input id="l_daily">
+
+<label data-i18n="days"></label>
+<input id="l_days">
+
+<label data-i18n="resale"></label>
+<input id="l_resale">
+
+<button onclick="simulateLeasing()" data-i18n="simulate"></button>
+<div class="result hidden" id="resLease"></div>
+<button onclick="pdfLeasing()" class="hidden" id="pdfLease">PDF</button>
+</div>
+
+<!-- ================= COMPARISON ================= -->
+<div class="card hidden" id="compare">
+<h3 data-i18n="comparison"></h3>
+<div class="result" id="resCompare"></div>
+<button onclick="pdfCompare()" data-i18n="download_pdf"></button>
+</div>
+
+<footer>© 2026 – Josué Cédric Komlan Akakpovi</footer>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const rates={EUR:1,USD:0.92,XOF:1/655,XAF:1/655};
+
+/* ================= LANG ================= */
+const i18n={
+fr:{
+app_name:"Simulateur d’Investissement Yango",
+app_desc:"Outil de simulation d’investissement VTC basé sur des données terrain Yango.",
+important:"Estimations basées sur des chauffeurs actifs.",
+language:"Langue",currency:"Devise",
+menu_salariat:"Salariat",
+menu_leasing:"Location avec option d’achat",
+menu_compare:"Comparaison",
+salariat:"Modèle Salariat",
+salariat_desc:"Le propriétaire conserve le véhicule et paie un chauffeur mensuellement.",
+leasing:"Location avec option d’achat",
+leasing_desc:"Le chauffeur paie un montant journalier et peut devenir propriétaire du véhicule.",
+vehicles:"Nombre de véhicules",
+purchase:"Prix d’achat du véhicule",
+revenue:"Revenu mensuel",
+salary:"Salaire chauffeur",
+fuel:"Carburant",
+maintenance:"Entretien",
+daily_payment:"Paiement journalier chauffeur",
+days:"Durée (jours)",
+resale:"Valeur finale du véhicule",
+simulate:"Simuler",
+profit:"Profit",
+roi:"Retour sur investissement",
+comparison:"Comparaison des modèles",
+download_pdf:"Télécharger le rapport PDF"
+},
+en:{ /* idem logique */ }
+};
+
+let lang=navigator.language.slice(0,2);
+if(!i18n[lang]) lang="fr";
+let currency="EUR";
+
+/* ================= INIT ================= */
+const langSelect=document.getElementById("lang");
+Object.keys(i18n).forEach(l=>langSelect.innerHTML+=`<option value="${l}">${l.toUpperCase()}</option>`);
+langSelect.value=lang;
+langSelect.onchange=()=>{lang=langSelect.value;applyLang()};
+currency.onchange=()=>currency=currency.value;
+
+function applyLang(){
+document.querySelectorAll("[data-i18n]").forEach(e=>e.innerText=i18n[lang][e.dataset.i18n]);
+}
+applyLang();
+
+function money(v){
+return new Intl.NumberFormat(lang==="fr"?"fr-FR":"en-US",{style:"currency",currency}).format(v);
+}
+function show(id){
+["salariat","leasing","compare"].forEach(x=>document.getElementById(x).classList.add("hidden"));
+document.getElementById(id).classList.remove("hidden");
+}
+
+/* ================= SALARIAT ================= */
+let salData={};
+function simulateSalariat(){
+const profit=(+s_rev.value)-(+s_salary.value + +s_fuel.value + +s_maint.value);
+const roi = profit>0 ? (+s_buy.value)/profit : null;
+salData={profit,roi};
+resSal.innerHTML=`
+<b>${i18n[lang].profit}</b> : ${money(profit)} / mois<br>
+<b>${i18n[lang].roi}</b> : ${roi?Math.round(roi)+" mois":"Non viable"}<br>
+<b>${profit>0?"✅ Chauffeur viable":"❌ Chauffeur en difficulté"}</b>
+`;
+resSal.classList.remove("hidden");
+pdfSal.classList.remove("hidden");
+}
+
+/* ================= LEASING ================= */
+let leaseData={};
+function simulateLeasing(){
+const total = (+l_daily.value * +l_days.value);
+const profit = total + (+l_resale.value||0) - (+l_buy.value);
+const roi = profit>0 ? (+l_buy.value)/(total/+l_days.value) : null;
+leaseData={profit,roi};
+resLease.innerHTML=`
+<b>${money(l_daily.value)} / jour</b><br>
+<b>${i18n[lang].roi}</b> : ${roi?Math.round(roi)+" mois":"Non viable"}<br>
+<b>${l_daily.value<50?"✅ Paiement soutenable":"❌ Paiement risqué"}</b>
+`;
+resLease.classList.remove("hidden");
+pdfLease.classList.remove("hidden");
+}
+
+/* ================= PDF ================= */
+function pdfSalariat(){
+const pdf=new jspdf.jsPDF();
+pdf.text("SALARIAT",10,10);
+pdf.text(`Profit : ${money(salData.profit)}`,10,20);
+pdf.text(`ROI : ${salData.roi?Math.round(salData.roi)+" mois":"Non viable"}`,10,30);
+pdf.save("Salariat_Yango.pdf");
+}
+function pdfLeasing(){
+const pdf=new jspdf.jsPDF();
+pdf.text("LEASING",10,10);
+pdf.text(`Profit : ${money(leaseData.profit)}`,10,20);
+pdf.text(`ROI : ${leaseData.roi?Math.round(leaseData.roi)+" mois":"Non viable"}`,10,30);
+pdf.save("Leasing_Yango.pdf");
+}
+function pdfCompare(){
+const pdf=new jspdf.jsPDF();
+pdf.text("COMPARAISON",10,10);
+pdf.text(`Salariat : ${money(salData.profit)}`,10,20);
+pdf.text(`Leasing : ${money(leaseData.profit)}`,10,30);
+pdf.save("Comparaison_Yango.pdf");
+}
+</script>
+</body>
+</html>
 
