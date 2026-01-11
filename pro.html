@@ -7,7 +7,7 @@
 
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8}
-.wrapper{max-width:1000px;margin:auto;padding:20px}
+.wrapper{max-width:1100px;margin:auto;padding:20px}
 .card{background:#fff;border-radius:14px;padding:20px;margin-bottom:24px}
 .app-title{text-align:center;font-size:24px;font-weight:bold}
 label{font-weight:bold;display:block;margin-top:14px}
@@ -21,7 +21,6 @@ button{background:#FFD400;border:none;font-weight:bold;cursor:pointer;margin-top
 .result{background:#fff8db;padding:18px;border-radius:12px;margin-top:18px}
 .error{background:#ffe5e5;color:#900;padding:14px;border-radius:10px;margin-top:14px}
 footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
-small{color:#666}
 </style>
 </head>
 
@@ -42,18 +41,45 @@ small{color:#666}
 
   <label data-i18n="currency"></label>
   <select id="currency">
-    <option value="USD">USD</option>
-    <option value="XOF">XOF (FCFA)</option>
-    <option value="XAF">XAF (FCFA)</option>
-    <option value="EUR">EUR</option>
-    <option value="GBP">GBP</option>
-    <option value="GHS">GHS</option>
-    <option value="NGN">NGN</option>
-    <option value="AED">AED</option>
-    <option value="CNY">CNY</option>
-    <option value="ZAR">ZAR</option>
-    <option value="KES">KES</option>
-    <option value="MAD">MAD</option>
+    <option value="USD">USD – US Dollar</option>
+
+    <!-- AFRIQUE -->
+    <option value="XOF">XOF – FCFA UEMOA</option>
+    <option value="XAF">XAF – FCFA CEMAC</option>
+    <option value="GHS">GHS – Ghana</option>
+    <option value="NGN">NGN – Nigeria</option>
+    <option value="ZAR">ZAR – South Africa</option>
+    <option value="KES">KES – Kenya</option>
+    <option value="MAD">MAD – Morocco</option>
+    <option value="EGP">EGP – Egypt</option>
+    <option value="TZS">TZS – Tanzania</option>
+    <option value="UGX">UGX – Uganda</option>
+    <option value="AOA">AOA – Angola</option>
+
+    <!-- EUROPE / EURASIE -->
+    <option value="EUR">EUR – Euro</option>
+    <option value="GBP">GBP – United Kingdom</option>
+    <option value="PLN">PLN – Poland</option>
+    <option value="RUB">RUB – Russia</option>
+    <option value="UZS">UZS – Uzbekistan</option>
+    <option value="KZT">KZT – Kazakhstan</option>
+
+    <!-- MOYEN-ORIENT -->
+    <option value="AED">AED – UAE</option>
+    <option value="SAR">SAR – Saudi Arabia</option>
+    <option value="QAR">QAR – Qatar</option>
+
+    <!-- ASIE -->
+    <option value="CNY">CNY – China</option>
+    <option value="PKR">PKR – Pakistan</option>
+    <option value="INR">INR – India</option>
+    <option value="IDR">IDR – Indonesia</option>
+    <option value="VND">VND – Vietnam</option>
+
+    <!-- AMÉRIQUES -->
+    <option value="COP">COP – Colombia</option>
+    <option value="MXN">MXN – Mexico</option>
+    <option value="BRL">BRL – Brazil</option>
   </select>
 </div>
 
@@ -67,25 +93,25 @@ small{color:#666}
 <h3 data-i18n="salariat"></h3>
 
 <label data-i18n="vehicles"></label>
-<input id="s_cars" type="number" placeholder="Ex: 5">
+<input id="s_cars" type="number" data-ph="vehicles_ph">
 
 <label data-i18n="purchase"></label>
-<input id="s_buy" type="number" placeholder="Prix d’achat par véhicule">
+<input id="s_buy" type="number" data-ph="purchase_ph">
 
 <label data-i18n="revenue"></label>
-<input id="s_rev" type="number" placeholder="Revenu mensuel par véhicule">
+<input id="s_rev" type="number" data-ph="revenue_ph">
 
 <label data-i18n="salary"></label>
-<input id="s_salary" type="number" placeholder="Salaire chauffeur">
+<input id="s_salary" type="number" data-ph="salary_ph">
 
 <label data-i18n="bonus"></label>
-<input id="s_bonus" type="number" placeholder="Primes (facultatif)">
+<input id="s_bonus" type="number" data-ph="bonus_ph">
 
 <label data-i18n="fuel"></label>
-<input id="s_fuel" type="number" placeholder="Carburant mensuel (facultatif)">
+<input id="s_fuel" type="number" data-ph="fuel_ph">
 
 <label data-i18n="maintenance"></label>
-<input id="s_maint" type="number" placeholder="Entretien & divers (facultatif)">
+<input id="s_maint" type="number" data-ph="maintenance_ph">
 
 <button onclick="simulateSalariat()" data-i18n="simulate"></button>
 <div class="error hidden" id="errSal"></div>
@@ -97,16 +123,16 @@ small{color:#666}
 <h3 data-i18n="leasing"></h3>
 
 <label data-i18n="vehicles"></label>
-<input id="l_cars" type="number" placeholder="Ex: 5">
+<input id="l_cars" type="number" data-ph="vehicles_ph">
 
 <label data-i18n="purchase"></label>
-<input id="l_buy" type="number" placeholder="Prix d’achat par véhicule">
+<input id="l_buy" type="number" data-ph="purchase_ph">
 
 <label data-i18n="sale_price"></label>
-<input id="l_sell" type="number" placeholder="Total payé par chauffeur">
+<input id="l_sell" type="number" data-ph="sale_ph">
 
 <label data-i18n="days"></label>
-<input id="l_days" type="number" placeholder="Durée en jours">
+<input id="l_days" type="number" data-ph="days_ph">
 
 <button onclick="simulateLeasing()" data-i18n="simulate"></button>
 <div class="error hidden" id="errLease"></div>
@@ -117,13 +143,8 @@ small{color:#666}
 </div>
 
 <script>
-/* ===== DONNÉES TERRAIN YANGO (USD – SILENCIEUX) ===== */
-const BASE={
-rev:1400,
-salary:140,
-fuel:300,
-maint:170
-};
+/* ===== BASE TERRAIN YANGO (USD) ===== */
+const BASE={rev:1400,salary:140,fuel:300,maint:170};
 
 /* ===== LANGUES ===== */
 const i18n={
@@ -143,13 +164,22 @@ salary:"Salaire chauffeur",
 bonus:"Primes",
 fuel:"Carburant",
 maintenance:"Entretien & divers",
-sale_price:"Total payé par chauffeur",
+sale_price:"Montant total payé par chauffeur",
 days:"Durée de paiement (jours)",
 simulate:"Simuler",
 profit:"Profit net mensuel",
 roi:"Retour sur investissement",
 months:"mois",
-error:"Veuillez remplir tous les champs obligatoires."
+error:"Veuillez remplir tous les champs obligatoires.",
+vehicles_ph:"Ex : 5",
+purchase_ph:"Ex : 5000",
+revenue_ph:"Ex : 1400",
+salary_ph:"Ex : 140",
+bonus_ph:"Facultatif",
+fuel_ph:"Facultatif",
+maintenance_ph:"Facultatif",
+sale_ph:"Ex : 7500",
+days_ph:"Ex : 540"
 },
 en:{
 app_name:"Yango Investment Simulator",
@@ -173,15 +203,27 @@ simulate:"Simulate",
 profit:"Monthly net profit",
 roi:"Return on investment",
 months:"months",
-error:"Please fill all required fields."
+error:"Please fill all required fields.",
+vehicles_ph:"e.g. 5",
+purchase_ph:"e.g. 5000",
+revenue_ph:"e.g. 1400",
+salary_ph:"e.g. 140",
+bonus_ph:"Optional",
+fuel_ph:"Optional",
+maintenance_ph:"Optional",
+sale_ph:"e.g. 7500",
+days_ph:"e.g. 540"
 }
 };
 
-/* ===== DEVISES (vers USD) ===== */
+/* ===== DEVISES (→ USD) ===== */
 const rates={
-USD:1,XOF:1/600,XAF:1/600,EUR:1/1.08,GBP:1/1.27,
-GHS:1/12,NGN:1/1600,AED:1/3.67,CNY:1/7.2,
-ZAR:1/19,KES:1/155,MAD:1/10
+USD:1,XOF:1/600,XAF:1/600,GHS:1/12,NGN:1/1600,ZAR:1/19,
+KES:1/155,MAD:1/10,EGP:1/48,TZS:1/2500,UGX:1/3800,AOA:1/850,
+EUR:1/1.08,GBP:1/1.27,PLN:1/4.3,RUB:1/95,UZS:1/12500,KZT:1/470,
+AED:1/3.67,SAR:1/3.75,QAR:1/3.64,
+CNY:1/7.2,PKR:1/280,INR:1/83,IDR:1/15500,VND:1/24500,
+COP:1/3950,MXN:1/17,BRL:1/5
 };
 
 let currentCurrency="USD";
@@ -196,15 +238,19 @@ Object.keys(i18n).forEach(l=>{
   langSelect.appendChild(o);
 });
 langSelect.value=currentLang;
+
 function applyLang(){
   document.querySelectorAll("[data-i18n]").forEach(el=>{
     el.innerText=i18n[currentLang][el.dataset.i18n];
+  });
+  document.querySelectorAll("[data-ph]").forEach(el=>{
+    el.placeholder=i18n[currentLang][el.dataset.ph];
   });
 }
 langSelect.onchange=()=>{currentLang=langSelect.value;applyLang();}
 applyLang();
 
-/* CURRENCY */
+/* CONVERSION */
 currency.onchange=()=>currentCurrency=currency.value;
 function toUSD(v){return v*rates[currentCurrency]}
 function fromUSD(v){
@@ -229,19 +275,11 @@ function simulateSalariat(){
   }
   const cars=+s_cars.value;
   const rev=(+s_rev.value||BASE.rev)*cars;
-  const costs=(
-    (+s_salary.value||BASE.salary)+
-    (+s_bonus.value||0)+
-    (+s_fuel.value||BASE.fuel)+
-    (+s_maint.value||BASE.maint)
-  )*cars;
-
+  const costs=((+s_salary.value||BASE.salary)+(+s_bonus.value||0)+(+s_fuel.value||BASE.fuel)+(+s_maint.value||BASE.maint))*cars;
   const profit=rev-costs;
   const roi=(toUSD(s_buy.value*cars)/toUSD(profit)).toFixed(1);
 
-  resSal.innerHTML=`
-  ${i18n[currentLang].profit} : ${fromUSD(profit)}<br>
-  ${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}`;
+  resSal.innerHTML=`${i18n[currentLang].profit} : ${fromUSD(profit)}<br>${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}`;
   resSal.classList.remove("hidden");
 }
 
@@ -252,13 +290,9 @@ function simulateLeasing(){
     errLease.innerText=i18n[currentLang].error;
     errLease.classList.remove("hidden");return;
   }
-  const cars=+l_cars.value;
-  const daily=(l_sell.value/l_days.value);
+  const daily=l_sell.value/l_days.value;
   const roiDays=(l_buy.value/daily).toFixed(0);
-
-  resLease.innerHTML=`
-  ${fromUSD(daily)} / jour<br>
-  ${i18n[currentLang].roi} : ${roiDays} jours`;
+  resLease.innerHTML=`${fromUSD(daily)} / jour<br>${i18n[currentLang].roi} : ${roiDays} jours`;
   resLease.classList.remove("hidden");
 }
 </script>
