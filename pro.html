@@ -7,24 +7,21 @@
 
 <style>
 body{margin:0;font-family:Arial,sans-serif;background:#f5f6f8}
-.wrapper{max-width:900px;margin:auto;padding:20px}
+.wrapper{max-width:1000px;margin:auto;padding:20px}
 .card{background:#fff;border-radius:14px;padding:20px;margin-bottom:24px}
-.app-title{text-align:center;font-size:22px;font-weight:bold}
-.field{margin-bottom:18px}
-label{font-weight:bold}
+.app-title{text-align:center;font-size:24px;font-weight:bold}
+label{font-weight:bold;display:block;margin-top:14px}
 input,select,button{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  font-size:15px
+  width:100%;padding:12px;border-radius:10px;
+  border:1px solid #ccc;font-size:15px
 }
-button{background:#FFD400;border:none;font-weight:bold;cursor:pointer}
+button{background:#FFD400;border:none;font-weight:bold;cursor:pointer;margin-top:18px}
 .nav button{margin-bottom:10px}
 .hidden{display:none}
-.result{background:#fff8db;padding:15px;border-radius:12px;margin-top:15px}
-.error{background:#ffe5e5;color:#900;padding:12px;border-radius:10px;margin-top:15px}
+.result{background:#fff8db;padding:18px;border-radius:12px;margin-top:18px}
+.error{background:#ffe5e5;color:#900;padding:14px;border-radius:10px;margin-top:14px}
 footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
+small{color:#666}
 </style>
 </head>
 
@@ -45,45 +42,18 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 
   <label data-i18n="currency"></label>
   <select id="currency">
-    <option value="USD">USD – US Dollar</option>
-
-    <!-- Afrique -->
-    <option value="XOF">XOF – FCFA UEMOA</option>
-    <option value="XAF">XAF – FCFA CEMAC</option>
-    <option value="GHS">GHS – Ghana Cedi</option>
-    <option value="NGN">NGN – Nigerian Naira</option>
-    <option value="ZAR">ZAR – South African Rand</option>
-    <option value="KES">KES – Kenyan Shilling</option>
-    <option value="MAD">MAD – Moroccan Dirham</option>
-    <option value="EGP">EGP – Egyptian Pound</option>
-    <option value="TZS">TZS – Tanzanian Shilling</option>
-    <option value="UGX">UGX – Ugandan Shilling</option>
-    <option value="AOA">AOA – Angolan Kwanza</option>
-
-    <!-- Europe / Eurasie -->
-    <option value="EUR">EUR – Euro</option>
-    <option value="GBP">GBP – British Pound</option>
-    <option value="PLN">PLN – Polish Zloty</option>
-    <option value="RUB">RUB – Russian Ruble</option>
-    <option value="UZS">UZS – Uzbek Som</option>
-    <option value="KZT">KZT – Kazakh Tenge</option>
-
-    <!-- Moyen-Orient -->
-    <option value="AED">AED – UAE Dirham</option>
-    <option value="SAR">SAR – Saudi Riyal</option>
-    <option value="QAR">QAR – Qatari Riyal</option>
-
-    <!-- Asie -->
-    <option value="CNY">CNY – Chinese Yuan</option>
-    <option value="PKR">PKR – Pakistani Rupee</option>
-    <option value="INR">INR – Indian Rupee</option>
-    <option value="IDR">IDR – Indonesian Rupiah</option>
-    <option value="VND">VND – Vietnamese Dong</option>
-
-    <!-- Amériques -->
-    <option value="COP">COP – Colombian Peso</option>
-    <option value="MXN">MXN – Mexican Peso</option>
-    <option value="BRL">BRL – Brazilian Real</option>
+    <option value="USD">USD</option>
+    <option value="XOF">XOF (FCFA)</option>
+    <option value="XAF">XAF (FCFA)</option>
+    <option value="EUR">EUR</option>
+    <option value="GBP">GBP</option>
+    <option value="GHS">GHS</option>
+    <option value="NGN">NGN</option>
+    <option value="AED">AED</option>
+    <option value="CNY">CNY</option>
+    <option value="ZAR">ZAR</option>
+    <option value="KES">KES</option>
+    <option value="MAD">MAD</option>
   </select>
 </div>
 
@@ -94,44 +64,67 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 
 <!-- SALARIAT -->
 <div class="card hidden" id="salariat">
-  <h3 data-i18n="salariat"></h3>
+<h3 data-i18n="salariat"></h3>
 
-  <label data-i18n="purchase"></label>
-  <input id="s_buy" type="number" placeholder="Ex: 5000 (prix du véhicule)">
+<label data-i18n="vehicles"></label>
+<input id="s_cars" type="number" placeholder="Ex: 5">
 
-  <label data-i18n="revenue"></label>
-  <input id="s_rev" type="number" placeholder="Ex: 1400 (revenu mensuel)">
+<label data-i18n="purchase"></label>
+<input id="s_buy" type="number" placeholder="Prix d’achat par véhicule">
 
-  <label data-i18n="salary"></label>
-  <input id="s_salary" type="number" placeholder="Ex: 140 (charges mensuelles)">
+<label data-i18n="revenue"></label>
+<input id="s_rev" type="number" placeholder="Revenu mensuel par véhicule">
 
-  <button onclick="simulateSalariat()" data-i18n="simulate"></button>
-  <div class="error hidden" id="errSal"></div>
-  <div class="result hidden" id="resSal"></div>
+<label data-i18n="salary"></label>
+<input id="s_salary" type="number" placeholder="Salaire chauffeur">
+
+<label data-i18n="bonus"></label>
+<input id="s_bonus" type="number" placeholder="Primes (facultatif)">
+
+<label data-i18n="fuel"></label>
+<input id="s_fuel" type="number" placeholder="Carburant mensuel (facultatif)">
+
+<label data-i18n="maintenance"></label>
+<input id="s_maint" type="number" placeholder="Entretien & divers (facultatif)">
+
+<button onclick="simulateSalariat()" data-i18n="simulate"></button>
+<div class="error hidden" id="errSal"></div>
+<div class="result hidden" id="resSal"></div>
 </div>
 
 <!-- LEASING -->
 <div class="card hidden" id="leasing">
-  <h3 data-i18n="leasing"></h3>
+<h3 data-i18n="leasing"></h3>
 
-  <label data-i18n="purchase"></label>
-  <input id="l_buy" type="number" placeholder="Ex: 5000 (prix du véhicule)">
+<label data-i18n="vehicles"></label>
+<input id="l_cars" type="number" placeholder="Ex: 5">
 
-  <label data-i18n="sale_price"></label>
-  <input id="l_sell" type="number" placeholder="Ex: 7500 (total payé)">
+<label data-i18n="purchase"></label>
+<input id="l_buy" type="number" placeholder="Prix d’achat par véhicule">
 
-  <label data-i18n="duration"></label>
-  <input id="l_months" type="number" placeholder="Ex: 24">
+<label data-i18n="sale_price"></label>
+<input id="l_sell" type="number" placeholder="Total payé par chauffeur">
 
-  <button onclick="simulateLeasing()" data-i18n="simulate"></button>
-  <div class="error hidden" id="errLease"></div>
-  <div class="result hidden" id="resLease"></div>
+<label data-i18n="days"></label>
+<input id="l_days" type="number" placeholder="Durée en jours">
+
+<button onclick="simulateLeasing()" data-i18n="simulate"></button>
+<div class="error hidden" id="errLease"></div>
+<div class="result hidden" id="resLease"></div>
 </div>
 
 <footer>© 2026 – Josué Cédric Komlan Akakpovi</footer>
 </div>
 
 <script>
+/* ===== DONNÉES TERRAIN YANGO (USD – SILENCIEUX) ===== */
+const BASE={
+rev:1400,
+salary:140,
+fuel:300,
+maint:170
+};
+
 /* ===== LANGUES ===== */
 const i18n={
 fr:{
@@ -143,16 +136,20 @@ menu_salariat:"Salariat",
 menu_leasing:"Leasing",
 salariat:"Simulation – Modèle Salariat",
 leasing:"Simulation – Modèle Leasing",
-purchase:"Prix d’achat du véhicule",
-revenue:"Revenu mensuel",
-salary:"Charges mensuelles",
-sale_price:"Montant total payé",
-duration:"Durée (mois)",
+vehicles:"Nombre de véhicules",
+purchase:"Prix d’achat par véhicule",
+revenue:"Revenu mensuel par véhicule",
+salary:"Salaire chauffeur",
+bonus:"Primes",
+fuel:"Carburant",
+maintenance:"Entretien & divers",
+sale_price:"Total payé par chauffeur",
+days:"Durée de paiement (jours)",
 simulate:"Simuler",
-profit:"Profit mensuel",
+profit:"Profit net mensuel",
 roi:"Retour sur investissement",
 months:"mois",
-error:"Veuillez remplir tous les champs avec des valeurs valides."
+error:"Veuillez remplir tous les champs obligatoires."
 },
 en:{
 app_name:"Yango Investment Simulator",
@@ -163,36 +160,35 @@ menu_salariat:"Salary",
 menu_leasing:"Leasing",
 salariat:"Salary model simulation",
 leasing:"Leasing model simulation",
-purchase:"Vehicle purchase price",
-revenue:"Monthly revenue",
-salary:"Monthly costs",
-sale_price:"Total paid",
-duration:"Duration (months)",
+vehicles:"Number of vehicles",
+purchase:"Purchase price per vehicle",
+revenue:"Monthly revenue per vehicle",
+salary:"Driver salary",
+bonus:"Bonuses",
+fuel:"Fuel",
+maintenance:"Maintenance & others",
+sale_price:"Total paid by driver",
+days:"Payment duration (days)",
 simulate:"Simulate",
-profit:"Monthly profit",
+profit:"Monthly net profit",
 roi:"Return on investment",
 months:"months",
-error:"Please fill in all fields with valid values."
+error:"Please fill all required fields."
 }
 };
 
 /* ===== DEVISES (vers USD) ===== */
 const rates={
-USD:1,
-XOF:1/600,XAF:1/600,
-GHS:1/12,NGN:1/1600,ZAR:1/19,KES:1/155,
-MAD:1/10,EGP:1/48,TZS:1/2500,UGX:1/3800,AOA:1/850,
-EUR:1/1.08,GBP:1/1.27,PLN:1/4.3,RUB:1/95,UZS:1/12500,KZT:1/470,
-AED:1/3.67,SAR:1/3.75,QAR:1/3.64,
-CNY:1/7.2,PKR:1/280,INR:1/83,IDR:1/15500,VND:1/24500,
-COP:1/3950,MXN:1/17,BRL:1/5
+USD:1,XOF:1/600,XAF:1/600,EUR:1/1.08,GBP:1/1.27,
+GHS:1/12,NGN:1/1600,AED:1/3.67,CNY:1/7.2,
+ZAR:1/19,KES:1/155,MAD:1/10
 };
 
 let currentCurrency="USD";
 let currentLang=navigator.language.slice(0,2);
 if(!i18n[currentLang]) currentLang="en";
 
-/* ===== INIT LANG ===== */
+/* INIT LANG */
 const langSelect=document.getElementById("lang");
 Object.keys(i18n).forEach(l=>{
   const o=document.createElement("option");
@@ -200,7 +196,6 @@ Object.keys(i18n).forEach(l=>{
   langSelect.appendChild(o);
 });
 langSelect.value=currentLang;
-
 function applyLang(){
   document.querySelectorAll("[data-i18n]").forEach(el=>{
     el.innerText=i18n[currentLang][el.dataset.i18n];
@@ -209,51 +204,61 @@ function applyLang(){
 langSelect.onchange=()=>{currentLang=langSelect.value;applyLang();}
 applyLang();
 
-/* ===== CONVERSION ===== */
+/* CURRENCY */
 currency.onchange=()=>currentCurrency=currency.value;
-function toUSD(v){return v * rates[currentCurrency]}
+function toUSD(v){return v*rates[currentCurrency]}
 function fromUSD(v){
   return new Intl.NumberFormat(undefined,{
-    style:"currency",
-    currency:currentCurrency,
-    maximumFractionDigits:2
-  }).format(v / rates[currentCurrency]);
+    style:"currency",currency:currentCurrency,maximumFractionDigits:0
+  }).format(v/rates[currentCurrency]);
 }
 
-/* ===== NAV ===== */
+/* NAV */
 function show(id){
   salariat.classList.add("hidden");
   leasing.classList.add("hidden");
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* ===== VALIDATION ===== */
-function invalid(arr){return arr.some(v=>!v||v<=0);}
-
-/* ===== SIMULATIONS ===== */
+/* SALARIAT */
 function simulateSalariat(){
   errSal.classList.add("hidden");resSal.classList.add("hidden");
-  if(invalid([s_buy.value,s_rev.value,s_salary.value])){
+  if(!s_cars.value||!s_buy.value){
     errSal.innerText=i18n[currentLang].error;
     errSal.classList.remove("hidden");return;
   }
-  const profitUSD=toUSD(s_rev.value-s_salary.value);
-  const roi=(toUSD(s_buy.value)/profitUSD).toFixed(1);
-  resSal.innerHTML=`${i18n[currentLang].profit} : ${fromUSD(profitUSD)}<br>
+  const cars=+s_cars.value;
+  const rev=(+s_rev.value||BASE.rev)*cars;
+  const costs=(
+    (+s_salary.value||BASE.salary)+
+    (+s_bonus.value||0)+
+    (+s_fuel.value||BASE.fuel)+
+    (+s_maint.value||BASE.maint)
+  )*cars;
+
+  const profit=rev-costs;
+  const roi=(toUSD(s_buy.value*cars)/toUSD(profit)).toFixed(1);
+
+  resSal.innerHTML=`
+  ${i18n[currentLang].profit} : ${fromUSD(profit)}<br>
   ${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}`;
   resSal.classList.remove("hidden");
 }
 
+/* LEASING */
 function simulateLeasing(){
   errLease.classList.add("hidden");resLease.classList.add("hidden");
-  if(invalid([l_buy.value,l_sell.value,l_months.value])){
+  if(!l_cars.value||!l_buy.value||!l_sell.value||!l_days.value){
     errLease.innerText=i18n[currentLang].error;
     errLease.classList.remove("hidden");return;
   }
-  const monthlyUSD=toUSD(l_sell.value/l_months.value);
-  const roi=(toUSD(l_buy.value)/monthlyUSD).toFixed(1);
-  resLease.innerHTML=`${fromUSD(monthlyUSD)} / ${i18n[currentLang].months}<br>
-  ${i18n[currentLang].roi} : ${roi} ${i18n[currentLang].months}`;
+  const cars=+l_cars.value;
+  const daily=(l_sell.value/l_days.value);
+  const roiDays=(l_buy.value/daily).toFixed(0);
+
+  resLease.innerHTML=`
+  ${fromUSD(daily)} / jour<br>
+  ${i18n[currentLang].roi} : ${roiDays} jours`;
   resLease.classList.remove("hidden");
 }
 </script>
