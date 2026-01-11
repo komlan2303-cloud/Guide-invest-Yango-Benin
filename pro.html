@@ -47,13 +47,13 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <div class="wrapper">
 
 <div class="card">
-<b data-i18n="important">Estimations basées sur le service Yango ECO</b>
-<b>Important :</b>  
-Estimations basées sur le service <b>Yango ECO</b>.
+  <b data-i18n="important"></b>
 </div>
+
 
 <div class="card">
 <label>Langue</label>
+<label data-i18n="language">Langue</label>
 </script>
 <select id="lang">
   <option value="fr">Français</option>
@@ -68,6 +68,7 @@ Estimations basées sur le service <b>Yango ECO</b>.
 
 
 <label>Devise</label>
+<label data-i18n="currency">Devise</label>
 <select id="currency">
   <option value="FCFA">FCFA</option>
   <option value="USD">USD</option>
@@ -79,8 +80,8 @@ Estimations basées sur le service <b>Yango ECO</b>.
 
 <div class="card" id="login">
 <h2 data-i18n="access">Accès professionnel</h2>
-<input id="code" placeholder="Code PRO">
-<button onclick="unlock()">OK</button>
+<input id="code" data-i18n-placeholder="code" placeholder="Code PRO">
+<button onclick="unlock()" data-i18n="ok">OK</button>
 </div>
 
 <div class="card hidden" id="app">
@@ -163,16 +164,24 @@ Estimations basées sur le service <b>Yango ECO</b>.
 <script>
   function applyLanguage() {
   const langValue = document.getElementById("lang").value;
+
+  // Textes normaux
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
     if (i18n[langValue] && i18n[langValue][key]) {
       el.innerText = i18n[langValue][key];
     }
   });
+
+  // Placeholders
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (i18n[langValue] && i18n[langValue][key]) {
+      el.placeholder = i18n[langValue][key];
+    }
+  });
 }
 
-document.getElementById("lang").addEventListener("change", applyLanguage);
-window.addEventListener("load", applyLanguage);
 
 /* ===== CONFIG ===== */
 const rates={FCFA:1,USD:600,EUR:655,GHS:50,NGN:1.3};
@@ -182,6 +191,10 @@ currency.onchange=()=>cur=currency.value;
 /* ===== I18N ===== */
 const i18n = {
   fr: {
+    language: "Langue",
+    currency: "Devise",
+    ok: "OK",
+    code: "Code PRO",
     access: "Accès professionnel",
     salariat: "Simulation – Modèle Salariat",
     leasing: "Simulation – Modèle Leasing",
@@ -193,7 +206,12 @@ const i18n = {
     calculate: "Calculer",
     important: "Estimations basées sur le service Yango ECO"
   },
+
   en: {
+    language: "Language",
+    currency: "Currency",
+    ok: "OK",
+    code: "PRO code",
     access: "Professional access",
     salariat: "Salary model simulation",
     leasing: "Leasing model simulation",
@@ -205,7 +223,12 @@ const i18n = {
     calculate: "Calculate",
     important: "Estimates based on Yango ECO service"
   },
+
   es: {
+    language: "Idioma",
+    currency: "Moneda",
+    ok: "OK",
+    code: "Código PRO",
     access: "Acceso profesional",
     salariat: "Simulación – Modelo salarial",
     leasing: "Simulación – Modelo leasing",
@@ -217,7 +240,12 @@ const i18n = {
     calculate: "Calcular",
     important: "Estimaciones basadas en el servicio Yango ECO"
   },
+
   pt: {
+    language: "Idioma",
+    currency: "Moeda",
+    ok: "OK",
+    code: "Código PRO",
     access: "Acesso profissional",
     salariat: "Simulação – Modelo salarial",
     leasing: "Simulação – Modelo leasing",
@@ -229,7 +257,12 @@ const i18n = {
     calculate: "Calcular",
     important: "Estimativas baseadas no serviço Yango ECO"
   },
+
   ru: {
+    language: "Язык",
+    currency: "Валюта",
+    ok: "ОК",
+    code: "ПРО код",
     access: "Профессиональный доступ",
     salariat: "Модель с зарплатой",
     leasing: "Лизинговая модель",
@@ -241,7 +274,12 @@ const i18n = {
     calculate: "Рассчитать",
     important: "Оценки основаны на сервисе Yango ECO"
   },
+
   ar: {
+    language: "اللغة",
+    currency: "العملة",
+    ok: "موافق",
+    code: "رمز احترافي",
     access: "دخول احترافي",
     salariat: "نموذج الراتب",
     leasing: "نموذج التأجير",
@@ -253,7 +291,12 @@ const i18n = {
     calculate: "احسب",
     important: "التقديرات مبنية على خدمة Yango ECO"
   },
+
   hi: {
+    language: "भाषा",
+    currency: "मुद्रा",
+    ok: "ठीक है",
+    code: "प्रो कोड",
     access: "पेशेवर प्रवेश",
     salariat: "वेतन मॉडल",
     leasing: "लीजिंग मॉडल",
@@ -265,7 +308,12 @@ const i18n = {
     calculate: "गणना करें",
     important: "अनुमान Yango ECO सेवा पर आधारित हैं"
   },
+
   zh: {
+    language: "语言",
+    currency: "货币",
+    ok: "确定",
+    code: "专业代码",
     access: "专业访问",
     salariat: "薪资模式",
     leasing: "租赁模式",
