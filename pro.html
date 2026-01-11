@@ -150,4 +150,128 @@ app_name:"Simulateur d’Investissement Yango",
 app_desc:"Outil professionnel de simulation d’investissement dans le VTC avec Yango. Les calculs sont basés sur des données terrain collectées auprès de chauffeurs actifs.",
 important:"Estimations basées sur des données terrain Yango",
 language:"Langue",currency:"Devise",
-menu_salariat:"Salariat",menu_leasing:"Leasing",menu_compare:"Comparais_
+menu_salariat:"Salariat",menu_leasing:"Leasing",menu_compare:"Comparaison",
+salariat:"Simulation Salariat",leasing:"Simulation Leasing",
+vehicles:"Nombre de véhicules",
+purchase:"Prix d’achat par véhicule",
+revenue:"Revenu mensuel par véhicule",
+salary:"Salaire chauffeur",
+fuel_mode:"Mode carburant",
+fuel_simple:"Saisie directe",
+fuel_estimate:"Estimation intelligente",
+fuel:"Carburant mensuel",
+fuel_price:"Prix carburant à la pompe",
+consumption:"Consommation (L/100 km)",
+price_km:"Prix par km Yango",
+maintenance:"Entretien & divers",
+sale_price:"Total payé par chauffeur",
+days:"Durée (jours)",
+simulate:"Simuler",
+profit:"Profit mensuel",
+comparison:"Comparaison Salariat vs Leasing",
+download_pdf:"Télécharger le rapport PDF",
+
+vehicles_ph:"Ex : 5 véhicules",
+purchase_ph:"Ex : 5 000 par véhicule",
+revenue_ph:"Ex : 1 400 par véhicule",
+salary_ph:"Ex : 140 par mois",
+fuel_ph:"Ex : 300 par mois",
+fuel_price_ph:"Ex : 1.2 par litre",
+consumption_ph:"Ex : 8 L / 100 km",
+price_km_ph:"Ex : 0.35 par km",
+maintenance_ph:"Ex : 170 par mois",
+sale_ph:"Ex : 7 500",
+days_ph:"Ex : 540"
+},
+en:{
+app_name:"Yango Investment Simulator",
+app_desc:"Professional investment simulation tool for ride-hailing with Yango. Calculations are based on real field data collected from active drivers.",
+important:"Estimates based on Yango field data",
+language:"Language",currency:"Currency",
+menu_salariat:"Salary",menu_leasing:"Leasing",menu_compare:"Comparison",
+salariat:"Salary simulation",leasing:"Leasing simulation",
+vehicles:"Number of vehicles",
+purchase:"Purchase price per vehicle",
+revenue:"Monthly revenue per vehicle",
+salary:"Driver salary",
+fuel_mode:"Fuel mode",
+fuel_simple:"Manual input",
+fuel_estimate:"Smart estimation",
+fuel:"Monthly fuel",
+fuel_price:"Fuel price",
+consumption:"Consumption (L/100 km)",
+price_km:"Price per km",
+maintenance:"Maintenance & others",
+sale_price:"Total paid by driver",
+days:"Duration (days)",
+simulate:"Simulate",
+profit:"Monthly profit",
+comparison:"Salary vs Leasing comparison",
+download_pdf:"Download PDF report",
+
+vehicles_ph:"e.g. 5 vehicles",
+purchase_ph:"e.g. 5,000 per vehicle",
+revenue_ph:"e.g. 1,400 per vehicle",
+salary_ph:"e.g. 140 per month",
+fuel_ph:"e.g. 300 per month",
+fuel_price_ph:"e.g. 1.2 per liter",
+consumption_ph:"e.g. 8 L / 100 km",
+price_km_ph:"e.g. 0.35 per km",
+maintenance_ph:"e.g. 170 per month",
+sale_ph:"e.g. 7,500",
+days_ph:"e.g. 540"
+}
+};
+
+let lang=navigator.language.slice(0,2);
+if(!i18n[lang]) lang="en";
+let currency="USD";
+
+const langSelect=document.getElementById("lang");
+Object.keys(i18n).forEach(l=>langSelect.innerHTML+=`<option value="${l}">${l.toUpperCase()}</option>`);
+langSelect.value=lang;
+langSelect.onchange=()=>{lang=langSelect.value;applyLang()};
+currency.onchange=()=>currency=currency.value;
+
+function applyLang(){
+  document.querySelectorAll("[data-i18n]").forEach(e=>e.innerText=i18n[lang][e.dataset.i18n]);
+  document.querySelectorAll("[data-ph]").forEach(e=>e.placeholder=i18n[lang][e.dataset.ph]);
+}
+applyLang();
+
+function toUSD(v){return v*rates[currency]}
+function fromUSD(v){return new Intl.NumberFormat(undefined,{style:"currency",currency}).format(v/rates[currency])}
+function show(id){["salariat","leasing","compare"].forEach(x=>document.getElementById(x).classList.add("hidden"));document.getElementById(id).classList.remove("hidden")}
+function toggleFuel(){fuel_simple.classList.toggle("hidden",fuel_mode.value==="estimate");fuel_estimate.classList.toggle("hidden",fuel_mode.value==="simple")}
+
+let salProfit=0, leaseDaily=0;
+
+function simulateSalariat(){
+  const cars=+s_cars.value;
+  let fuelCost=+s_fuel.value||0;
+  if(fuel_mode.value==="estimate"){
+    fuelCost=(BASE.km/100)*(+consumption.value||8)*(+fuel_price.value||1);
+  }
+  const profit=(+s_rev.value*cars)-((+s_salary.value+fuelCost+(+s_maint.value||0))*cars);
+  salProfit=profit;
+  resSal.innerHTML=`${i18n[lang].profit} : ${fromUSD(profit)}`;
+  resSal.classList.remove("hidden");
+}
+
+function simulateLeasing(){
+  leaseDaily=(+l_sell.value)/(+l_days.value);
+  resLease.innerHTML=`${fromUSD(leaseDaily)} / day`;
+  resLease.classList.remove("hidden");
+}
+
+function downloadPDF(){
+  const {jsPDF}=window.jspdf;
+  const pdf=new jsPDF();
+  pdf.text(i18n[lang].comparison,10,10);
+  pdf.text("Salariat: "+fromUSD(salProfit),10,20);
+  pdf.text("Leasing daily: "+fromUSD(leaseDaily),10,30);
+  pdf.save("Yango_Investment_Report.pdf");
+}
+</script>
+</body>
+</html>
