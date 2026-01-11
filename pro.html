@@ -273,5 +273,99 @@ function downloadPDF(){
   pdf.save("Yango_Investment_Report.pdf");
 }
 </script>
+<!-- ================= HISTORY & PRO (ADD-ON) ================= -->
+
+<div class="card hidden" id="history">
+  <h3 data-i18n="history_title"></h3>
+  <div id="historyList" class="result"></div>
+</div>
+
+<div class="card">
+  <b data-i18n="pro_badge"></b>
+</div>
+
+<script>
+/* ================= I18N ADD-ON ================= */
+if(i18n.fr){
+  i18n.fr.history_title = "Historique des simulations";
+  i18n.fr.pro_badge = "Version PRO – Analyse avancée, multi-devises et export activés";
+}
+if(i18n.en){
+  i18n.en.history_title = "Simulation history";
+  i18n.en.pro_badge = "PRO version – Advanced analytics, multi-currency & export enabled";
+}
+
+/* ================= HISTORY LOGIC ================= */
+function saveHistory(type, payload){
+  const history = JSON.parse(localStorage.getItem("yango_history") || "[]");
+  history.unshift({
+    type,
+    currency,
+    lang,
+    date: new Date().toLocaleString(),
+    data: payload
+  });
+  localStorage.setItem("yango_history", JSON.stringify(history.slice(0, 10)));
+  renderHistory();
+}
+
+function renderHistory(){
+  const history = JSON.parse(localStorage.getItem("yango_history") || "[]");
+  if(!history.length){
+    historyList.innerHTML = "—";
+    return;
+  }
+  historyList.innerHTML = history.map(h => `
+    <div style="margin-bottom:10px">
+      <b>${h.type}</b> – ${h.date}<br>
+      <small>${JSON.stringify(h.data)}</small>
+    </div>
+  `).join("");
+}
+renderHistory();
+
+/* ================= EXTEND EXISTING FUNCTIONS ================= */
+const _simulateSalariat = simulateSalariat;
+simulateSalariat = function(){
+  _simulateSalariat();
+  saveHistory("Salariat", {
+    profit: fromUSD(salProfit),
+    vehicles: s_cars.value
+  });
+};
+
+const _simulateLeasing = simulateLeasing;
+simulateLeasing = function(){
+  _simulateLeasing();
+  saveHistory("Leasing", {
+    daily: fromUSD(leaseDaily),
+    vehicles: l_cars.value
+  });
+};
+
+/* ================= COMPARISON TABLE ================= */
+const _show = show;
+show = function(id){
+  _show(id);
+  if(id === "compare"){
+    resCompare.innerHTML = `
+      <table style="width:100%;border-collapse:collapse">
+        <tr>
+          <th style="text-align:left">Model</th>
+          <th style="text-align:left">Result</th>
+        </tr>
+        <tr>
+          <td>Salariat</td>
+          <td>${fromUSD(salProfit)} / month</td>
+        </tr>
+        <tr>
+          <td>Leasing</td>
+          <td>${fromUSD(leaseDaily)} / day</td>
+        </tr>
+      </table>
+    `;
+  }
+};
+</script>
 </body>
 </html>
