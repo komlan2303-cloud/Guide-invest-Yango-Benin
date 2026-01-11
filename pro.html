@@ -45,6 +45,9 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 
 <body>
 <div class="wrapper">
+<div class="card" style="text-align:center;font-weight:bold;font-size:18px">
+  <span data-i18n="Simulateur d'investissement Yango"></span>
+</div>
 
 <div class="card">
   <b data-i18n="important"></b>
@@ -87,12 +90,13 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <div class="card hidden" id="app">
 
 <div class="nav">
-<button onclick="show('salariat')">Salariat</button>
-<button onclick="show('leasing')">Leasing</button>
-<button onclick="show('compare')">Comparaison</button>
-<button onclick="show('history')">Historique</button>
+<button onclick="show('salariat')" data-i18n="menu_salariat"></button>
+<button onclick="show('leasing')" data-i18n="menu_leasing"></button>
+<button onclick="show('compare')" data-i18n="menu_compare"></button>
+<button onclick="show('history')" data-i18n="menu_history"></button>
 </div>
-
+</script>
+<script>
 <div id="salariat" class="hidden">
 <h3 data-i18n="salariat">Simulation Salariat</h3>
 
@@ -112,11 +116,18 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 <input id="s_salary" type="number" value="80000">
 </div>
 
-<button onclick="calcSalariat()">Calculer</button>
-<h3 data-i18n="calculate">Calculer</h3>  
+<button onclick="calcSalariat()" data-i18n="simulate"></button>
 <div class="result" id="resSal"></div>
 <button onclick="pdf('Salariat')">PDF</button>
 </div>
+</script>
+
+resSal.innerHTML = `
+${i18n[lang].profit} : ${conv(profit)}<br>
+${i18n[lang].roi} : ${(s_buy.value/profit).toFixed(1)} ${i18n[lang].months}
+`;
+
+<script>
 
 <div id="leasing" class="hidden">
 <h3 data-i18n="leasing">Simulation Leasing</h3>
@@ -162,6 +173,15 @@ footer{text-align:center;font-size:13px;color:#555;margin-top:40px}
 </div>
 
 <script>
+  function detectBrowserLang() {
+  const browserLang = navigator.language.slice(0,2);
+  return i18n[browserLang] ? browserLang : "fr";
+}
+
+const langSelect = document.getElementById("lang");
+langSelect.value = detectBrowserLang();
+applyLanguage();
+
   function applyLanguage() {
   const langValue = document.getElementById("lang").value;
 
@@ -190,142 +210,127 @@ currency.onchange=()=>cur=currency.value;
 
 /* ===== I18N ===== */
 const i18n = {
-  fr: {
-    language: "Langue",
-    currency: "Devise",
-    ok: "OK",
-    code: "Code PRO",
-    access: "Accès professionnel",
-    salariat: "Simulation – Modèle Salariat",
-    leasing: "Simulation – Modèle Leasing",
-    comparison: "Comparaison",
-    history: "Historique",
-    purchase: "Prix d’achat du véhicule",
-    revenue: "Revenu mensuel",
-    salary: "Salaire chauffeur",
-    calculate: "Calculer",
-    important: "Estimations basées sur le service Yango ECO"
+  fr:{
+    app_name:"Yango Business Simulator – PRO",
+    language:"Langue",
+    currency:"Devise",
+    ok:"OK",
+    code:"Code PRO",
+    access:"Accès professionnel",
+    menu_salariat:"Salariat",
+    menu_leasing:"Leasing",
+    menu_compare:"Comparaison",
+    menu_history:"Historique",
+    salariat:"Simulation – Modèle Salariat",
+    leasing:"Simulation – Modèle Leasing",
+    simulate:"Simuler",
+    profit:"Profit",
+    roi:"ROI",
+    months:"mois",
+    important:"Estimations basées sur le service Yango ECO"
   },
 
-  en: {
-    language: "Language",
-    currency: "Currency",
-    ok: "OK",
-    code: "PRO code",
-    access: "Professional access",
-    salariat: "Salary model simulation",
-    leasing: "Leasing model simulation",
-    comparison: "Comparison",
-    history: "History",
-    purchase: "Vehicle purchase price",
-    revenue: "Monthly revenue",
-    salary: "Driver salary",
-    calculate: "Calculate",
-    important: "Estimates based on Yango ECO service"
+  es:{
+    app_name:"Simulador de Negocio Yango – PRO",
+    language:"Idioma",
+    currency:"Moneda",
+    ok:"OK",
+    code:"Código PRO",
+    access:"Acceso profesional",
+    menu_salariat:"Salariado",
+    menu_leasing:"Leasing",
+    menu_compare:"Comparación",
+    menu_history:"Historial",
+    salariat:"Simulación – Modelo salarial",
+    leasing:"Simulación – Modelo leasing",
+    simulate:"Simular",
+    profit:"Beneficio",
+    roi:"ROI",
+    months:"meses",
+    important:"Estimaciones basadas en el servicio Yango ECO"
   },
 
-  es: {
-    language: "Idioma",
-    currency: "Moneda",
-    ok: "OK",
-    code: "Código PRO",
-    access: "Acceso profesional",
-    salariat: "Simulación – Modelo salarial",
-    leasing: "Simulación – Modelo leasing",
-    comparison: "Comparación",
-    history: "Historial",
-    purchase: "Precio de compra del vehículo",
-    revenue: "Ingresos mensuales",
-    salary: "Salario del conductor",
-    calculate: "Calcular",
-    important: "Estimaciones basadas en el servicio Yango ECO"
+  pt:{
+    app_name:"Simulador de Negócios Yango – PRO",
+    language:"Idioma",
+    currency:"Moeda",
+    ok:"OK",
+    code:"Código PRO",
+    access:"Acesso profissional",
+    menu_salariat:"Salário",
+    menu_leasing:"Leasing",
+    menu_compare:"Comparação",
+    menu_history:"Histórico",
+    salariat:"Simulação – Modelo salarial",
+    leasing:"Simulação – Modelo leasing",
+    simulate:"Simular",
+    profit:"Lucro",
+    roi:"ROI",
+    months:"meses",
+    important:"Estimativas baseadas no serviço Yango ECO"
   },
 
-  pt: {
-    language: "Idioma",
-    currency: "Moeda",
-    ok: "OK",
-    code: "Código PRO",
-    access: "Acesso profissional",
-    salariat: "Simulação – Modelo salarial",
-    leasing: "Simulação – Modelo leasing",
-    comparison: "Comparação",
-    history: "Histórico",
-    purchase: "Preço de compra do veículo",
-    revenue: "Receita mensal",
-    salary: "Salário do motorista",
-    calculate: "Calcular",
-    important: "Estimativas baseadas no serviço Yango ECO"
+  ru:{
+    app_name:"Yango Бизнес Симулятор – PRO",
+    language:"Язык",
+    currency:"Валюта",
+    ok:"ОК",
+    code:"ПРО код",
+    access:"Профессиональный доступ",
+    menu_salariat:"Зарплата",
+    menu_leasing:"Лизинг",
+    menu_compare:"Сравнение",
+    menu_history:"История",
+    salariat:"Модель с зарплатой",
+    leasing:"Лизинговая модель",
+    simulate:"Рассчитать",
+    profit:"Прибыль",
+    roi:"Окупаемость",
+    months:"мес.",
+    important:"Оценки основаны на сервисе Yango ECO"
   },
 
-  ru: {
-    language: "Язык",
-    currency: "Валюта",
-    ok: "ОК",
-    code: "ПРО код",
-    access: "Профессиональный доступ",
-    salariat: "Модель с зарплатой",
-    leasing: "Лизинговая модель",
-    comparison: "Сравнение",
-    history: "История",
-    purchase: "Цена покупки автомобиля",
-    revenue: "Ежемесячный доход",
-    salary: "Зарплата водителя",
-    calculate: "Рассчитать",
-    important: "Оценки основаны на сервисе Yango ECO"
+  hi:{
+    app_name:"Yango बिज़नेस सिम्युलेटर – PRO",
+    language:"भाषा",
+    currency:"मुद्रा",
+    ok:"ठीक है",
+    code:"प्रो कोड",
+    access:"पेशेवर प्रवेश",
+    menu_salariat:"वेतन",
+    menu_leasing:"लीजिंग",
+    menu_compare:"तुलना",
+    menu_history:"इतिहास",
+    salariat:"वेतन मॉडल",
+    leasing:"लीजिंग मॉडल",
+    simulate:"सिमुलेट करें",
+    profit:"लाभ",
+    roi:"ROI",
+    months:"महीने",
+    important:"अनुमान Yango ECO सेवा पर आधारित हैं"
   },
 
-  ar: {
-    language: "اللغة",
-    currency: "العملة",
-    ok: "موافق",
-    code: "رمز احترافي",
-    access: "دخول احترافي",
-    salariat: "نموذج الراتب",
-    leasing: "نموذج التأجير",
-    comparison: "المقارنة",
-    history: "السجل",
-    purchase: "سعر شراء السيارة",
-    revenue: "الدخل الشهري",
-    salary: "راتب السائق",
-    calculate: "احسب",
-    important: "التقديرات مبنية على خدمة Yango ECO"
-  },
-
-  hi: {
-    language: "भाषा",
-    currency: "मुद्रा",
-    ok: "ठीक है",
-    code: "प्रो कोड",
-    access: "पेशेवर प्रवेश",
-    salariat: "वेतन मॉडल",
-    leasing: "लीजिंग मॉडल",
-    comparison: "तुलना",
-    history: "इतिहास",
-    purchase: "वाहन खरीद मूल्य",
-    revenue: "मासिक आय",
-    salary: "चालक वेतन",
-    calculate: "गणना करें",
-    important: "अनुमान Yango ECO सेवा पर आधारित हैं"
-  },
-
-  zh: {
-    language: "语言",
-    currency: "货币",
-    ok: "确定",
-    code: "专业代码",
-    access: "专业访问",
-    salariat: "薪资模式",
-    leasing: "租赁模式",
-    comparison: "比较",
-    history: "历史记录",
-    purchase: "车辆购买价格",
-    revenue: "月收入",
-    salary: "司机工资",
-    calculate: "计算",
-    important: "估算基于 Yango ECO 服务"
+  zh:{
+    app_name:"Yango 商业模拟器 – PRO",
+    language:"语言",
+    currency:"货币",
+    ok:"确定",
+    code:"专业代码",
+    access:"专业访问",
+    menu_salariat:"薪资",
+    menu_leasing:"租赁",
+    menu_compare:"比较",
+    menu_history:"历史",
+    salariat:"薪资模式",
+    leasing:"租赁模式",
+    simulate:"模拟",
+    profit:"利润",
+    roi:"回本期",
+    months:"个月",
+    important:"估算基于 Yango ECO 服务"
   }
 };
+
 
 /* ===== PRO CODE ===== */
 const PRO={ "DEMO":{type:"count",max:20} };
